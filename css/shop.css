@@ -1,0 +1,374 @@
+.productListingSubCategory {
+	border:  none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #3E2116;
+	height: 20px;
+	padding-top: 9;
+	padding-bottom: 9;
+
+}
+.dotLine {
+	background-image:  url(Images/dotline-shop.gif);
+	background-repeat: repeat-x;
+	background-position: left center;
+	height: 30px;
+
+}
+.productBand_category {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #F7F5E5;
+	font-weight: bold;
+	background-color: 87684E;
+
+}
+.categorySelect {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+}
+
+/* Shop Basket */
+.basketTable {
+	background-color: #FFFFFF;
+
+
+}
+.basketHeaderRow {
+	background-color: #87684E;
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #ffffff;
+}
+.basketQuantityField {
+
+}
+.totalChargeRow {
+	background-color: #C1C1C1;
+	padding : 0 0 0 5;
+	border:  1px #FFFFFF solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+/* Category listing AND product detail */
+.attributeTableHeader {
+
+}
+.attribute {
+
+}
+.optionTableHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+.optionSelector {
+
+}
+.priceTableHeader,.RRPTableHeader {
+
+}
+.oldPrice {
+	text-decoration: line-through;
+}
+.price{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #da1204;
+	TEXT-DECORATION: none;
+	font-weight: bold;
+
+}
+.entryErrors {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;	
+	color: #D70610;
+	TEXT-DECORATION: none;
+	font-weight: bold;
+	
+}
+.SpecialPrice { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: 7B0000
+}
+.ProductSize {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color:#87684E;
+}
+.productName {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#CC6600;
+}
+.productName:hover {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	color:#3E2116;
+	TEXT-DECORATION: underline;
+}
+.productDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+}
+/* Product detail */
+.separatorHR {
+
+}
+
+/* Checkout */
+.checkoutSectionHeading {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.checkoutSectionTable{
+	background-color: #F4F2ED;
+	padding : 0 0 0 5;
+	border:  1px solid #C9BFA7;
+	font-weight: bold;
+	}
+.checkoutSectionTableCurrent{
+	background-color: #6F859A;
+	padding : 0 0 0 5;
+	border:  1px #FFFFFF solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	}
+.userDetailTable {
+	color: #FFFFFF;
+}
+.productname {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+
+}
+.productname:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #177CD5;
+	text-decoration: underline;
+
+}/* Category listing */
+.productListingHeader {
+	padding : 0 0 0 5;
+	border:  1px solid #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	background-color: 87684E;
+
+
+ } 
+.productListingPanel {
+	background-color: #FFFFFF;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: 959090;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: 959090;
+	font-size: 11px;
+} 
+.formField {
+	border: 1px solid #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+} 
+.shopLogoBack {
+	background-color: #B1D9FC;
+}
+.calculateshiping {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #B44D00;
+	text-decoration: none;
+}
+.basketSubTotal {
+	padding : 0 0 0 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #87684E;
+
+
+}
+.basketTotal {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #C13129;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #87684E;
+
+
+}
+.basketOddRow {
+
+	background-color: #E9E5DC;
+}
+.textSmall {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #333333;
+	text-decoration: none;
+	font-weight: bold;
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	text-align: left;
+	padding-left: 5px;
+}
+.progressBar {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+}
+.progressBarTable {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-top-color: C9BFA7;
+	border-left-color: C9BFA7;
+	background-color: #FFFFFF;
+
+
+}
+.progressBarCell {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #87684E;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: C9BFA7;
+	border-bottom-color: C9BFA7;
+
+}
+.basketEvenRow {
+	background-color: #F4F2ED;
+}
+.category-top {
+	background-image: url(../Templates/OnlineShopAsset/Images/i-ferns.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.productBack {
+	background-color: #FFFFFF;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #333333;
+	border-right-color: #333333;
+	border-bottom-color: #333333;
+	border-left-color: #333333;
+	border-right-style: solid;
+	border-left-style: solid;
+
+}
+.borderGrey {
+	border: 1px solid #666666;
+}
+A {
+	COLOR: #000000; 
+	text-decoration: none;
+}
+.A_hover {
+	COLOR: #da1204; 
+	text-decoration: none;	
+}
+.shopBoxOutline {
+	border: 1px solid #87684E;
+}.Line-vert {
+	background-image: url(../Templates/OnlineShopAsset/Images/line-vert.gif);
+	background-repeat: repeat-y;
+	width: 20px;
+
+}
+.LineHoriz {
+	background-image: url(../Templates/OnlineShopAsset/Images/dotline-shop2.gif);
+	background-repeat: repeat-x;
+	height: 30px;
+}
+
+.paymentChoice {
+	border: 1px solid rgb(213, 213, 213) ;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.addressChoice {
+	border: 1px solid rgb(213, 213, 213) ;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.messageBox {
+	border: 1px solid rgb(213, 213, 213) ;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.layoutBanner {
+	height:100%;
+	width:100%;
+}

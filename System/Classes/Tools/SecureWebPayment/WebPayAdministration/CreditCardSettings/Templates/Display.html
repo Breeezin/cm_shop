@@ -1,0 +1,209 @@
+<INPUT type="hidden" name="NoBack" value="1">
+<TABLE BORDER="0" WIDTH="100%">	
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_Manual" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_Manual', 'checked')?> > Manual Processor
+			</TH>
+			<TD>
+				&nbsp;
+			</TD>
+		
+		</TR>
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_PayPro" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_PayPro', 'checked')?> > Pay Pro Processor
+			</TH>
+			<TD>
+				If you have a Pay Pro account for online credit card processing, enter the details below.				
+				<TABLE>
+					<TR>
+						<TD>Merchant Key :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="PayProMarchantKey"}</TD>
+					</TR>
+					<TR>
+						<TD>Mode :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="PayProMode"}</TD>
+					</TR>
+					<TR>
+						<TD colspan="2"><small>e.g. {8964ebec-acbd-477e-9a45-688c3af473b5}</small></TD>						
+					</TR>					
+				</TABLE>				
+			</TD>		
+		</TR>
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_Paystation" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_Paystation', 'checked')?> > Paystation Processor
+			</TH>
+			<TD>
+				If you have a Paystation account for online credit card processing, enter the details below.
+				<TABLE>
+					<TR>
+						<TD>Merchant Key :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="PaystationMarchantKey"}</TD>
+					</TR>
+					<TR>
+						<TD>Mode :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="PaystationMode"}</TD>
+					</TR>
+					<TR>
+						<TD colspan="2"><small>e.g. </small></TD>
+					</TR>
+				</TABLE>
+			</TD>
+		</TR>
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_EGate" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_EGate', 'checked')?> > ANZ eGate
+			</TH>
+			<TD>
+				If you have a ANZ eGate account for online credit card processing, enter the details below.
+				<TABLE>
+					<TR>
+						<TD>Merchant ID :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="EGateMarchantID"}</TD>
+					</TR>
+					<TR>
+						<TD>Access Code :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="EGateAccessCode"}</TD>
+					</TR>
+					<TR>
+						<TD>Secure Hash Secret 1 :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="EGateHashSecret"}</TD>
+					</TR>
+					<TR>
+						<TD>Secure Hash Secret 1 Confirm:</TD>
+						<TD>{tmpl_fieldset_field_validate fieldset="FieldSet" field="EGateHashSecret"}</TD>
+					</TR>													
+				</TABLE>
+			</TD>
+		</TR>
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_HPP" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_HPP', 'checked')?> > DPS Hosted Payments Page
+			</TH>
+			<TD>
+				If you have a Hosted Payments account for online credit card processing, enter the details below.
+				<TABLE>
+					<TR>
+						<TD>User ID :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="HPPUserID"}</TD>
+					</TR>
+					<TR>
+						<TD>Access Key :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="HPPAccessKey"}</TD>
+					</TR>
+					<TR>
+						<TD>Mac Key :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="HPPMacKey"}</TD>
+					</TR>
+				</TABLE>
+			</TD>
+		</TR>
+        <TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_DPS" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_DPS', 'checked')?> > DPS Processor
+			</TH>
+			<TD>
+				If you have a DPS account for online credit card processing, enter the details below.				
+				<TABLE>
+					<TR>
+						<TD>Account :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="DPSAccount"}</TD>
+					</TR>
+					<TR>
+						<TD>Password :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="DPSPassword"}</TD>
+					</TR>
+				</TABLE>	
+				<p>		
+				<table border="0" width="50%" ID="Table2" bgcolor="#cccccc">
+				<tr>
+					<td colspan="2">Valid values for Currency are: </td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">CAD</td>
+					<td width="38%" BGCOLOR="#ffffff">Canadian Dollar</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">CHF</td>
+					<td width="38%" BGCOLOR="#ffffff">Swiss Franc</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">EUR</td>
+					<td width="38%" BGCOLOR="#ffffff">Euro</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">GBP</td>
+					<td width="38%" BGCOLOR="#ffffff">Pound Sterling</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">HKD</td>
+					<td width="38%" BGCOLOR="#ffffff">Hong Kong Dollar</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">JPY</td>
+					<td width="38%" BGCOLOR="#ffffff">Japanese Yen</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">NZD</td>
+					<td width="38%" BGCOLOR="#ffffff">New Zealand Dollar</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">SGD</td>
+					<td width="38%" BGCOLOR="#ffffff">Singapore Dollar</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">USD</td>
+					<td width="38%" BGCOLOR="#ffffff">United States Dollar</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">ZAR</td>
+					<td width="38%" BGCOLOR="#ffffff">Rand</td>
+				</tr>
+				<tr>
+					<td width="12%" BGCOLOR="#ffffff">AUD</td>
+					<td width="38%" BGCOLOR="#ffffff">Australian Dollar</td>
+				</tr>
+				</table>
+				NOTE: Currencies must be configured on your DPS account before changing the web payment setup.
+
+				</p>
+			</TD>
+		
+		</TR>		
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				<input type="radio" style="border:0" name="Processor" value="WebPay_CreditCard_ZipZap" <?=ss_getInputStatus($data['Processor'],'WebPay_CreditCard_ZipZap', 'checked')?> > ZipZap Processor
+			</TH>
+			<TD>
+				If you have a ZipZap account for online credit card processing, enter the details below.
+				
+				<TABLE>
+					<TR>
+						<TD valign="top">Username :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="ZipZapUsername"}<BR><SMALL>(Test mode = 'zipzap_test')</SMALL></TD>
+					</TR>
+
+					<TR>
+						<TD valign="top">NZD Transaction<BR>Username :</TD>
+						<TD>{tmpl_fieldset_field fieldset="FieldSet" field="ZipZapUsernameNZD"}<BR><SMALL>(Test mode = 'zipzap_test')</SMALL></TD>
+					</TR>
+				</TABLE>
+			</TD>	
+		</TR>
+		<TR>
+		<Td colspan="2">Please select 'Use Default Currency if you wish to use PayPro processor.</TD>
+		</TR>
+		<TR>
+			<TH ALIGN="LEFT" VALIGN="TOP" WIDTH="30%">
+				Credit Cards Accepted :
+			</TH>
+			<TD>					
+				<TABLE>
+					<TR><TD><input type="radio" name="UseCurrency" style="border:0" <?=ss_getInputStatus($data['UseCurrency'],'Defalut', 'checked')?> value="Defalut">Use Default Currency <input type="radio" style="border:0" name="UseCurrency" <?=ss_getInputStatus($data['UseCurrency'],'NZD', 'checked')?> value="NZD">Use NZD</TD></TR>
+					<TR><TD>{tmpl_fieldset_field fieldset="FieldSet" field="CreditCardTypes"}</TD></TR>										
+				</TABLE>
+			</TD>
+		
+		</TR>
+</TABLE>		

@@ -1,0 +1,185 @@
+
+<SCRIPT LANGUAGE="Javascript">	
+	function confirmReset() {
+		if (confirm('Are you sure you want to reset all statistics for your website?')) {
+			document.location = 'index.cfm?act=Statistics.Reset';
+		}
+	}
+</SCRIPT>
+<img src="images/h-usage.gif" width="126" height="26" ALT="Usage"><br>
+<table width="100%" border="0" cellpadding="10" cellspacing="0" class="border-stats">
+  <tr>
+    <td>
+	  There have been {tmpl_var TotalHits} hits on your website. 
+      <P>
+        We recommend you periodically <A HREF="Javascript:void(0);" ONCLICK="window.print();">print your stats</A> as a record and then <A HREF="Javascript:confirmReset();">reset them</A>. 
+      </P>
+      {tmpl_if !$data['AllHitsDefined']} 
+	  	<P>
+			Below are the statistics for the top ten pages on your website.  For details of the hits 
+			on all your pages <A HREF="index.php?act=Statistics.Display&AllPageHits=1">click here</A>}.
+		</P>
+	  {tmpl_else}		  
+	  	<P>
+			Below are the statistics for all the pages on your website.  To return to the details of the top ten 
+			pages, <A HREF="index.php?act=Statistics.Display">click here</A>}.
+		</P>
+		{tmpl_end}
+	  {tmpl_if $data['PageHitCount']}
+      <table width="100%" border="0" cellpadding="3" cellspacing="0" class="border-statsinner">
+        <tr bgcolor="##EFEFEF">
+          <td class="bottomline"><strong>Page</strong></td>
+          <td width="30" class="bottomline"><div align="center"><strong>Hits</strong></div></td>
+          <td width="30" class="bottomline"><div align="center"><strong>Users</strong></div></td>
+          <td width="250" class="bottomline">&nbsp;</td>
+        </tr>
+		<CFSET TopCount = Q_ResourceHits.Hits[1]>
+		<!--- We want the minimum to be 2 px, find out what size the biggest should be --->
+<!---		<CFSET MinPercent = Q_ResourceHits.Hits[Q_ResourceHits.RecordCount] / TopCount>--->
+		{tmpl_eval $barWidth = 200;} <!--- Min(200, 1 / MinPercent)>--->
+		{tmpl_eval $counter = 0;}
+		<CFLOOP QUERY="Q_ResourceHits">
+		
+        <tr>
+          <td bgcolor="##FFFFFF"><A HREF="#CFG.AbsoluteWebURL##Resource#">#Left(Resource,50)#</A></td>
+          <td bgcolor="d6d6d6"><div align="center">#Hits#</div></td>
+          <td><div align="center">#Users#</div></td>
+		  <CFSET Width = Evaluate('(Hits / TopCount) * BarWidth')>
+		  <CFIF Width LT 2><CFSET Width=2></CFIF>
+          <td width="250" bgcolor="##FFFFFF"><table width="#Width#" border="0" cellpadding="0" cellspacing="0" class="statsbar">
+            <tr>
+              <td width="120">&nbsp;</td>
+            </tr>
+          </table></td>
+        </tr>
+			<CFSET Counter = Counter+1>
+			<CFIF Counter GT 10 AND NOT IsDefined("ATTRIBUTES.AllHits")>
+				<CFBREAK>
+			</CFIF>
+		</CFLOOP>
+      </table>
+      {tmpl_end}
+
+	  </td>
+  </tr>
+</table>
+<p><img src="images/h-referrals.gif" width="114" height="25" ALT="Referrals"></p>
+<table width="100%" border="0" cellpadding="10" cellspacing="0" class="border-stats">
+  <tr>
+     <td>There have been <CFIF Len(Q_Total.Referrals)>{tmpl_ Q_Total.Referrals}<CFELSE>no</CFIF> referrals to your website<CFIF Len(Q_Total.Referrals)>, the top ten referrers are...<CFELSE>.</CFIF><BR>
+      <br>
+      <table width="100%" border="0" cellpadding="3" cellspacing="0" class="border-statsinner">
+        <tr bgcolor="#EFEFEF">
+          <td class="bottomline"><strong>Page</strong></td>
+          <td width="30" class="bottomline"><div align="center"><strong>Referrals</strong></div>
+          </td>
+          <td width="250" bgcolor="#EFEFEF" class="bottomline"><strong>% of Total</strong></td>
+        </tr>
+  	<CFLOOP QUERY="Q_TopReferrers">
+		
+        <tr>
+          <td bgcolor="##FFFFFF"><CFIF Len(Referring_Site)>#Referring_Site#<CFELSE>Unknown Referrer</CFIF></td>
+          <td bgcolor="##d6d6d6"><div align="center">#Refs#</div>
+          </td>
+		  <CFSET Width = Evaluate('(Refs / Q_Total.Referrals) * 200')>
+		  <CFIF Width LT 2><CFSET Width=2></CFIF>
+          <td width="250" bgcolor="##FFFFFF"><table width="#Width#" border="0" cellpadding="0" cellspacing="0" class="statsbar">
+              <tr>
+                <td width="120">&nbsp;</td>
+              </tr>
+            </table>
+           </td>
+        </tr>
+		}
+	</CFLOOP>
+      </table></td>
+  </tr>
+</table>
+<br>
+<img src="images/h-users.gif" ALT="Users"><br>                                  <br>
+
+<table width="100%" border="0" cellpadding="10" cellspacing="0" class="border-stats">
+  <tr>
+    <td>
+		<P>
+		Below is a list of all the user detail fields that are collected.
+		Simply click the field you are interested in to view a report of the values 
+		entered by your customers.
+		</P>		
+      <table width="100%" border="0" cellpadding="3" cellspacing="0" class="border-statsinner">
+        <tr bgcolor="##EFEFEF">
+          <td class="bottomline"><strong>Field</strong></td>
+<!---          <td class="bottomline"><div align="center"><strong>Most common value</strong></div></td>--->
+        </tr>
+		<CFLOOP FROM="1" TO="#ArrayLen(UserFields)#" INDEX="index">
+        <tr>
+          <td bgcolor="##FFFFFF"><A HREF="Javascript:window.open('#CGI.SCRIPT_NAME#?act=userFieldDetails&FieldUUID=#UserFields[index].UUID#','UserFieldDetails','width=500,height=400,scrollbars=yes');void(0);">#HTMLEditFormat(UserFields[index].Name)#</A></td>
+<!---          <td bgcolor="d6d6d6">
+		  <CFSET MaxFreq = 0>
+		  <CFSET MaxValue = "">
+		  <CFSET Total = 0>
+		  <CFLOOP LIST="#StructKeyList(UserFields[index].values)#" INDEX="key">
+		  	<CFSET Total = Total + UserFields[index].values[key].freq>
+		  	<CFIF UserFields[index].values[key].freq GT MaxFreq>
+				<CFSET MaxFreq = UserFields[index].values[key].freq>
+				<CFSET MaxValue = UserFields[index].values[key].value>
+			</CFIF>
+		  </CFLOOP>
+		  	#HTMLEditFormat(MaxValue)# (#MaxFreq#/#Total#)--->
+		  </td>
+        </tr>
+		</CFLOOP>
+      </table>
+	</td>
+  </tr>
+</table>
+}
+<br>
+<img src="images/h-diskspace.gif" width="113" height="24" alt="Disk Space"><br>                                  <br>
+<table width="100%" border="0" cellpadding="10" cellspacing="0" class="border-stats">
+  <tr>
+    <td><CFIF NOT IsDefined("CFG.SpaceAllowance")>
+	<CFSET CFG.SpaceAllowance = (1024 * 1024) * 10>
+</CFIF>
+Your website is currently using {tmpl_ DecimalFormat(TotalSize/(1024 * 1024))} Megabytes and has approximately {tmpl_ DecimalFormat((CFG.SpaceAllowance - TotalSize) / (1024 * 1024))} Megabytes remaining...<BR>
+
+      <br>
+  	
+      <table width="400" border="0" cellspacing="0" cellpadding="10">
+        <tr align="left" valign="top">
+          <td width="20%"><table width="200" height="40" border="0" cellpadding="0" cellspacing="0" bgcolor="##FFFFFF">
+            <tr>
+              <td width="#Evaluate('(SystemSize / (CFG.SpaceAllowance)) * 200')#" class="statsbar">&nbsp;</td>
+              <td width="#Evaluate('(ContentSize / (CFG.SpaceAllowance)) * 200')#" class="statsbarsilver">&nbsp;</td>
+              <td width="#Evaluate('200 - ((ContentSize + SystemSize) / CFG.SpaceAllowance) * 200')#" class="whitespace">&nbsp;</td>
+            </tr>
+          </table>
+            </td>
+          <td><strong>Key</strong>
+            <table width="100" border="0" cellspacing="0" cellpadding="4">
+              <tr>
+                <td><table width="15" height="15" border="0" cellpadding="0" cellspacing="0" class="statsbar">
+                    <tr>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table>
+                </td>
+                <td>System (#DecimalFormat(SystemSize/(1024 * 1024))#MB)</td>
+              </tr>
+              <tr>
+                <td><table width="15" height="15" border="0" cellpadding="0" cellspacing="0" class="statsbarsilver">
+                    <tr>
+                      <td>&nbsp;</td>
+                    </tr>
+                  </table>
+                </td>
+                <td>Content (#DecimalFormat(ContentSize/(1024 * 1024))#MB)</td>
+              </tr>
+            </table>
+            </td>
+        </tr>
+      </table>                                        
+	}
+    </td>
+  </tr>
+</table>

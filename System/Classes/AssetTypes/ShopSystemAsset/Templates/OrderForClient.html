@@ -1,0 +1,439 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>
+			<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable">
+	        	<tr>
+	        		<td colspan="3"><span class="Calculateshiping">Add To Basket</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						Select a product to add, enter a quantity and then click the add button.
+					</td>
+				</tr>
+				<tr><td><table class="onlineShop_checkoutSectionTable" width="100%" cellspacing="0" cellpadding="5">
+				<form name="adder" action="{tmpl_var AssetPath}/Service/UpdateBasket" method="post">
+					<input type="hidden" name="BackURL" value="<?=$GLOBALS['cfg']['currentServer']?>{tmpl_var AssetPath}/Service/OrderForClient">
+				<tr>
+					<td width="100"><strong>Category:</strong></td>
+					<td>
+						 <select name="pr_ca_id" class="onlineShop_productBand_categorySelect" onchange="document.getElementById('loader').src = '{tmpl_var_js AssetPath}/Service/CategoryProductsJS/OfflineProducts/1/ca_id/'+this.options[selectedIndex].value;">
+							<option selected value="">Please Select</option>								
+							<tmpl_loop query="Q_Categories">
+								<option value="{tmpl_row_var ca_id}">{tmpl_row_var ca_name}</option>
+							</tmpl_loop>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Product:</strong></td>
+					<td>
+						 <select name="Key">
+							<option value="">Select Category First</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><strong>Qty:</strong></td>
+					<td>
+						  <input type="text" size="3" name="Qty" value="1">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type="submit" name="Add" value="Add to Basket" onclick="if (this.form.Key.selectedIndex == 0) {alert('Please select a product'); return false; } return true;">
+					</td>
+				</tr>
+					<script language="Javascript">
+						function updateProducts(p) {
+							keys = document.forms.adder.Key;
+							for(var j= keys.options.length-1; j >= 0; j--) keys.options[j] = null;
+							keys[0] = new Option('Please Select','');
+							for(var i=0;i<p.length;i++) keys[i+1] = new Option(p[i].n,p[i].k);
+						}
+					</script>
+					<iframe src="" id="loader" name="loader" style="display:none;"></iframe>
+				</form>
+				</table>
+				</td></tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>
+	
+		<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable">
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        	<tr>
+        		<td colspan="5"><span class="Calculateshiping">Basket</span></td>
+   		 </tr>
+
+   		 </tmpl_if>
+        	<tr>
+        		<td class="onlineShop_BasketHeaderRow">Product</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td class="onlineShop_BasketHeaderRow">Remove</td>
+        	</tmpl_if>
+        		<td class="onlineShop_BasketHeaderRow">Qty</td>
+        		<td class="onlineShop_BasketHeaderRow"> Price</td>
+        		<td class="onlineShop_BasketHeaderRow">Sub Total</td>
+   		 </tr>
+
+	<? 
+		$data['TotalPrice'] = 0;
+		$flipFlop = 0;
+		foreach($data['Basket']['Products'] as $item) { 
+			$data['Name'] = $item['Product']['pr_name'];
+			$data['Options'] = $item['Product']['Options'];
+			$data['Qty'] = $item['Qty'];
+			$data['Key'] = $item['Key'];
+			$data['StockCode'] = $item['Product']['pro_stock_code'];
+			$data['UnitPrice'] = $item['Product']['Price'];
+			// $data['sourceC'] = $item['Product']['pro_source_currency'];
+			$data['sourceC'] = $data['OrderCurrency'];
+			$flipFlop = 1-$flipFlop;
+			$data['Class'] = '';
+			if ($flipFlop == 1) $data['Class'] = 'onlineShopBasketOddRow';
+	?>
+        	<tr align="left" valign="middle">
+        		<td class="{tmpl_var Class}">
+					<strong>{tmpl_var Name}<tmpl_if condition="strlen($data['Options'])"> ({tmpl_var Options})</tmpl_if></strong><br />{tmpl_var StockCode}
+   			 </td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+				<form action="{tmpl_var AssetPath}/Service/UpdateBasket/Key/{tmpl_var_url Key}/Mode/Set">
+					<input type="hidden" name="BackURL" value="<?=$GLOBALS['cfg']['currentServer']?>{tmpl_var AssetPath}/Service/OrderForClient">
+					<td class="{tmpl_var Class}"><input type="image" src="Images/but-remove.gif" name="Remove" style="border:0px;"></td>
+        			<td class="{tmpl_var Class}"><input name="Qty" value="{tmpl_var Qty}" size="3" onchange="this.form.submit();" class="onlineShop_basketQuantityField"></td>
+				</form>
+        	<tmpl_else>
+        		<td class="{tmpl_var Class}">{tmpl_var Qty}</td>
+        	</tmpl_if>
+			<form action="{tmpl_var AssetPath}/Service/UpdateBasket/Key/{tmpl_var_url Key}/Mode/NewPrice">
+				<input type="hidden" name="BackURL" value="<?=$GLOBALS['cfg']['currentServer']?>{tmpl_var AssetPath}/Service/OrderForClient">
+				<input type="hidden" name="Qty" value="{tmpl_var Qty}"/>
+				<td class="{tmpl_var Class}"><input type='text' size=6 name='NewPrice' value='<? echo $data['UnitPrice'];?>'/><?php echo $data['sourceC'];?></td>
+			</form>
+			<td class="{tmpl_var Class}">{tmpl_eval print($data['This']->formatPrice('display',$data['Qty']*$data['UnitPrice'], $data['sourceC']))}</td>
+   		 </tr>
+	<? } ?>
+   		 
+		<? $data['Tax'] = '';
+		   if (array_key_exists('Tax',$data['Basket'])) $data['Basket']['Tax']['Code']; 
+		?>
+		<tmpl_if condition="strlen($data['Tax'])">
+        <tr>
+				<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal"><?php print(ListLast($data['TaxCountryNoteHTML'],'~')); ?></td>
+			<td class="onlineShopBasketSubTotal">
+				{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Tax']['Amount']))}			
+			</td>
+		</tmpl_if>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">Sub-total: </td>
+        		<td class="onlineShopBasketSubTotal"><tmpl_if condition="array_key_exists('SubTotal',$data['Basket'])">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['SubTotal']))}</tmpl_if></td>
+   		 </tr>
+		 <? 
+		 	$total_discount = 0;
+   		 	if (array_key_exists('Discounts',$data['Basket'])) { 
+   		 		foreach($data['Basket']['Discounts'] as $data['DiscountName'] => $data['DiscountAmount']) {
+   		 ?>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">{tmpl_var DiscountName}: </td>
+        		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['DiscountAmount']))}</td>
+   		 </tr>
+   		 <? } $total_discount += $data['DiscountAmount']; } ?>
+		 <tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">Total Discount:</td>
+        		<td class="onlineShopBasketSubTotal">
+					<form name="freightForm" action="{tmpl_var AssetPath}/Service/OrderForClient/UpdateDiscount/1" method="post">
+						<input type='text' name='DiscountAmount' value='<?=$total_discount?>' />
+						<input type="submit" name="Update" value="Update">
+					</form>
+				</td>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">Shipping:</td>
+        		<td class="onlineShopBasketSubTotal">
+					<form name="freightForm" action="{tmpl_var AssetPath}/Service/OrderForClient/UpdateFreight/1" method="post">
+						<input type='text' name='FreightAmount' value='<?php echo $data['Basket']['Freight']['Amount'] ?>' />
+						<input type="submit" name="Update" value="Update">
+					</form>
+				</td>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketTotal">Total: </td>
+        		<td nowrap class="onlineShopBasketTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Total']))}</td>
+   		 </tr>
+   		 	<tmpl_if condition="$data['DisplayCurrency']['CurrencyCode'] !== $_SESSION['Shop']['CurrencyCountry']['cn_currency_code']">
+	        	<tr>
+	        		<td>&nbsp;</td>
+				<tmpl_if condition="$data['Style'] == 'WithInputs'">
+	        		<td>&nbsp;</td>
+	        	</tmpl_if>
+	        		<td>&nbsp;</td>
+	        		<td class="onlineShopBasketTotalNZ">Approx Total: </td>
+	        		<td bowrap class="onlineShopBasketTotalNZ">{tmpl_eval print($data['This']->formatPrice('displayApprox',$data['Basket']['Total'], $data['DisplayCurrency']['CurrencyCode']))}</td>
+	   		 	</tr>
+   		 	</tmpl_if>
+   		 	<tmpl_if condition="$data['DisplayCurrency']['CurrencyCode'] !== $data['ChargeCurrency']['CurrencyCode']">
+	        	<tr>
+	        	<?php $data['colspan']=3; ?>
+				<tmpl_if condition="$data['Style'] == 'WithInputs'">
+		        	<?php $data['colspan']=4; ?>
+	        	</tmpl_if>
+	        		<td colspan="{tmpl_var colspan}" class="onlineShopBasketTotalNZ">We can only process transactions in {tmpl_eval print($data['ChargeCurrency']['Currency'])}s, so we have converted the total amount of your order to the equivalent amount based on current exchange rates. The amount you will actually be charged is:</td>
+	        		<td nowrap class="onlineShopBasketTotalNZ">{tmpl_eval print($data['This']->formatPrice('charge',$data['Basket']['Total']))}</td>
+	   		 	</tr>
+   		 	</tmpl_if>
+   		 </table>
+        	</td>
+	</tr>
+
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Options" >
+	<tmpl_if condition="ss_OptionExists('Shop Discount Codes')">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><table border="0" cellspacing="0" cellpadding="5">
+        	<tr>
+        		<td colspan="2"><span class="Calculateshiping">Discount Code</span></td>
+   		 </tr>
+        	<tr>
+        		<td colspan="2">If you have a discount code, please enter it below.  The products in
+        			your basket will be updated based on the discount code entered.</td>
+   		 </tr>
+			<form action="{tmpl_var AssetPath}/Service/ChangeDiscountCode/DoAction/Yes" method="post">
+        	<tr>
+        		<td width="150"><strong>Discount Code</strong></td>
+				<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+	       		 <td>
+	       		 	<input type="text" name="DiscountCode" value="{tmpl_var DiscountCode}">
+					<input type="image" src="Images/but-update.gif" style="border:0px;">	       		 	
+      			</td>
+       	 </tr>
+       	</form>
+       	</table></td>
+	</tr>
+	</tmpl_if>
+	</table>
+
+
+
+
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	
+	<tr><td colspan="2"><table>
+	
+	<tr>
+		<td>
+		{tmpl_if count($data['Errors'])}
+		<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=5 width="100%">
+		<tr>
+								<td>		
+			<P>
+			{tmpl_errors Errors}
+			</P>
+			</td>
+						</tr>
+					
+				</table>
+				{tmpl_end}	
+	</td>
+	</tr>			
+	
+	<tr>
+		<td><span class="Calculateshiping">Billing Details</span></td>
+	</tr>
+	<form name="CheckoutForm" action="{tmpl_var AssetPath}/Service/OrderForClient/Do_Service/Yes" method="POST">
+		<tr>
+			<td valign=top>
+				<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=8 width="100%">
+				
+						<tr>
+							<td>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw PurchaserDetails}          
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+			 </table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td><span 
+                                class=Calculateshiping>Shipping
+			Details</span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td valign=top>			
+			<SCRIPT LANGUAGE="Javascript">
+					
+					function sameAsPurchaser() {	
+						var theForm = document.forms.CheckoutForm;
+						var dontReload = (theForm.Us0_50A4_Parent.options[theForm.Us0_50A4_Parent.selectedIndex].value == theForm.ShDe0_50A4_Parent.options[theForm.ShDe0_50A4_Parent.selectedIndex].value);
+						<?php 
+							foreach ($data['ShippingFields'] as $aField) {
+								print ("//".strtolower(get_class($aField))." class name\n");
+								$usFieldName = str_replace('ShDe','Us',$aField->name);
+								
+								if (strtolower(get_class($aField)) == 'checkboxfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.length; i++) {
+											if (theForm.$usFieldName[i].checked) {
+												theForm.{$aField->name}[i].checked;
+											}
+										}"
+									);
+								} else if (strtolower(get_class($aField)) == 'countryfield' or strtolower(get_class($aField)) == 'selectfromarrayfield' ) {
+									print "var temp1 = theForm.{$usFieldName}.options[theForm.$usFieldName.selectedIndex].value;";																		
+									print("										
+										for (var i = 0; i < theForm.{$aField->name}.options.length; i++) {\n
+											if (theForm.{$aField->name}.options[i].value == temp1) {\n												
+												theForm.{$aField->name}.options[i].selected = true;\n																								 
+												break;
+											}										
+										}										
+									");	
+								} else if (strtolower(get_class($aField)) == 'parentchildrenfield') {
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+									print("
+										var selectedValue = theForm.{$usFieldName}_Parent.options[theForm.{$usFieldName}_Parent.selectedIndex].value;										
+										for (var i = 0; i < theForm.{$aField->name}_Parent.options.length; i++) {\n
+											if (theForm.{$aField->name}_Parent.options[i].value == selectedValue) {\n
+												theForm.{$aField->name}_Parent.options[i].selected = true;\n
+												break;
+											}
+										}
+										{$aField->name}_updateChild();{$aField->name}_checkParent(true);\n
+										if (theForm.{$usFieldName}_ChildSelect.options.length) {
+										var selectedParentValue = theForm.{$usFieldName}_ChildSelect.options[theForm.{$usFieldName}_ChildSelect.selectedIndex].value;\n
+										
+										for (var i = 0; i < theForm.{$aField->name}_ChildSelect.options.length; i++) {\n
+											if (theForm.{$aField->name}_ChildSelect.options[i].value == selectedParentValue) {\n												
+												theForm.{$aField->name}_ChildSelect.options[i].selected = true;\n																								 
+												break;
+											}
+										}
+										}										
+									");										
+									print("theForm.{$aField->name}_ChildText.value = theForm.{$usFieldName}_ChildText.value;\n");																		
+									print("{$aField->name}_update(false);\n");																		
+				
+				
+									
+								} else if (strtolower(get_class($aField)) == 'multiselectfromarrayfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.options.length; i++) {
+											if (theForm.$usFieldName.options[i].selected) {
+												theForm.{$aField->name}.options[i].selected = true;
+											}
+										}
+									");	
+								} else if (strtolower(get_class($aField)) == 'namefield') {
+									print("
+										
+										theForm['{$aField->name}[first_name]'].value = theForm['{$usFieldName}[first_name]'].value;
+										theForm['{$aField->name}[last_name]'].value = theForm['{$usFieldName}[last_name]'].value;
+									");					
+								} else {									
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+								}
+							}
+						?>				
+
+					}
+					</SCRIPT>				<table class=onlineShop_checkoutSectionTable cellspacing=0 cellpadding=8 width="100%">
+					
+						<tr>
+							<td>
+								<p>Please enter your
+                                                							
+								 shipping details. If the shipping details
+                                                							
+								 are the same as the purchaser details, you
+                                                							
+									may	click the "same
+                                                									as purchaser" button
+                                                							
+                                                							
+                                                										to copy the details
+							into the fields	below: <br><br><br>
+							<input type="button" name="same" value="Same As Purchaser" onClick="sameAsPurchaser();">
+				
+							</p>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw ShippingDetails}         
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+			 </table>
+			</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+			<div align="center">
+				<input type="Submit" name="Save Order" value="Save Order">
+			</div>
+		</td>
+		</tr>
+		<tr>
+			Special Instructions<br/>
+			<TEXTAREA NAME="GiftMessage" STYLE="width:100%" ROWS="6" COLS="40">{tmpl_var GiftMessage}</TEXTAREA>
+		</tr>
+				</form>
+		
+		
+	</table></td></tr>	
+	
+</table>

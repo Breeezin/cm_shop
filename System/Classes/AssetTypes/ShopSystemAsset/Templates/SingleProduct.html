@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="ltr" lang="en" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="ltr" lang="en" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]>-->
+<html dir="ltr" class="ltr" lang="en">
+  <!--<![endif]-->
+
+  <head>
+    <meta content="text/html; charset=iso-8859-1" http-equiv="content-type">
+    <meta name="keywords" content="{[Keywords]}">
+    <meta name="description" content="{[Description]}">
+    <title>{[WindowTitle]}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="images/logo.png" rel="icon">
+    <link href="css/stylesheet.css" rel="stylesheet">
+    <link href="css/paneltool.css" rel="stylesheet">
+    <link href="css/colorpicker.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/material-design-iconic-font.min.css" rel="stylesheet">
+    <link href="js/jquery/magnific/magnific-popup.css" rel="stylesheet">
+    <link href="css/owl.carousel.css" rel="stylesheet">
+    <link href="css/homebuilder.css" rel="stylesheet">
+    <link href="css/typo.css" rel="stylesheet">
+    <link href="css/newsletter.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery/magnific/jquery.magnific-popup.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/theme/common.js"></script>
+    <script type="text/javascript" src="js/jquery/owl-carousel/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="js/jquery/colorpicker/js/colorpicker.js"></script>
+    <script type="text/javascript" src="js/layerslider/jquery.themepunch.plugins.min.js"></script>
+    <script type="text/javascript" src="js/layerslider/jquery.themepunch.revolution.min.js"></script>
+  </head>
+
+  <body class="common-home page-home layout-fullwidth">
+    <div class="row-offcanvas row-offcanvas-left">
+<tmpl_if condition="$data['Q_Product']->numRows() == 0">
+	<p>Sorry, this product no longer exists in our database.  Please <a href="{tmpl_var AssetPath}">try searching again</a></p>
+<tmpl_else>
+	<tmpl_loop query="Q_Product">
+	<?php
+
+	if( $row['pr_combo'] >= 1 )
+	{
+		$Q_Combos = query("SELECT pr_id, pro_stock_available, cpr_qty FROM shopsystem_products, shopsystem_product_extended_options, shopsystem_combo_products
+				WHERE cpr_element_pr_id = {$row['pr_id']}
+					AND cpr_pr_id = pr_id
+					AND pr_id = pro_pr_id");
+
+		$instock = 999;
+		while ($comrow=$Q_Combos->fetchRow())
+			if( ($comrow['pro_stock_available'] != null) && ($comrow['cpr_qty'] >= 1 ) )
+				if( $instock > $comrow['pro_stock_available']/$comrow['cpr_qty'] )
+					$instock = $comrow['pro_stock_available']/$comrow['cpr_qty'];
+		$row['pro_stock_available'] = (int)$instock;
+	}
+
+	?>
+  <div class="padding-30">
+    <div class="row">
+      <div class="col-sm-5 image-container">
+        <div class="thumbnail image text-center">
+          <a href="/{tmpl_row_var FullImage}" class="imagezoom">
+						<img src= "{tmpl_row_var FullImage}"
+								title="{tmpl_row_var pr_name}" alt="{tmpl_row_var pr_name}" id="image"
+								data-zoom-image="/{tmpl_row_var FullImage}"
+								class="product-image-zoom img-responsive">
+					</a>
+        </div>
+			</div>
+      <div class="col-sm-7">
+        <h1 class="heading_detail">{tmpl_row_var pr_name}</h1>
+        <div class="detail rating clearfix"></div>
+        <ul class="list-unstyled">
+          <li>{tmpl_row_var_raw pr_short}</li>
+          <li>{tmpl_var_raw OptionsHTML}</li>
+        </ul>
+        <ul class="list-unstyled">
+          <li>
+            <h3 class="detail price-new">
+							{tmpl_row_var_raw PricesHTML}
+						</h3>
+          </li>
+          <li>
+						<?php if( strlen( $row['PrCigarLength'] ) || strlen( $row['PrCigarThickness'] ) ) {
+							ss_ShowCigarSize( $row['PrCigarLength'], $row['PrCigarThickness'] );
+						} ?>       			
+          </li>
+          <li>
+						<?php if( array_key_exists( 'ct_name', $row ) and strlen( $row['ct_name'] ) and ($row['ct_name'] != 'Unknown') ) {
+							echo '<strong>Format:</strong>';
+							echo $row['ct_name'];
+						} ?>
+          </li>
+          <li>
+						<? if ($row['pr_combo']) {
+							$Combo = getRow("SELECT SUM(cpr_qty) AS TheCount FROM shopsystem_combo_products WHERE cpr_element_pr_id = {$row['pr_id']}");
+							print('<strong>Boxes in combo:</strong>'.$Combo['TheCount']);
+							$data['AttributesHTML'] = '<strong>Llamas per box:</strong>Varies';
+						} ?>
+          </li>
+          <li>
+						{tmpl_var_raw AttributesHTML}
+          </li>
+        </ul>
+        <div id="product">
+          <div class="product-buttons-wrap clearfix">
+						<input type="hidden" name="product_id" value= "{tmpl_row_var pr_id}">
+            <div class="clearfix"> </div>
+						<hr>
+							<div class="action action-detail clearfix"><?php if( $row['pro_stock_available'] > 0 ) { ?>
+								<button type="button" id="button-cart" class="button-cart pull-left" onclick="cart.add('{tmpl_row_var pr_id}');"><i class="zmdi zmdi-shopping-cart-plus"></i><span>Add to Cart</span></button><?php } ?>
+								<button class="wishlist pull-left" type="button" data-toggle="tooltip" title="" onclick="wishlist.add('{tmpl_row_var pr_id};');" data-original-title="Add to Wish List"><i class="zmdi zmdi-favorite-outline"></i><span>Add to Wish List</span></button>
+							</div>
+						<hr>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	</tmpl_loop>
+</tmpl_if>
+  </body>
+</html>

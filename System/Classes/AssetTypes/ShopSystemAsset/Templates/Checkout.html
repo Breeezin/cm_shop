@@ -1,0 +1,221 @@
+<table cellspacing=0 cellpadding=5 width="100%" border=0>
+	<tr>
+		<td class="Calculateshiping">Confirm Order</td>
+	</tr>
+	<tr>
+		<td>
+			<p>Please confirm that your order is correct, you	may make changes by <a 
+                              href="{tmpl_var AssetPath}/Service/Basket">returning to the basket</a> </p>
+			</td>
+	</tr>
+	<tr>
+		
+    <td>{tmpl_var_raw BasketHTML}</td>
+	</tr>
+	<tr>
+		<td class="Calculateshiping">Returning Customers</td>
+	</tr>
+	<tr>
+		<td valign=top>							
+			<table class="onlineShop_checkoutSectionTable" cellspacing=0 cellpadding=5 width="100%">
+				<tr>
+					<td>
+						<p>If you are a returning customer, <a href="javascript:if (document.getElementById('Returning').style.display == 'none')document.getElementById('Returning').style.display =''; else document.getElementById('Returning').style.display = 'none';void(0);">click here</a></p>
+						<div id="Returning" style="display:none;">
+							{tmpl_var_raw LoginHTML}
+						</div>
+					</td>
+				</tr>
+		 </table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		{tmpl_if count($data['Errors'])}
+		<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=5 width="100%">
+		<tr>
+								<td>		
+			<P>
+			{tmpl_errors Errors}
+			</P>
+			</td>
+						</tr>
+					
+				</table>
+				{tmpl_end}	
+	</td>
+	</tr>		
+	<tr>
+		<td><span class="Calculateshiping">{tmpl_if $data['LoggedIn'] < 0}New {tmpl_end}Customer Details</span></td>
+	</tr>
+	<FORM NAME="CheckoutForm" ACTION="{tmpl_var AssetPath}/Service/{tmpl_var Service}/Do_Service/Yes" METHOD="POST">
+	<INPUT type="hidden" name="tr_id" value="{tmpl_var tr_id}">
+	<INPUT type="hidden" name="tr_token" value="{tmpl_var tr_token}">
+		<tr>
+			<td valign=top>
+				<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=5 width="100%">
+				
+						<tr>
+							<td>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw PurchaserDetails}          
+                                 </td>
+                                 
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+						<?php if (ss_optionExists("Shop Customer Join Newsletter")) { ?>
+						<TR><TD><input type="checkbox" {tmpl_var JoinNewsletter} value="checked" name="JoinNewsletter">Yes, I would like to join the newsletters group from this web site.</TD></TR>
+						<?php } ?>
+					
+				</table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td><span 
+                                class=Calculateshiping>Shipping
+			Details</span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td valign=top>			
+			<SCRIPT LANGUAGE="Javascript">
+					
+					function sameAsPurchaser() {	
+						var theForm = document.forms.CheckoutForm;
+						<?php 
+							foreach ($data['ShippingFields'] as $aField) {
+								$usFieldName = str_replace('ShDe','Us',$aField->name);
+								
+								if ($aField->name !== $data['ShippingCountryFieldName']) {
+									if (get_class($aField) == 'checkboxfield') {
+										print("
+											for (var i = 0; i < theForm.$usFieldName.length; i++) {
+												if (theForm.$usFieldName[i].checked) {
+													theForm.{$aField->name}[i].checked;
+												}
+											}"
+										);
+									} else if (get_class($aField) == 'countryfield' or get_class($aField) == 'selectfromarrayfield' ) {
+										print "var change = true;\n";
+										if (get_class($aField) == 'countryfield') {
+											print "if (theForm.{$aField->name}.disabled) {change = false; }";											
+										}
+										print "if (change) {";
+										print "var temp1 = theForm.{$usFieldName}.options[theForm.$usFieldName.selectedIndex].value;";																		
+										
+										print("										
+											for (var i = 0; i < theForm.{$aField->name}.options.length; i++) {\n
+												if (theForm.{$aField->name}.options[i].value == temp1) {\n												
+													theForm.{$aField->name}.options[i].selected = true;\n																								 
+													break;
+												}										
+											}
+										}										
+										");								
+									} else if (get_class($aField) == 'parentchildrenfield') {
+										print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+										print("										
+											var selectedValue = theForm.{$usFieldName}_Parent.options[theForm.{$usFieldName}_Parent.selectedIndex].value;										
+											for (var i = 0; i < theForm.{$aField->name}_Parent.options.length; i++) {\n
+												if (theForm.{$aField->name}_Parent.options[i].value == selectedValue) {\n
+													theForm.{$aField->name}_Parent.options[i].selected = true;\n
+													break;
+												}
+											}
+											{$aField->name}_updateChild();{$aField->name}_checkParent(true);\n
+											if (theForm.{$usFieldName}_ChildSelect.options.length) {
+											var selectedParentValue = theForm.{$usFieldName}_ChildSelect.options[theForm.{$usFieldName}_ChildSelect.selectedIndex].value;\n
+											
+											for (var i = 0; i < theForm.{$aField->name}_ChildSelect.options.length; i++) {\n
+												if (theForm.{$aField->name}_ChildSelect.options[i].value == selectedParentValue) {\n												
+													theForm.{$aField->name}_ChildSelect.options[i].selected = true;\n																								 
+													break;
+												}
+											}
+											}										
+										");										
+										print("theForm.{$aField->name}_ChildText.value = theForm.{$usFieldName}_ChildText.value;");																		
+										
+									
+									} else if (get_class($aField) == 'multiselectfromarrayfield') {
+										print("
+											for (var i = 0; i < theForm.$usFieldName.options.length; i++) {
+												if (theForm.$usFieldName.options[i].selected) {
+													theForm.{$aField->name}.options[i].selected = true;
+												}
+											}
+										");	
+									} else if (get_class($aField) == 'namefield') {
+										print("
+											
+											theForm['{$aField->name}[first_name]'].value = theForm['{$usFieldName}[first_name]'].value;
+											theForm['{$aField->name}[last_name]'].value = theForm['{$usFieldName}[last_name]'].value;
+										");					
+									} else {									
+										print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+									}
+								}
+							}
+						?>				
+					}					
+					</SCRIPT>
+				<table class=onlineShop_checkoutSectionTable cellspacing=0 cellpadding=5 width="100%">
+					
+						<tr>
+							<td>
+								<p>Please enter your shipping details. If the shipping details are the same as the purchaser details, you
+									may	click the "same as purchaser" button to copy the details into the fields	below: <BR><BR><BR>
+							<INPUT type="button" name="same" value="Same As Purchaser" ONCLICK="sameAsPurchaser();">
+							</p>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw ShippingDetails}         
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+					
+				</table>
+			</td>
+		</tr>
+		
+				
+		<tr>
+			<td class="Calculateshiping">Payment</td>
+		</tr>
+		<tr>
+			<td>
+				<table class=onlineShop_checkoutSectionTable height="100%" cellspacing=0 cellpadding=5 width="100%">
+					<tbody>
+						<tr>
+						 <td>						 <p>Now you may pay for your order by selecting a payment method	below. </p>
+					 	 <p align="center">
+					 	 	{tmpl_var_raw PaymentOptions}
+					 	 </p></td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+            	<tr align="center">
+            		<td class="onlineShopShopProgressBarCell">1 - Basket</td>
+            		<td class="onlineShopShopProgressBarON">2 - Checkout</td>
+            		<td class="onlineShopShopProgressBarCell">3 - Payment</td>
+            		<td class="onlineShopShopProgressBarCell">4 - Finished</td>
+       		 </tr>
+            	</table></td>
+		</tr>
+ </form>
+</table>

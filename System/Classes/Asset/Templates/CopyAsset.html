@@ -1,0 +1,44 @@
+
+{tmpl_if $data['AreDefined'] == 1}
+	{tmpl_if $data['AnyError'] == 0}
+	<SCRIPT language="JavaScript">
+		window.opener.copyCallback();
+		window.opener.focus();
+		window.close();
+	</SCRIPT>
+	{tmpl_else}
+		{tmpl_errors2 EntryErrors}
+	{tmpl_end}
+{tmpl_else}
+
+
+{tmpl_end}
+<P>
+Please select the location you would like to copy {tmpl_eval print($data['Asset']['as_name']);} to and then click the copy or copy branch button.
+</P>
+
+<FORM method="POST" ACTION="index.php?act=Asset.Copy&DoAction=Yes&as_id={tmpl_eval print($data['Asset']['as_id']);}" ONSUBMIT="return checkForm()" NAME="copyForm">
+<TABLE ALIGN="CENTER" WIDTH="80%" HEIGHT="80%"><TR><TD >
+
+	
+	<DIV ID="AssetTree" STYLE="width:275;height:300; overflow:auto;border:solid black 1px;" CLASS="treeBackground"><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"><TR STYLE="height:5"><TD> </TD></TR><TR><TD ID="mainTree">{tmpl_var_raw TreeResult}</TD></TR></TABLE></DIV>
+
+</TD><TD VALIGN="TOP" ALIGN="RIGHT">
+
+	<INPUT TYPE="HIDDEN" VALUE="" NAME="as_parent_as_id">
+	<INPUT TYPE="SUBMIT" VALUE="Copy" NAME="Copy" CLASS="adminButtons"><BR>
+	<INPUT TYPE="SUBMIT" VALUE="Copy Branch" NAME="Copy" CLASS="adminButtons">
+</FORM></TD></TR></TABLE>
+
+<SCRIPT language="Javascript">
+	function copyAssetTo(as_id,AssentName,AssetPath,AssetParentID,AssetParentPath) {
+		document.forms.copyForm.as_parent_as_id.value = as_id;
+	}
+	function checkForm() {
+		if(document.forms.copyForm.as_parent_as_id.value == "") {
+			alert ("Please select where you would like to copy this item to.");
+			return false;
+		}
+		return true;
+	}
+</SCRIPT>

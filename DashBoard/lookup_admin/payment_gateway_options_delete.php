@@ -1,0 +1,1 @@
+generic_delete.php

@@ -1,0 +1,286 @@
+<?
+	ss_paramKey($data,'ConfirmOrder',false);
+?>
+<table cellspacing=0 cellpadding=5 width="100%" border=0>
+	<tr>
+		<td class="Calculateshiping">Confirm Order</td>
+	</tr>
+	<tr>
+		<td>
+			<p>Please confirm that your order is correct, you	may make changes by <a 
+                              href="{tmpl_var AssetPath}/Service/Basket">returning to the basket</a> </p>
+			</td>
+	</tr>
+	<tr>
+		
+    <td>{tmpl_var_raw BasketHTML}</td>
+	</tr>
+	<tr>
+		<td class="Calculateshiping">Returning Customers</td>
+	</tr>
+	<tr>
+		<td valign=top>							
+			<table class="onlineShop_checkoutSectionTable" cellspacing=0 cellpadding=8 width="100%">
+				<tr>
+					<td>
+						<p>If you are a returning customer, <a href="javascript:if (document.getElementById('Returning').style.display == 'none')document.getElementById('Returning').style.display =''; else document.getElementById('Returning').style.display = 'none';void(0);">click here</a></p>
+						<div id="Returning" style="display:none;">
+							{tmpl_var_raw LoginHTML}
+						</div>
+					</td>
+				</tr>
+		 </table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		{tmpl_if count($data['Errors'])}
+		<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=8 width="100%">
+		<tr>
+								<td>		
+			<p>
+			{tmpl_errors Errors}
+			</p>
+			</td>
+		 </tr>
+		 </table>
+				{tmpl_end}	
+	</td>
+	</tr>		
+	<tr>
+		<td><span class="Calculateshiping">Billing Details</span></td>
+	</tr>
+	<form name="CheckoutForm" action="{tmpl_var AssetPath}/Service/{tmpl_var Service}/Do_Service/Yes" method="POST">
+	<input type="hidden" name="tr_id" value="{tmpl_var tr_id}">
+	<input type="hidden" name="tr_token" value="{tmpl_var tr_token}">
+		<tr>
+			<td valign=top>
+				<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=8 width="100%">
+				
+						<tr>
+							<td>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw PurchaserDetails}          
+
+                                 </td>
+                                 </tr>
+								</table>
+               					<p>We recommend you enter a password above to protect your account information.  You can use this password to retrieve your details when you return to shop with us again.</p>
+							</td>
+						</tr>
+						<?php if (ss_optionExists("Shop Customer Join Newsletter")) { ?>
+							<TR><TD><input type="checkbox" {tmpl_var JoinNewsletter} value="checked" name="JoinNewsletter">Yes, I would like to subscribe to the newsletter.</TD></TR>
+						<?php } ?>
+			 </table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td><span 
+                                class=Calculateshiping>Shipping
+			Details</span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td valign=top>			
+			<script language="Javascript">
+					
+					function sameAsPurchaser() {	
+						var theForm = document.forms.CheckoutForm;
+						<?php 
+							foreach ($data['ShippingFields'] as $aField) {
+								print ("//".get_class($aField)." class name\n");
+								$usFieldName = str_replace('ShDe','Us',$aField->name);
+								
+								if (get_class($aField) == 'checkboxfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.length; i++) {
+											if (theForm.$usFieldName[i].checked) {
+												theForm.{$aField->name}[i].checked;
+											}
+										}"
+									);
+								} else if (get_class($aField) == 'countryfield' or get_class($aField) == 'selectfromarrayfield' ) {
+									print "var temp1 = theForm.{$usFieldName}.options[theForm.$usFieldName.selectedIndex].value;";																		
+									print("										
+										for (var i = 0; i < theForm.{$aField->name}.options.length; i++) {\n
+											if (theForm.{$aField->name}.options[i].value == temp1) {\n												
+												theForm.{$aField->name}.options[i].selected = true;\n																								 
+												break;
+											}										
+										}										
+									");	
+								} else if (strtolower(get_class($aField)) == 'parentchildrenfield') {
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+									print("
+										var selectedValue = theForm.{$usFieldName}_Parent.options[theForm.{$usFieldName}_Parent.selectedIndex].value;										
+										for (var i = 0; i < theForm.{$aField->name}_Parent.options.length; i++) {\n
+											if (theForm.{$aField->name}_Parent.options[i].value == selectedValue) {\n
+												theForm.{$aField->name}_Parent.options[i].selected = true;\n
+												break;
+											}
+										}
+										{$aField->name}_updateChild();{$aField->name}_checkParent(true);\n
+										if (theForm.{$usFieldName}_ChildSelect.options.length) {
+										var selectedParentValue = theForm.{$usFieldName}_ChildSelect.options[theForm.{$usFieldName}_ChildSelect.selectedIndex].value;\n
+										
+										for (var i = 0; i < theForm.{$aField->name}_ChildSelect.options.length; i++) {\n
+											if (theForm.{$aField->name}_ChildSelect.options[i].value == selectedParentValue) {\n												
+												theForm.{$aField->name}_ChildSelect.options[i].selected = true;\n																								 
+												break;
+											}
+										}
+										}										
+									");										
+									print("theForm.{$aField->name}_ChildText.value = theForm.{$usFieldName}_ChildText.value;\n");											
+									print("{$aField->name}_update(false);\n");																		
+				
+				
+									
+								} else if (get_class($aField) == 'multiselectfromarrayfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.options.length; i++) {
+											if (theForm.$usFieldName.options[i].selected) {
+												theForm.{$aField->name}.options[i].selected = true;
+											}
+										}
+									");	
+								} else if (get_class($aField) == 'namefield') {
+									print("
+										
+										theForm['{$aField->name}[first_name]'].value = theForm['{$usFieldName}[first_name]'].value;
+										theForm['{$aField->name}[last_name]'].value = theForm['{$usFieldName}[last_name]'].value;
+									");					
+								} else {									
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+								}
+							}
+						?>				
+					}					
+					</script>
+				<table class=onlineShop_checkoutSectionTable cellspacing=0 cellpadding=8 width="100%">
+					
+						<tr>
+							<td>
+								<p>Please enter your
+                                                							
+								 shipping details. If the shipping details
+                                                							
+								 are the same as the purchaser details, you
+                                                							
+									may	click the "same
+                                                									as purchaser" button
+                                                							
+                                                							
+                                                										to copy the details
+							into the fields	below: <br><br><br>
+							<input type="button" name="same" value="Same As Purchaser" onClick="sameAsPurchaser();">
+				
+							</p>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw ShippingDetails}         
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+			 </table>
+			</td>
+		</tr>
+		
+<tmpl_if condition="ss_OptionExists('Gift Message')">
+		<tr>
+			<td class="Calculateshiping">Special Instructions</td>
+		</tr>
+			<td>
+				<table class=onlineShop_checkoutSectionTable height="100%" cellspacing=0 cellpadding=8 width="100%">
+					<tbody>
+						<tr>
+						 <td>
+						 If you have any special instructions regarding your order, please enter them below:
+						 <DIV ALIGN="CENTER"> 
+						<TEXTAREA NAME="GiftMessage" STYLE="width:100%" ROWS="6" COLS="40">{tmpl_var GiftMessage}</TEXTAREA>
+						</DIV></td>
+						</tr>
+					</tbody>
+			 </table>
+			</td>
+		</tr>
+</tmpl_if>						
+
+		<tmpl_if condition="$data['ConfirmOrder']">
+		<tr>
+			<td class="Calculateshiping">Confirm</td>
+		</tr>
+		<tr>
+			<td>
+
+				<table class=onlineShop_checkoutSectionTable height="100%" cellspacing=0 cellpadding=5 width="100%">
+					<tbody>
+						<tr>
+						 <td>		 <p>Now you may confirm your order by clicking the button below. </p>
+					 	 <p align="center">
+					 	 	<DIV ALIGN="CENTER">
+<input type="hidden" name="PaymentOption" value="">
+
+<INPUT TYPE="button"  class="WebPayButton"  NAME="PaymentOptions" id="PayConfirm" onclick="document.forms.CheckoutForm.PaymentOption.value='ByConfirm';document.forms.CheckoutForm.submit();" value="Confirm Order">
+</DIV>					 	 </p></td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		
+		<tmpl_else>
+		
+		
+		<tr>
+			<td class="Calculateshiping">Payment</td>
+		</tr>
+		<tr>
+			<td>
+				<table class=onlineShop_checkoutSectionTable height="100%" cellspacing=0 cellpadding=8 width="100%">
+					<tbody>
+						<tr>
+						 <td>						 <p>Now you may pay for your order by selecting a payment method	below. </p>
+					 	 <p align="center">
+					 	 	{tmpl_var_raw PaymentOptions}
+					 	 </p></td>
+						</tr>
+					</tbody>
+			 </table>
+			</td>
+		</tr>
+		
+		</tmpl_if>
+		
+		<tr>
+			<td align="right"><table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+            	<tr align="center">
+            		<td class="onlineShopShopProgressBarCell">1 - Basket</td>
+            		<td class="onlineShopShopProgressBarON">2 - Checkout</td>
+            		<td class="onlineShopShopProgressBarCell">3 - Payment</td>
+            		<td class="onlineShopShopProgressBarCell">4 - Finished</td>
+       		 </tr>
+            	</table></td>
+		</tr>
+ </form>
+</table>
+<script language="javascript" type="text/javascript">
+	var hawaiiIndex = null;
+	for(var temp = 0; temp < parents_ShDe0_50A4[840].length; temp++) {
+		if (parents_ShDe0_50A4[840][temp].id == 17) {
+			parents_ShDe0_50A4[840][temp].id = '';
+			parents_ShDe0_50A4[840][temp].name = '';
+			break;
+		}
+	}
+	//delete(parents_ShDe0_50A4[840][hawaiiIndex]);
+</script>

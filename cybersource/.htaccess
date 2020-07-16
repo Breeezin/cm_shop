@@ -1,0 +1,2 @@
+php_value include_path .:/var/www/chroot/shop:/usr/share/php:/usr/share/php/fpdf
+php_value memory_limit 512M

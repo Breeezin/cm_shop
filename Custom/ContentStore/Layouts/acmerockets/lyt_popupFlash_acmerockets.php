@@ -1,0 +1,25 @@
+<html>
+<head>
+		<title>{[SiteName]} - {[Title]}</title>
+		<meta name="keywords" 	     content="{[Keywords]}">
+		<meta name="description" 	 content="{[Description]}">
+		<link rel="STYLESHEET" 		 type="text/css" href="sty_main.css"      media="screen">
+<meta http-equiv="Content-Type" content="text/html; charset=<?=['cfg']['Web_Charset']?>">
+<script language="JavaScript" src="../Custom/ContentStore/Layouts/Scripts/linkfade.js"></script>
+</head>
+
+<body  bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" style="vertical-align:middle">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><div align="center">
+			{[Content]}
+		</div></td>
+	</tr>
+	<tr>
+		<td><div align="center"><a href="javascript:window.close();"><br>
+		<img src="Images/i-close.gif" width="83" height="17" border="0"></a></div></td>
+	</tr>
+</table>
+<?php include("Custom/ContentStore/Layouts/acmerockets/tracker.php"); ?>
+</body>
+</html>

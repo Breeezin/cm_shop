@@ -1,0 +1,67 @@
+<p><a href="index.php?act=OnlineShop.AcmeDUAPreparationListExport">Export to File</a></p>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Client Name</strong></td>
+		<td><strong>Shipping Address</strong></td>
+		<td><strong>Total Llamas</strong></td>
+		<td><strong>Total Euros</strong></td>
+		<td><strong>N&ordm; Conduce</strong></td>
+		<td><strong>Total Euros<br />(including shipment)</strong></td>
+		<td><strong>N&ordm; Invoice</strong></td>
+	</tr>
+<tmpl_loop query="Q_Orders">
+	<?php 
+		// Get shipping details
+		$shippingDetails = unserialize($row['or_shipping_details']);
+		$data['ShippingDetailsHTML'] = '';
+		foreach($shippingDetails['ShippingDetails'] as $key => $aValue) {
+			if ($key != 'first_name' and $key != 'last_name' and $key != 'Email') {
+				$data['ShippingDetailsHTML'] .= $aValue."<BR>";
+			}
+		}		
+	
+		// Get transit doc number
+		/*$TransitDoc = getRow("
+			SELECT * FROM shopsystem_transit_documents
+			WHERE TrDoInvoiceLink = {$row['inv_id']}
+		");
+		if ($TransitDoc !== null) {
+			$data['TransitDoc'] = $TransitDoc['TrDoID'];
+		} else {
+			$data['TransitDoc'] = '&nbsp;';
+		}*/
+//		if ($row['TrDoID'] == null) $row['TrDoID'] = '&nbsp;';
+//		Hack - Rex, 20060817, stop showing external products here
+		if ($row['TrDoID'] == null) continue;
+		
+		// Loop thru products in the order and only allow it if its not marked shipped
+		$o = unserialize($row['or_basket']);
+		$display = true;
+		if (is_array($o['Basket']['Products'])) {
+			foreach ($o['Basket']['Products'] as $p) {
+				if (array_key_exists('InvoiceNumbers',$p) and is_array($p['InvoiceNumbers'])) {
+				foreach ($p['InvoiceNumbers'] as $id => $number) {
+					if (strlen($number) and $number == $row['inv_id']) {
+						if (array_key_exists($id,$p['Shipped']) and strlen($p['Shipped'][$id])) {
+							// Its already been shipped
+							$display = false;
+						}
+					}
+				}
+				}
+			}
+		}
+		if ($display) {		
+	?>		
+	<tr>
+		<td valign="top">{tmpl_row_var in_destination}</td>
+		<td valign="top">{tmpl_var_raw ShippingDetailsHTML}</td>
+		<td valign="top">{tmpl_row_var in_units}</td>
+		<td valign="top"><?	print(ss_decimalFormat($row['in_total_value'])); ?></td>
+		<td valign="top">{tmpl_row_var_raw TrDoID}</td>
+		<td valign="top">{tmpl_row_var in_total_value}</td>
+		<td valign="top">{tmpl_row_var inv_id}</td>
+	</tr>
+	<? }	?>
+</tmpl_loop>
+</table>

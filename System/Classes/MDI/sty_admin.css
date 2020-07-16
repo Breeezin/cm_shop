@@ -1,0 +1,490 @@
+/* Used in the shop administration area product/category list */
+.solidline-shop {
+	border-top-width: 1px;	border-top-style: solid;	border-top-color: #000000;
+}
+.solidline-shopdottedleft {
+	border-top-width: 1px;	border-top-style: solid;	border-left-color: #7e7e7e;
+	border-left-width: 1px;	border-left-style: dotted;	border-top-color: #000000;
+}
+.solidline-shopsolidleft {
+	border-top-width: 1px;	border-top-style: solid;	border-left-color: #CCCCCC;
+	border-left-width: 1px;	border-left-style: solid;	border-top-color: #000000;
+}
+
+.dottedline-shop {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+}
+.dottedline-shopdottedleft {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+	border-left-width: 1px;	border-left-style: dotted;	border-left-color: #7e7e7e;
+}
+.dottedline-shopsolidleft {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+	border-left-width: 1px;	border-left-style: solid;	border-left-color: #CCCCCC;
+}
+
+.evenRowShop {
+	background-color: #FFFFFF;
+}
+
+
+/*	
+	These are used in the new generation of admin plugins. Basically the same
+	as the shop ones. The shop should be converted to use these at some stage.
+ */
+.adminEvenRow {
+	background-color: #FFFFFF;
+}
+.adminOddRow {
+}
+.adminEvenRowBlue {
+	background-color: #FFFFFF;
+	color: #0000FF
+}
+.adminOddRowBlue {
+	color: #0000FF
+}
+.adminEvenRowRed {
+	background-color: #FFFFFF;
+	color: #FF0000
+}
+.adminOddRowRed {
+	color: #FF0000
+}
+
+.adminSolidLine {
+	border-top-width: 1px;	border-top-style: solid;	border-top-color: #000000;
+}
+.adminSolidLineDottedLeft {
+	border-top-width: 1px;	border-top-style: solid;	border-top-color: #000000;
+	border-left-width: 1px;	border-left-style: dotted;	border-left-color: #7e7e7e;
+}
+.adminSolidLineSolidLeft {
+	border-top-width: 1px;	border-top-style: solid;	border-top-color: #000000;
+	border-left-width: 1px;	border-left-style: solid;	border-left-color: #CCCCCC;
+}
+.adminDottedLine {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+}
+.adminDottedLineDottedleft {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+	border-left-width: 1px;	border-left-style: dotted;	border-left-color: #7e7e7e;
+}
+.adminDottedLineSolidLeft {
+	border-top-width: 1px;	border-top-style: dotted;	border-top-color: #7e7e7e;
+	border-left-width: 1px;	border-left-style: solid;	border-left-color: #CCCCCC;
+}
+
+
+
+.topline-light {
+	background-color: #9EC2D1;
+}
+.topline-dark {
+	background-color: #69828D;
+}
+.tab-bottomline {
+	background-color: #EFF5F7;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #69828D;
+}
+.tab-on {
+	background-color: #f9f9f9;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #f9f9f9;
+}
+.oddRow {
+	background-color: #DFDFDF;
+}
+.page {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #333333;
+	background-color: #F9F9F9;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #69828D;
+	border-bottom-color: #69828D;
+	border-left-color: #69828D;
+}
+.line-notab {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #69828D;
+}
+.tabtext-off {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+}
+.tabtext-on {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #999999;
+}
+INPUT.adminButtons, .adminButtons {
+	font-size: 8pt; 
+	background-color: #cccccc;
+	padding-left:15px;
+	padding-right:15px; 
+	cursor: hand;
+	font-family: Arial, Helvetica, sans-serif; 	
+	border: 1px solid #666666;
+}
+
+.childrenButton {
+	font-size: 8pt; 
+	background-color: #cccccc; 
+	padding-left:15px; 
+	padding-right:15px; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+	width:8em; 	
+	border: 1px solid #666666;
+}
+
+
+.formborder,select,input {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #333333;
+	border: 1px solid #666666;
+}
+.bodytext  {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+}
+body,table,td, tr, p, .adminBackground  {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	scrollbar-base-color: #ffffff;
+	scrollbar-face-color: #F4F4F4;
+	scrollbar-track-color: white;
+	scrollbar-arrow-color: #666666;
+	scrollbar-highlight-color: #F4F4F4;
+	scrollbar-3dlight-color: #F4F4F4;
+	scrollbar-shadow-color: #F4F4F4;
+	scrollbar-darkshadow-color: #666666; 
+}
+.adminBackground {
+	background-color: #f9f9f9;
+}
+.TreeItem { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px; 
+	font-weight: bold;
+	margin: 3px;
+	color: #000000;
+	text-decoration: none;
+}
+.TreeItem:hover { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px; 
+	font-weight: bold;
+	margin: 3px;
+	color: #666666;
+	text-decoration: underline;
+}
+.TreeItemDisabled { 
+	font-family: "ms sans serif", sans-serif, arial, helv, helvetica; 
+	font-size: 8pt; 
+	margin: 3px;
+	color: #808080;
+}
+.treeBackground {
+	background-color: white;
+}
+.border-stats {
+	border: 1px solid #CCCCCC;
+}
+.panelBackground {
+	background-color: #ACC0C9;
+	border-bottom: 1px solid #000000;
+	border-left: 1px solid #000000;
+	border-right: 1px solid #000000;
+}
+.panelBarOpen {
+	background-image: url(Templates/Images/background-tab1.gif);
+	border: 1px #000000 solid;
+}
+.panelBarClosed {
+	background-image: url(Templates/Images/background-tab-off1.gif);
+	border: 1px #869AA3 solid;
+}
+.panelBarText {
+	text-decoration: none;
+	font-weight: bold;
+	color: #666666;
+	padding-left: 7px;
+}
+.propertiesLink {
+	padding-bottom: 10px;
+}
+.propertiesPanel {
+	padding:5px;
+	background-color:white;
+	border-bottom:1px solid #69828D;
+}
+.propertiesLabel {
+	font-size: 11px;
+}
+
+/* The following classes are used in the tree and shop bars that
+	open and close on the left of the screen */
+.siteComponentBar {
+	width: 153px;
+	height: 21px;
+	position: absolute;
+	z-index: 10000;
+}
+.assetBarOpen {
+	background-image: url(Templates/Images/tab-website.gif);
+	cursor: hand;
+}
+.assetBarClosed {
+	background-image: url(Templates/Images/tab-website-off.gif);
+	cursor: hand;
+}
+.shopBarOpen {
+	background-image: url(Templates/Images/tab-shop.gif);
+	cursor: hand;
+}
+.shopBarClosed {
+	background-image: url(Templates/Images/tab-shop-off.gif);
+	cursor: hand;
+}
+.newsletterBarOpen {
+	background-image: url(Templates/Images/tab-newsletter.gif);
+	cursor: hand;
+}
+.newsletterBarClosed {
+	background-image: url(Templates/Images/tab-newsletter-off.gif);
+	cursor: hand;
+}
+
+.statsbar {
+	background-image: url(../Tools/Statistics/Templates/Images/bar-back.gif);
+	border: 1px solid #666666;
+}
+.bottomline {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #999999;
+}
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+.whitespace {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #999999;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+}
+.statsbarwhite {
+	background-color: #FFFFFF;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+
+
+}
+.statssysbar1 {
+	border: 1px solid #666666;
+	background-color: #CBD994;
+}
+.statscustombar1 {
+	background-color: #4A6A78;
+	border: 1px solid #666666;
+
+}
+.statsdbbar1 {
+	background-color: #74B4CF;
+	border: 1px solid #666666;
+
+}
+
+.statsbarwhite1 {
+	background-color: #FFFFFF;	
+	border: 1px solid #666666;}	
+	
+.statsbarred1 {
+	background-color: #FF0000;	
+	border: 1px solid #666666;}	
+	
+.statsbarwhite {
+	background-color: #FFFFFF;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+
+
+}
+.statsbarsilver {
+	background-color: silver;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #666666;
+	border-right-color: #666666;
+	border-bottom-color: #666666;
+
+
+}
+.statssysbar {
+	border: 1px solid #666666;
+	background-color: #CBD994;
+}
+.statscustombar {
+	background-color: #4A6A78;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+
+}
+.statsdbbar {
+	background-color: #74B4CF;
+	border-top: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+
+}
+
+.CustomerName { font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; margin: 3px; color: #FFFFFF; text-decoration: none; }
+.tabtext-onCopy { font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: bold; color: #FFFFFF; }
+.border-tab-inner { border: 1px #000000 solid; }
+.border-tab { border: 1px #999999 solid; }
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #485C65;
+	text-decoration: underline;
+}
+a:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	text-decoration: none;
+}
+
+.adminThrobber {
+	color: red;
+}
+.invoiceBckHeaders {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #666666;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000000;
+}
+.BorderRight {
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #666666;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000000;
+}
+.dottedline-shopWhite {
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #7e7e7e;
+	background-color: #FFFFFF;
+
+}
+
+
+.AdminRequired { 
+	color: Red 
+}
+.AdminErrorField { 
+	background : LightSkyBlue; 
+}
+.AdminButtons { 	
+	font-size: 8pt; 
+	background-color: Silver;
+	padding-left: 15px; 
+	padding-right: 15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+}
+.AdminEvenRow { 
+	background : #EEEEEE; 
+}
+.AdminOddRow {  
+}
+.AdminNote { 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: smaller; 
+	color: #333333; 
+	text-decoration: none;
+	font-weight: normal;
+ }
+.AdminDisplayName {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 9pt; 
+	color: #333333; 
+	text-decoration: none;
+	font-weight: bolder;
+}
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+.bodytextBlue {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #5E90A5;
+}
+.bottomDot {
+
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+	border-bottom-color: #999999;
+}
+.bodytextGrey {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+}
+.bodytextGrey:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+}

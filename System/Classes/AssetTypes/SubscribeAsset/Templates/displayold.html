@@ -1,0 +1,128 @@
+{tmpl_if array_key_exists('DoAction',$data['ATTRIBUTES']) and $data['success']}
+	{tmpl_var_raw thankYouContent}
+{tmpl_else}
+	{tmpl_if array_key_exists('DoAction',$data['ATTRIBUTES']) and !$data['success']}
+		{tmpl_errors errors}
+	{/tmpl_if}
+
+	<TABLE WIDTH="90%" cellpadding="5" CLASS="SubscribeForm">
+	  <TR>
+	    <TD> 
+		  <FORM ACTION="{tmpl_var AssetPath}" METHOD="POST" name="SubForm">
+		  <strong><img src="Images/square.gif"> Subscribe</strong><br><br>
+	  	  {tmpl_if count($data['UserGroups']) > 1 }
+		      We publish the following email newsletters, to join any of these please enter your first name, last name, email address and indicate the mailing lists you wish to join.
+		      {tmpl_else}
+		      To join our email mailing list for occasional messages from this
+		      web site please enter your first name, last name and email address. 
+		      {/tmpl_if}
+		     
+	      <TABLE WIDTH="100%">
+	      <?php if (ss_optionExists('Newsletter Advanced Subscribe Form')) { ?>	      
+		    
+		      {tmpl_var_raw FieldsHTML}
+		    
+	      <?php } else { ?>
+			<TR>
+			  <TD WIDTH="5%" VALIGN="TOP" CLASS="requiredFlag"></TD>
+			  <TH ALIGN="LEFT" VALIGN="TOP" WIDTH="35%">Name : </TH>
+			  <TD WIDTH="30%"><INPUT TYPE="TEXT" NAME="first_name" VALUE="{tmpl_var first_name}" STYLE="width:100%" CLASS="SubscribeFormField"><BR><SMALL>First</SMALL></TD>
+			  <TD WIDTH="30%"><INPUT TYPE="TEXT" NAME="last_name" VALUE="{tmpl_var last_name}" STYLE="width:100%" CLASS="SubscribeFormField"><BR><SMALL>Last</SMALL></TD>
+			</TR>
+			<TR>
+			  <TD WIDTH="5%" VALIGN="TOP" CLASS="requiredFlag">+</TD>
+			  <TH ALIGN="LEFT" VALIGN="TOP">Email Address : </TH>
+			  <TD COLSPAN="2"><INPUT TYPE="TEXT" NAME="Email" VALUE="{tmpl_var Email}" SIZE="40" STYLE="width:100%" CLASS="SubscribeFormField"></TD>
+			</TR>
+			<?php } ?>
+			{tmpl_if count($data['UserGroups']) > 1 }
+					<TR>
+			  			<TD WIDTH="5%" VALIGN="TOP" CLASS="requiredFlag">+</TD>
+						<TH ALIGN="LEFT" VALIGN="TOP">Mailing Lists:</TH>
+			  			<TD>
+<?php 
+			  				foreach($data['UserGroups'] as $ug_id) { 
+			  					$ug = getRow("SELECT * FROM UserGroups WHERE ug_id = $ug_id");
+			  					if ($ug !== null) {
+				  					$data['ug_name'] = $ug['ug_name'];
+				  					$data['ug_id'] = $ug['ug_id'];
+?>
+						  				<input <?if(array_search($ug['ug_id'],$data['ATTRIBUTES']['UserGroups']) !== false) print('checked');?> type="checkbox" value="{tmpl_var ug_id}" name="UserGroups[]"> {tmpl_var ug_name}<br />
+<?php
+								}	
+							}			
+?>
+			  			</TD>
+					</TR>
+			{tmpl_else}
+				{tmpl_if count($data['UserGroups']) > 0 }
+				<TR>
+				  <TD><INPUT TYPE="HIDDEN" NAME="UserGroups[]" VALUE="{tmpl_eval print($data['UserGroups'][0]); }"></TD>
+			    </TR>
+			    {tmpl_else}
+				<TR>
+				  <TD><STRONG>Please select a user group from your administration area</STRONG></TD>
+			    </TR>
+			    </tmpl_if>
+		    </tmpl_if>
+		    
+			<TR>
+		  	  <TD colspan="4" VALIGN="TOP" CLASS="requiredFlag"><br>
+			    You may receive Newsletters
+			    in one of two formats. If you are using an Email program such as
+			    Outlook, or Outlook Express 6, you will be able to receive HTML newsletters
+			    with formatting and pictures. If you are using an older email program,
+			    or would prefer to receive text only newsletters, then you may choose
+			    this option below<br>
+			  </TD>
+		  	</TR>
+			<TR>
+			  <TD WIDTH="5%" VALIGN="TOP" CLASS="requiredFlag">+</TD>
+			  <TH ALIGN="LEFT" VALIGN="TOP">HTML Newsletter : </TH>
+			  <TD COLSPAN="2">
+			  	<INPUT STYLE="border:0px;background-color:transparent;" NAME="HTML" TYPE="Radio" class="newsinputs" VALUE="1" checked="checked"> HTML <BR>
+			  	<INPUT STYLE="border:0px;background-color:transparent;" NAME="HTML" TYPE="Radio" class="newsinputs" VALUE="0"> Text only
+			  </TD>
+			</TR>
+			<TR>
+			  <TD COLSPAN="3"><INPUT TYPE="IMAGE" NAME="SUBBY" SRC="Images/but-subscribe.gif" STYLE="border:0px;"></TD>
+			</TR>
+		  </TABLE>
+		  <INPUT TYPE="HIDDEN" NAME="DoAction" VALUE="Subscribe">
+	      </FORM>
+	    </TD>
+	  </TR>
+    </TABLE>
+	<br>
+	<TABLE WIDTH="90%" cellpadding="5" CLASS="SubscribeForm">
+		<TR>
+			<TD>
+			  <FORM ACTION="{tmpl_var AssetPath}" METHOD="POST">
+				<strong><img src="Images/square.gif"> Unsubscribe</strong><br><br>
+				To unsubscribe from our mailing lists please enter your email address.
+	  			<TABLE WIDTH="100%">
+			  		<TR>
+						<TD WIDTH="5%" VALIGN="TOP" CLASS="requiredFlag">+</TD>
+				  		<TH WIDTH="35%" ALIGN="LEFT" VALIGN="TOP">Email Address : </TH>
+				  		<TD COLSPAN="2"><INPUT TYPE="TEXT" NAME="Email" VALUE="{tmpl_var Email}" SIZE="40" STYLE="width:100%" CLASS="SubscribeFormField"></TD>
+			  		</TR>
+			  		<TR>
+						<TD COLSPAN="3"><INPUT TYPE="IMAGE" NAME="SUBBY" SRC="Images/but-unsubscribe.gif" STYLE="border:0px;"></TD>
+					</TR>
+				</TABLE>
+			{tmpl_if count($data['UserGroups']) > 1 }
+		  		<p>Support for multiple mailing lists coming soon</p>
+			{tmpl_else}
+				{tmpl_if count($data['UserGroups']) > 0 }
+					<INPUT TYPE="HIDDEN" NAME="UserGroups[]" VALUE="{tmpl_eval print($data['UserGroups'][0]); }">
+			    {tmpl_else}
+				  <STRONG>Please select a user group from your administration area</STRONG>
+			    </tmpl_if>
+		    </tmpl_if>
+				
+	  			<INPUT TYPE="HIDDEN" NAME="DoAction" VALUE="Unsubscribe">
+	  			</FORM>
+	  		</TD>
+	  	</TR>
+	</TABLE>
+</tmpl_if>

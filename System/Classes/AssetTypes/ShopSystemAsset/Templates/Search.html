@@ -1,0 +1,51 @@
+<p>
+To browse all our products please click on the go button beside &quot;Browse Products&quot; or <A HREF="{tmpl_var AssetPath}/Service/CategoryList">click here to view category list</A>.
+</p>
+  <br />
+  <br />
+  <br />
+  <table width="400" border="0" align="center" cellpadding="10" cellspacing="0" class="onlineShop_ProductListingHeader">
+  <tr>
+    <td><img src="Images/square.gif"> Browse Products</td>
+    <td width="24"><a href="{tmpl_var AssetPath}/Service/Engine"><img src="Images/but-go.gif" border="0"></a></td>
+  </tr>
+</table>
+<p>You may also search for products by category by selecting a category from
+  the dropdown below, and clicking go, or search for products by entering a keyword
+  in the &quot;Keyword&quot; input field below.</p>
+<table width="400" border="0" align="center" cellpadding="10" cellspacing="0" class="onlineShop_ProductListingHeader">
+<form action="{tmpl_var AssetPath}/Service/Engine" method="POST">
+  <tr>
+    <td><img src="Images/square.gif"> Search
+      Products</td>
+  </tr>
+  <tr>
+  <td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+	      <tr align="left" valign="middle">
+			    <td>
+			      <table width="100%">
+			      	<tr>
+			      		<td>Category:</td>
+			      		<td width="99%">
+			    <select style="width:100%;" name="pr_ca_id" class="EmailFormField">
+                  <option value="">All Categories</option>
+                  <tmpl_eval expression="foreach($data['CategoriesArray'] as $data['category'] => $data['id']) {">
+                    <option value="{tmpl_var id}">{tmpl_var category}</option>
+                  </tmpl_eval>
+                </select>
+                		</td>
+                	</tr>
+                	<tr>
+                		<td>Keywords:</td>
+                		<td width="99%"><input style="width:100%;" name="Keywords" type="text" class="EmailFormField" value="" size="20"></td>
+                	</tr>
+                </table>
+                
+                 </td>
+		      </tr>
+		  </table>
+	</td>
+    <td width="24" valign="bottom"> <input type="IMAGE" name="Go2" src="Images/but-go.gif" style="border:0px;"></td>
+  </tr>
+</form>
+</table>

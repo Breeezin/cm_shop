@@ -1,0 +1,91 @@
+                                    <div class="item active products-block">
+                                      <div class="row products-row last">
+<?php
+  requireClass('ShopSystem_ProductsAdministration');  
+  $temp = new Request("Security.Sudo",array('Action'=>'start'));      
+  $productAdmin = new ShopSystem_ProductsAdministration($data['this']->asset->getID());    
+  $temp = new Request("Security.Sudo",array('Action'=>'stop'));  
+
+/*
+{tmpl_var_raw CurrencyConverterHTML}
+*/
+$n = 0;
+?>
+<tmpl_loop query="Q_Products">
+<?php
+
+	if( $row['pr_combo'] >= 1 )
+	{
+		$Q_Combos = query("SELECT pr_id, pro_stock_available, cpr_qty FROM shopsystem_products, shopsystem_product_extended_options, shopsystem_combo_products
+				WHERE cpr_element_pr_id = {$row['pr_id']}
+					AND cpr_pr_id = pr_id
+					AND pr_id = pro_pr_id");
+
+		$instock = 999;
+		while ($comrow=$Q_Combos->fetchRow())
+			if( ($comrow['pro_stock_available'] != null) && ($comrow['cpr_qty'] >= 1 ) )
+				if( $instock > $comrow['pro_stock_available']/$comrow['cpr_qty'] )
+					$instock = $comrow['pro_stock_available']/$comrow['cpr_qty'];
+		$row['pro_stock_available'] = (int)$instock;
+	}
+
+	if( ++$n >= 7 ) { $n = -1000;
+
+?>
+                                      </div>
+                                    </div>
+                                    <div class="item products-block">
+                                      <div class="row products-row">
+<?php } ?>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 product-col border">
+                                          <div class="product-block">
+                                            <div class="image">
+                                              <a class="img" href="{tmpl_row_var ProductDetailLink}">
+                                                <img border="0" src="{tmpl_row_var WideImage}" alt="{tmpl_row_var pr_name}" class="img-responsive" />
+                                              </a>
+                                            </div>
+                                            <div class="product-meta clearfix">
+                                              <h6 class="name">
+                                                  <a href="{tmpl_row_var ProductDetailLink}"> {tmpl_row_var pr_name} </a>
+                                              </h6>
+                                              <div class="action">
+                                                <a class="quickview iframe-link btn-product" data-placement="top" 
+                                                  href="{tmpl_row_var ProductPopupLink}" title="Quick View">
+                                                  <i class="zmdi zmdi-eye"></i>
+                                                </a>
+                                                <a style="display:none;" data-placement="top" class="zoom info-view btn-product"
+                                                  title="{tmpl_row_var pr_name}" href="{tmpl_row_var WideImage}">
+                                                  <i class="zmdi zmdi-zoom-in"></i>
+                                                </a>
+                                                <button class="wishlist btn-product" type="button" title="Remove from Wish List"
+                                                  onclick="wishlist.remove({tmpl_row_var pr_id});">
+                                                  <i class="zmdi zmdi-thumb-down"></i>
+                                                </button>
+                                              </div>
+                                              <div class="bottom clearfix">
+                                                <div class="price">
+                                                  <span class="price-new">{tmpl_row_var_raw PricesHTML}</span>
+													<tmpl_eval expression="print($data['this']->getOptions($row,$data['OptionFieldsArray']))">
+													<?php if( array_key_exists( 'pro_stock_available', $data ) ) $row['pro_stock_available'] = $data['pro_stock_available']; ?>
+                                                </div>
+                                              </div>
+                                              <div class="cart">
+																								<tmpl_if condition="$row['pro_stock_available'] > 10">
+																									<p>In Stock</p>
+																									<button class="btn btn-cart" title="Add to Cart" type="button" onclick="cart.add('{tmpl_row_var pr_id}');"> Add to Cart </button>
+																								<tmpl_else>
+																									<tmpl_if condition="$row['pro_stock_available'] > 0">
+																										<p>Low Stock</p>
+																										<button class="btn btn-cart" title="Add to Cart" type="button" onclick="cart.add('{tmpl_row_var pr_id}');"> Add to Cart </button>
+																									<tmpl_else>
+																										<p>Out of Stock</p>
+																										<button class="btn btn-cart" title="Add to Cart" type="button" onclick="alert('Sorry, out of stock');"> Add to Cart </button>
+																									</tmpl_if>
+																								</tmpl_if>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+</tmpl_loop>
+                                      </div>
+                                    </div>

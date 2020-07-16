@@ -1,0 +1,810 @@
+<?
+	global $dumplines;
+
+	$dumplines = array();
+	$row = $data['Vendor']->fetchRow();
+	$data = array_merge($data,$row);
+
+	$customsReport = $data['Allocated'];
+	$unallocatedShipments = $data['Unallocated'];
+
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_mainPrint.css" rel="stylesheet" type="text/css" media="print">
+</tmpl_if>
+<style type="text/css">
+.Bodytext,body,p,td,table {  font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333333; text-decoration: none}
+H1 {  
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#B44D00;
+}
+H3 {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #3E2116;
+}
+#categoryDescriptions p {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #B44D00; text-decoration: none}
+.AdminRequired { color: Red }
+.AdminErrorField { background : LightSkyBlue; }
+.AdminButtons { 	
+	font-size: 8pt; 
+	font-variant: small-caps; 
+	background-color: Silver;
+	padding-left:15px; 
+	padding-right:15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+}
+.AdminEvenRow { background : #EEEEEE; }
+.AdminOddRow {  }
+.BreadCrumbs {
+	font-size: 10px;
+	color: black;
+	text-decoration: none;
+}
+.BreadCrumbs:hover {
+	font-size: 10px;
+	color: black;
+	text-decoration: underline;
+}
+.dotline {
+	background-image: url(Images/dotline.gif);
+	background-repeat: repeat-x;
+	background-position: center;
+}
+.Border {
+	border: 1px solid #C9BFA7;
+}
+.CandyStripeHome {
+	background-image: url(Images/candy-home.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 237px;
+}
+.CandyStripeInside {
+	background-image: url(Images/candy-inside.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 136px;
+}
+.Copyright {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D7CF7D;
+	text-decoration: none;
+	padding-bottom: 10px;
+}
+.Grungefill {
+	background-image: url(Images/grunge-fill.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 387px;
+}
+A {
+	COLOR: #CC6600; 
+	text-decoration: underline;
+}
+.A_hover {
+	COLOR: #333333; 
+	text-decoration: underline;	
+}
+.textLight10 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+
+}
+.textLight11 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	text-decoration: none;
+	line-height: 18px;
+
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align: left;
+	padding-left: 5px;
+}
+.EmailFormAssetSubmitButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: FFFFFF;
+	font-weight: bold;	
+	font-size: 9px;
+	background-color: A4B75D;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: ffffff;
+	border-right-color: #ffffff;
+	border-bottom-color: #ffffff;
+	border-left-color: ffffff;
+	padding-left: 5px;
+	padding-right: 5px;	
+	text-align: center;
+}
+.noBorder {
+	background-color: transparent;
+	border: 0px solid ;	
+}
+
+.textWelcome {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 17px;
+	color: #CC6600;
+	font-weight: normal;
+
+}
+.textSubHeaders {
+	font-size: 11px;
+	color: #3092A7;
+	font-weight: bold;
+}
+.textSubHeaders {
+	font-size: 10px;
+	color: #87684E;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", Times, serif;
+
+}
+strong {
+	font-weight: bold;
+}
+.textNews {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textNewsDate {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+}
+.textNews:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textMed11 {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+}.textMed11link {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: underline;
+	line-height: 17px;
+}
+.Bannersml {
+	background-image: url(Images/banner-sml.jpg);
+	background-position: right top;
+}
+.Brownback {
+	width: 387px;
+	background-color: #3E2116;
+
+}
+.Line {
+	border-top-width: 1px;
+	border-bottom-width: 4px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #C9BFA7;
+	border-bottom-color: #C9BFA7;
+
+}
+.LineTop {
+	border-top-width: 4px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.LineBott {
+	border-top-width: 7px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.textsideLinks {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #EDEBD5;
+	text-decoration: none;
+	line-height: 17px;
+}
+li {
+	list-style-image: url(Images/bullet.gif);
+		MARGIN-TOP: 8px;
+	MARGIN-BOTTOM: 8px;
+}.onlineShopSizeQuick {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color:#C13129;
+}.textHeader {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #B44D00;
+}
+.Sizename {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: #D2CAB6;
+	padding: 4px 4px 4px 8px;
+
+}
+.SizeBrands {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: E9E5DC;
+	padding: 4px;
+
+}
+.SizeDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-right: 1px;
+	padding-left: 1px;
+
+
+}
+.Size {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-top: 5px;
+	padding-left: 5px;
+
+}
+.boxtopfill {
+	background-image: url(Images/top.gif);
+	background-repeat: repeat-x;
+
+
+}
+.boxleftfill {
+	background-image: url(Images/left.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxrightfill {
+	background-image: url(Images/right.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxbott {
+
+	background-image: url(Images/bott1.gif);
+	background-repeat: repeat-x;
+}
+.textQuotes {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 19px;
+	color: #87684E;
+	font-weight: normal;
+}
+.linevert {
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 14px;
+}
+.onlineShopPriceQuick {
+
+	border:  none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #3E2116;
+}
+.textFormsBold {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+	padding-right: 10px;
+}
+.Formbordertop {
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #CCCCCC;
+	padding-bottom: 5px;
+	padding-top: 5px;
+
+
+
+}
+.Formbordercenter {
+
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+}
+.textRed {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #C90000;
+	text-decoration: none;
+
+}
+.bannerleft {
+	background-image: url(Images/top-left.jpg);
+	background-repeat: no-repeat;
+	width: 32px;
+	background-position: left top;
+
+}
+.bannerright {
+
+	background-image: url(Images/top-right.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	width: 31px;
+}
+.bannermiddle {
+	background-image: url(Images/top-banner.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+	width: 687px;
+	height: 92px;
+
+}
+.text14 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+}
+.text12 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+
+}
+.Borderinvoice {
+	border: 1px solid #999999;
+
+}
+.text12Italic {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	font-style: italic;
+}
+.textNotes {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #999999;
+	text-decoration: none;
+}
+.Borderordersheet {
+	background-color: #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-position: center;
+	text-align: center;
+
+
+
+}
+</style>
+</head>
+
+<body>
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<div class="dontPrint">
+<table cellpadding=5>
+<form action="index.php" method="post" name="theForm">
+	<tr>
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<td><input type="button" value="Print" onclick="window.print();"></td>
+	</td>
+	</tr>
+</form>
+</table>
+</div>
+<br />
+</tmpl_if>
+<?php
+function emit_product( $product )
+{
+	global $dumplines;
+	$rc = 0;
+
+	echo "<tr class='r'>";
+	if( count($product['SupplierItems'] ) > 0 )
+		$rc += emit_supplies( $product['SupplierItems'], $product['Unshipped'] );
+	else
+		$rc += emit_supplies( NULL, $product['Unshipped'] );
+	echo "</tr>";
+}
+
+function emit_supplies( $supplies = NULL, $unshipped )
+{
+	global $dumplines;
+
+	$rc = 0;
+
+	if( $supplies )
+	{
+		$nr = 1;
+//		foreach( $supplies as $sil_id => $supply )
+//			if( count($supply['Shipments']) > 1 )
+//				$nr += count($supply['Shipments']);
+//			else
+//				$nr++;
+
+		$sc = 0;
+		foreach( $supplies as $sil_id => $supply )
+		{
+			$sc++;
+			if( $sc > 1 )		// i.e. NOT the first line
+				echo "<tr class='u'>";
+			$sd = $supply['Details'];
+//			$shipments = $supply['Shipments'];
+//			$nshipments = count($shipments);
+			$td = "<td>";
+//			if( $nshipments > 1 )
+//				$td = "<td rowspan=$nshipments>";
+
+			if( strlen( $sd['sin_customs_reference'] ) )
+				echo "$td{$sd['sin_customs_reference']}</td>";
+			else
+				echo "{$td}SIN#{$sd['sin_id']}</td>";
+			echo "$td{$sd['sin_instock_date']}</td>";
+			//echo "$td{$sd['']}</td>";
+			echo "$td</td>";
+			echo "$td{$sd['sin_forwarder_name']}</td>";
+			echo "$td{$sd['pr_name']}</td>";
+			echo "$td{$sd['sil_qty_put_in_stock']}</td>";
+			echo "$td{$sd['pro_net_weight']}</td>";
+			echo "$td{$sd['pro_weight']}</td>";
+			echo "{$td}Boxes</td>";
+			echo "$td{$sd['pr0_883_f']}</td>";
+			//echo "$td{$sd['sin_paid_currency']} {$sd['sin_paid_amount']}</td>";
+			echo "$td{$sd['sin_paid_currency']} {$sd['sil_raw_line_cost']}</td>";
+			echo "$td{$sd['cn_name']}</td>";
+			echo "$td&nbsp;</td>";
+			echo "{$td}Llamas</td>";
+			echo "$td{$sd['pr_location']}</td>";
+			echo "$td&nbsp;</td>";
+			echo "$td&nbsp;</td>\n";
+
+//			$rc += max( $nshipments, 1 );
+//			emit_shipments( $shipments );
+			echo "$td".($sd['sil_qty_put_in_stock'] - $sd['sil_shipped_count'])."</td>\n";
+			if( $sc > 1 )		// i.e. NOT the first line
+				echo "</tr>";
+			else
+				echo "<td rowspan=$nr>$unshipped</td>";
+			foreach( $dumplines as $line )
+				echo $line;
+			$dumplines = array();
+		}
+	}
+//	else
+//	{
+//		for( $i = 0; $i++; $i < 17 )
+//			echo "<td>&nbsp;</td>";
+//		$rc++;
+//	}
+
+	return $rc;
+}
+
+
+function emit_shipments( $shipments )
+{
+	global $dumplines;
+
+	return;
+
+	if( count( $shipments ) > 0 )
+	{
+		$first = true;
+		$line = '';
+		foreach( $shipments as $shipment )
+		{
+			if( !$first )
+			{
+				$line = "<tr class='p'>";
+				if( strlen( $shipment['ors_customs_reference'] ) )
+					$line .= "<td>{$shipment['ors_customs_reference']}</td>";
+				else
+					$line .= "<td>Sheet:{$shipment['ors_id']}</td>";
+				$line .= "<td>{$shipment['orsi_qty']}</td>";
+				$line .= "<td>{$shipment['orsi_date_shipped']}</td>";
+				$line .= "<td>{$shipment['DestCountry']}</td>\n";
+				$line .= "</tr>";
+			}
+			else
+			{
+				if( strlen( $shipment['ors_customs_reference'] ) )
+					echo "<td>{$shipment['ors_customs_reference']}</td>";
+				else
+					echo "<td>Sheet:{$shipment['ors_id']}</td>";
+				echo "<td>{$shipment['orsi_qty']}</td>";
+				echo "<td>{$shipment['orsi_date_shipped']}</td>";
+				echo "<td>{$shipment['DestCountry']}</td>\n";
+			}
+			$first = false;
+			$dumplines[] = $line;
+		}
+	}
+	else
+	{
+		echo "<td>&nbsp;</td>";
+		echo "<td>&nbsp;</td>";
+		echo "<td>&nbsp;</td>";
+		echo "<td>&nbsp;</td>";
+	}
+}
+
+?>
+<h1>Inventory report</h1>
+<br />
+<h2>Propriétaire et Entrepositaire initial et Place d'entreposage</h2>{tmpl_var ve_address_for_customs}
+<br />
+<h1>generated at <?php echo strftime("%e %B %Y %H:%M:%S %Z", now() );?></h1>
+<?php $net = $ship = $USAShip = $EUShip = $OtherShip = 0; ?>
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" class="Borderinvoice">
+					<tr valign="top">
+						<td colspan=17 style="background-color:green;">entreposage</td>
+						<td colspan=2 style="background-color:yellow;">stock</td>
+					</tr>
+					<tr valign="top">
+						<!--- GREEN -->
+						<td  align="center">Document d'entreposage</td><!--1-->
+						<td  align="center">Date d'entreposage</td>
+						<td  align="center">Entrepositaire initial (lors de remise avec no et adresse</td>
+						<td  align="center">Propietaire</td>
+						<td  align="center">Genre Marchandise</td>
+						<td  align="center">Quantité Marchandise</td>
+						<td  align="center">Poids Net (g)</td>
+						<td  align="center">Poids Brut (g)</td>
+						<td  align="center">Colls(marque,no et nombre)</td>
+						<td  align="center">Quantité par boîte</td><!--10-->
+						<td  align="center">Valeur d'entreposage</td>
+						<td  align="center">Pays de provenance</td>
+						<td  align="center">ALAD</td>
+						<td  align="center">Traitement de la marchandise</td>
+						<td  align="center">Place d'entreposage</td>
+						<td  align="center">Preuve d'origine</td>
+						<td  align="center">Transit communautaire T2</td>
+						<!-- yellow -->
+						<td  align="center">Stock par facture</td>
+						<td  align="center">Stock sur etagere</td><!--23-->
+					 </tr>	
+				 	<? $data['TotalQty'] = 0; 
+
+					ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $customsReport );
+
+
+					foreach( $customsReport as $pr_id => $ProductLevel )
+					{
+						emit_product( $ProductLevel );
+					}
+
+//					ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $unallocatedShipments );
+				?>
+				</table></td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+	</table>
+</table>
+<br />
+<br />
+</body>
+</html>
+<?php return; /*  END OF FILE, IGNORE BELOW
+					if( $row['ct_name'] != 'Not a llama' )
+						{
+						//	echo "Cigares-2402.10";
+
+							if( strlen( $row['NetWeight'] ) && ( $row['NetWeight'] > 0 ) )
+								$net += $row['NetWeight'];
+
+							if( strlen( $row['ShipWeight'] ) && ( $row['ShipWeight'] > 0 ) )
+								$ship += $row['ShipWeight'];
+
+							if( $row['DstCnTwoCode'] == 'US' )
+								$USAShip += $row['ShipWeight'];
+							else
+								if( ss_countryISEU( $row['DstCnTwoCode'] ) )
+									$EUShip += $row['ShipWeight'];
+								else
+									$OtherShip += $row['ShipWeight'];
+						}
+
+					<tr>
+						<td align="right">&nbsp;{tmpl_row_var sin_customs_reference}</td><!--Document d'entreposage-->
+						<td align="right">&nbsp;{tmpl_row_var sin_id}</td><!--SIN, supplier invoice number-->
+						<td align="right">&nbsp;</td><!--Bureau de douane d'emission-->
+						<td align="right">&nbsp;<?php if( strlen($row['sin_instock_date']) ) { ?>{tmpl_row_var_date name="sin_instock_date" format="d.m.Y"}<?php } ?></td><!--Date d'entreposage-->
+						<td align="right">&nbsp;{tmpl_row_var sin_forwarder_name}</td><!--Propietaire-->
+						<td align="right">&nbsp;{tmpl_row_var QtyPutInStock}</td><!--Quantité Marchandise-->
+						<td>&nbsp;{tmpl_row_var pr_name}</td><!--Genre Marchandise -->
+						<td>&nbsp;</td><!--Traitement de la marchandise-->
+						<td>&nbsp;{tmpl_row_var SrcCnCountry}</td><!--Pays de provenance-->
+						<td>&nbsp;</td><!--Embalage-->
+						<td>&nbsp;{tmpl_row_var Boxes}</td><!--Nombre de boîtes-->
+						<td>&nbsp;{tmpl_row_var pr0_883_f}</td><!--Quantité en boîte-->
+						<td>&nbsp;</td><!--ALAD-->
+						<td>&nbsp;</td><!--Preuve d'origine-->
+						<td align="right">&nbsp;{tmpl_row_var NetWeight}</td><!--Poids Net-->
+						<td align="right">&nbsp;{tmpl_row_var ShipWeight}</td><!--Poids Brut-->
+						<td align="right">&nbsp;{tmpl_row_var sin_entered_currency} {tmpl_row_var CostPrice}</td><!--Valeur d'entreposage-->
+						<td>&nbsp;{tmpl_row_var pr_location}</td><!--Place d'entreposage-->
+						<td>&nbsp;</td><!--Transit communautaire T2-->
+						<td align="right">&nbsp;</td><!--Transitaire-->
+						<td align="right">&nbsp;{tmpl_row_var_date name="orsi_date_shipped" format="d.m.Y"}</td><!--Date de sortie-->
+						<td align="right">{tmpl_var ors_customs_reference}</td><!--Document de sortie-->
+						<td>&nbsp;{tmpl_row_var DstCnCountry}</td><!--Pays destination-->
+					</tr>
+						<? $data['TotalBoxes'] += $row['Boxes']; ?>
+					</tmpl_loop>
+				</table></td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+</table>
+<h2>Total Boxes</h2>{tmpl_var Boxes}<br/>
+<h2>Total Llamas</h2>{tmpl_var Llamas}<br/>
+<h2>Total equivalent USD Cost Value</h2><?= number_format( $data['USDCostPrice'], 0 ) ?><br/>
+<h2>Total equivalent USD Sales Value</h2><?= number_format( $data['USDSalesPrice'], 0 ) ?><br/>
+<h2>Total Net Tobacco Weight (kg)</h2><?= $net / 1000.0 ?><br/>
+<h2>Total Shipping Tobacco Weight (kg)</h2><?= $ship / 1000.0 ?><br/>
+<h2>Total Shipping Tobacco Weight (USA) (kg)</h2><?= $USAShip / 1000.0 ?><br/>
+<h2>Total Shipping Tobacco Weight (EU) (kg)</h2><?= $EUShip / 1000.0 ?><br/>
+<h2>Total Shipping Tobacco Weight (Rest) (kg)</h2><?= $OtherShip / 1000.0 ?><br/>
+<br />
+<br />
+<h1>Summary shelf report as at <?php echo date('c'); ?></h1>
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" class="Borderinvoice">
+					<tr>
+						<th>Product ID/<span style='color:blue;'>SIN#</span></th>
+						<th>Stock Code</th>
+						<th>Marchandise/<span style='color:blue;'>Document d'entreposage</span></th>
+						<th>Place d'entreposage</th>
+						<th>Stock indisponible</th>
+						<th>Stock Disponible pour acheter</th>
+						<th>En attente d'emballage</th>
+						<th>Etre prêt</th>
+						<th>Expédié sur cette feuille d'emballage</th>
+						<th>Sur étagère</th>
+						<th>Décompacté sur les factures fournisseurs</th>
+					</tr>
+				 	<tmpl_loop query="Q_Customs2">
+					<tr>
+						<td>{tmpl_row_var pr_id}</td>
+						<td>{tmpl_row_var pro_stock_code}</td>
+						<td>{tmpl_row_var pr_name}</td>
+						<td>{tmpl_row_var pr_location}</td>
+						<td>{tmpl_row_var pro_stock_unavailable}</td>
+						<td>{tmpl_row_var pro_stock_available}</td>
+						<td>{tmpl_row_var QtyPaidUnsent}</td>
+						<td>{tmpl_row_var QtyReservedOnStandby}</td>
+						<td>{tmpl_row_var ShippedHere}</td>
+						<td>{tmpl_row_var ShouldBeOnShelf}</td>
+						<td>{tmpl_row_var InvoiceUnshippedTotal}</td>
+					</tr>
+					<?php		// nasty hack, show what makes this up
+						if( $Qel = query( "select sin_id, sin_customs_reference, sil_pr_id, (sil_qty_put_in_stock - sil_shipped_count) as stock_available from supplier_invoice join supplier_invoice_line on sin_id = sil_sin_id where sil_qty_put_in_stock - sil_shipped_count > 0 and sil_pr_id = {$row['pr_id']}" ) )
+						{
+							while( $erow = $Qel->fetchRow() )
+							{?>
+							<tr>
+								<td><span style='color:blue;'><?=$erow['sin_id']?></span></td>
+								<td>&nbsp;</td>
+								<td><span style='color:blue;'><?=$erow['sin_customs_reference']?></span></td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><span style='color:blue;'><?=$erow['stock_available']?></span></td>
+							<tr>
+					<?php 	}
+						}
+					?>
+					</tmpl_loop>
+				</table></td>
+			</tr>
+			</table>
+			</td>
+			</tr>
+</table>
+<br />
+<br />
+</body>
+</html>
+*/

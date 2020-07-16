@@ -1,0 +1,46 @@
+<div class="mainprice curvybox boxshadow"><tmpl_if condition="$data['RRP'] !== null"><strong>RRP:</strong> <span id="RRP{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw RRP}</span>&nbsp;
+  <tmpl_if condition="$data['CurrencyConverter']"> <span id="RRP{tmpl_var pr_id}approx">{tmpl_var_raw RRPApprox}</span> </tmpl_if>
+  <br />
+</tmpl_if>
+<tmpl_if condition="$data['NormalPrice'] !== null"><strong>Price:</strong> <span id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">
+  <tmpl_if condition="$data['OnSpecial']"><span class="onlineShop_oldPrice">{tmpl_var_raw NormalPrice}</span>
+    <tmpl_else>
+    {tmpl_var_raw NormalPrice}</tmpl_if>
+  </span>&nbsp;
+  <tmpl_if condition="$data['CurrencyConverter']"> <span id="normalPrice{tmpl_var pr_id}approx" >
+    <tmpl_if condition="$data['OnSpecial']"> <span class="onlineShop_oldPrice">{tmpl_var_raw NormalPriceApprox}</span>
+      <tmpl_else>
+      {tmpl_var_raw NormalPriceApprox} </tmpl_if>
+    </span> </tmpl_if>
+  <br />
+</tmpl_if>
+<tmpl_if condition="$data['OnSpecial']"><strong>{tmpl_var SpecialDescription}&nbsp;Price:</strong> <span id="specialPrice{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw SpecialPrice}</span>&nbsp;
+  <tmpl_if condition="$data['CurrencyConverter']"> <span id="specialPrice{tmpl_var pr_id}approx">{tmpl_var_raw SpecialPriceApprox}</span> </tmpl_if>
+  <br />
+</tmpl_if>
+<div class="pricenote">{tmpl_var PriceMessage}</div>
+</div>
+<?php 
+if( getDefaultCurrencyCode( ) != 'BTC' ) {
+$discount = GetField( "select po_option_discountx100 from payment_gateway_options where po_currency = 'BTC' limit 1" )/100.0;
+if( $discount > 0 ) {
+$price = 0;
+if( $data['rawSpecialPrice'] > 0 )
+	$price = $data['rawSpecialPrice'];
+else
+	if( $data['rawNormalPrice'] > 0 )
+		$price = $data['rawNormalPrice'];
+?>
+<div class="mainprice curvybox boxshadow">
+<strong>Pay by Bitcoin and receive a <?= $discount ?> percent discount!</strong>
+Save the equivalent of <?php echo getDefaultCurrencySymbol( ).' '.number_format($price*$discount/100,getDefaultCurrencyPrecision( )); ?>
+<br />
+<a href='Shop_System/Service/ChangeCurrencyCountry?CurrencyThreeCode=BTC&BackURL=<?php echo ss_URLEncodedFormat( $_SERVER['REQUEST_URI'] );?>'>
+Swap to Bitcoin Prices</a>
+</div>
+<?php } } else { ?>
+<div class="mainprice curvybox boxshadow">
+<a href='Shop_System/Service/ChangeCurrencyCountry?CurrencyThreeCode=EUR&BackURL=<?php echo ss_URLEncodedFormat( $_SERVER['REQUEST_URI'] );?>'>
+Swap back to Euro</a>
+</div>
+<?php } ?>

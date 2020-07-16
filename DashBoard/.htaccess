@@ -1,0 +1,10 @@
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} 80 
+RewriteRule ^(.*)$ https://shop.iconcepts.local/DashBoard/$1 [R,L]
+AuthName "Access to the DashBoard"
+AuthType Basic
+AuthUserFile /var/www/chroot/shop/DashBoard/.htpasswd
+php_value memory_limit 999M
+require valid-user
+AddHandler cgi-script .pl
+Options +ExecCGI

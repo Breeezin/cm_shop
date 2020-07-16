@@ -1,0 +1,37 @@
+<table border="0" cellpadding="3" cellspacing="0" width="100%">
+<?php
+	for($i =0; $i < $data['ROWS_PER_PAGE']; $i++){
+		if ($data['CurrentIndex'] > ($data['NumberOfProducts'] -1))
+			break;
+?>
+	<TR>
+		<?php for($j =0; $j < $data['IMAGES_PER_ROW']; $j++){
+			if ($data['CurrentIndex'] > ($data['NumberOfProducts'] -1))
+				break;
+            $row = $data['Q_Products']->rows[$data['CurrentIndex']];
+        ?>
+			<TD>
+                    <table border="0" cellpadding="3" cellspacing="0" width="100%">
+                    	<tr>
+                    		<td>
+                                <tmpl_if condition="strlen($row['Image'])">
+                                    <div align="center">
+                                        {tmpl_if condition="strlen($row['pr_image1_large'])"}
+                                            <a href="javascript:window.open('index.php?act=ImageManager.Display&Type=Image&File={tmpl_var CurrentServer}{tmpl_var AssetStore}ProductImages/{tmpl_row_var pr_image1_large}','LargeImage', 'width={tmpl_var POPUP_WIDTH},height={tmpl_var POPUP_HEIGHT}');void(0);">
+                                            <img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></a><br>
+                                        {tmpl_else}
+                                            <a href="{tmpl_row_var ProductDetailLink}"><img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></a><br>
+                                        {/tmpl_if}
+                                    <a href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName">{tmpl_row_var pr_name}</a>
+                                    </div>
+        						</tmpl_if>
+                            </td>
+                        </tr>
+                    </table>
+                <?php $data['CurrentIndex']++;?>
+			</TD>
+		<?php } ?>
+	</TR>
+<?php } ?>
+</TABLE>
+{tmpl_var_raw PageThru}

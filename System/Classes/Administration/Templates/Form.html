@@ -1,0 +1,40 @@
+<tmpl_if condition="$data['tableTags']"> 
+<div class='container'>
+</tmpl_if>
+	<tmpl_eval expression="foreach ($data['fields'] as $data['field']) {">		
+	<?php if(!is_subclass_of($data['field'],'hiddenfield') and get_class($data['field']) != 'hiddenfield') {?>
+		<div class='row' <tmpl_if condition="$data['tableTags']">CLASS="{tmpl_if array_key_exists($data['field']->name,$data['errors'])}AdminErrorField{/tmpl_if}"</tmpl_if>>
+			<div CLASS="col-md-1 AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></div>
+			<div class="col-md-4 AdminDisplayName">
+				{tmpl_eval print($data['field']->displayName)}
+				<tmpl_if condition="strlen($data['field']->note)">
+					<br/><div CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</div>
+				</tmpl_if>
+			</div>
+			<div class="col-md-7">
+				<?php ss_log_message_r( 'Log:'.__FILE__.':'.__LINE__, $data['field'] ); ?>
+				{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName']; if( method_exists( $data['field'], 'display' ) ) print($data['field']->display(false, $formName));}
+			</div>
+		</div>
+		<tmpl_if condition="$data['field']->verify">
+			<div class='row' <tmpl_if condition="$data['tableTags']">CLASS="{tmpl_if array_key_exists($data['field']->name.'_V',$data['errors'])}AdminErrorField{/tmpl_if}"</tmpl_if>>
+				<div CLASS="col-md-1 AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></div>
+				<div class="col-md-4 AdminDisplayName">
+					Verify {tmpl_eval print($data['field']->displayName)}
+					<tmpl_if condition="strlen($data['field']->note)">
+					<br />
+					<div CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</div>
+					</tmpl_if>
+				</div>
+				<div class="col-md-7">
+					{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName'];  print($data['field']->display(true, $formName));}
+				</div>
+			</div>
+		</tmpl_if>	
+		<?php } else { ?>
+		{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName']; print($data['field']->display(false, $formName));}						
+		<?php } ?>
+	</tmpl_eval>
+<tmpl_if condition="$data['tableTags']"> 	
+</div>
+</tmpl_if>

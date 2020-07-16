@@ -1,0 +1,159 @@
+<? 
+/*
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="Custom/ContentStore/Layouts/sty_main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<tmpl_loop query="Q_Invoice">
+<table border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr align="right" valign="middle" bgcolor="#efefef">
+	 <td height="120" colspan="3" class="Formbordertop"><img src="Custom/ContentStore/Layouts/Images/logo-invoice.gif" width="122" height="53"><br> 	  <span class="textRed">Bjorck Bros. S.L.U. Cif B35702786<br>			 
+      C/Andres Perdomo s/n Edif. ZF M214, Las Palmas de	GC 35008<br>
+     Tel: 928 466336, Fax: 928 468656</span></td>
+ </tr>
+	<tr valign="top">
+		<td width="160" align="right" class="Formbordertop"><strong>&#8470; Factura:</strong></td>
+		<td rowspan="15" class="Formbordercenter">&nbsp;</td>
+		<td class="Formbordertop">{tmpl_row_var inv_id}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Empresa Remitente:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_sender_company}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Direcci&oacute;n Bj&ouml;rck Bros.S.L.:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_sender_address}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Telefono:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_sender_phone}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Fecha:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var_date name="in_date" format="d/m/Y"}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Forma de Pago:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_paymethod}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Destinatario:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_destination}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Pais:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_country}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>&#8470; de Cajas:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_boxes}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>&#8470; de Paquetes:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_parcels}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Peso:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_value}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Valor Unidad &euro;:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_unit_value}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>&#8470; deUnidades (Acmes):</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_units}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Pais de Origen:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_origin}</td>
+	</tr>
+	<tr valign="top">
+		<td align="right" class="Formbordertop"><strong>Valor Total:</strong></td>
+		<td class="Formbordertop">{tmpl_row_var in_total_value}</td>
+	</tr>
+</table>
+<script language="Javascript">
+window.focus();
+</script>
+<script language="Javascript">
+window.print();
+</script>
+</tmpl_loop>
+</body>
+</html>
+*/
+?>
+<tmpl_loop query="Q_Invoice">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="102" valign="top" bgcolor="#A6DED5"><img src="Images/logo.gif" alt="Bjorck Bros. S.L." width="102" height="183"></td>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr valign="top">
+				<td width="50%"><p><span class="text14">Factura de Abono de Bjorck Bros. S.L.U.
+</span><br>
+		                <span class="text12Italic">        Operador de Zona Franca</span></p>
+			    </td>
+				<td width="50%"><span class="text14">Abono<br>
+				</span><span class="text12Italic">Numero {tmpl_row_var CoInID}</span></td>
+		 </tr>
+			<tr valign="top">
+				<td width="50%">CIF: B35702786<br>
+Andres Perdomo s/n, Edificio Zona Franca<br>
+Oficina M214<br>
+35008 Las Palmas de Gran Canaria<br>
+Espa&ntilde;a<br>
+Telefono: + 34 928 466 336<br>
+Fax:	: + 34 928 468 656</td>
+				<td width="50%">&nbsp;</td>
+			</tr>
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+					<tr valign="top">
+						<td width="40%"><strong>Abono No.: </strong></td>
+						<td>{tmpl_row_var CoInID}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Fecha de Abono:</strong></td>
+						<td>{tmpl_row_var_date name="CoInDate" format="d/m/Y"}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Este abono es por la Factura No.:</strong></td>
+						<td>{tmpl_row_var CoInOriginalInvoiceLink}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Nombre del Cliente:</strong></td>
+						<td>{tmpl_row_var in_destination}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Total Abono (-): </strong></td>
+						<td>&euro;{tmpl_row_var CoInTotal}</td>
+					</tr>
+				</table></td>
+			</tr>
+		</table></td>
+	</tr>
+</table>
+</body><script language="Javascript">
+window.focus();
+</script>
+<script language="Javascript">
+window.print();
+</script>
+</html>
+</tmpl_loop>

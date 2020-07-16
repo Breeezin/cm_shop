@@ -1,0 +1,78 @@
+.box {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #666666;
+	width: 14%;
+	height: 25px;
+}
+.boxblank {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: white;
+	border-bottom-color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #666666;
+	width: 14%;
+	height: 25px;
+}
+.boxhover {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000000;
+	background-color: d1e6eb;
+	width: 14%;
+	height: 25px;
+	cursor: hand;
+}
+.boxDay {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+	font-weight: bold;
+	width: 14%;
+	height: 25px;
+	background-color: d1e6eb;
+}
+
+
+.dateyeartext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+}
+.arrow {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #336666;
+	text-decoration: none;
+}
+.arrow:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #336666;
+}

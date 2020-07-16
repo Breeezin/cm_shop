@@ -1,0 +1,35 @@
+
+	<TR>
+		<TH ALIGN="LEFT" WIDTH="33%">Type Of Credit Card :</TH>
+		<TD>{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardType"}</TD>
+	</TR>
+	<TR>
+		<TH ALIGN="LEFT">Credit Card Number :</TH>
+		<TD>{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardNumber"}</TD>
+	</TR>
+	
+	<TR>
+		<TH ALIGN="LEFT">Expiry Date :</TH>
+		<TD>{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardExpiry"}</TD>
+	</TR>
+	
+	<TR>
+		<TD ALIGN="LEFT"><STRONG>Holder Name :</STRONG></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardHolder"}</TD>
+	</TR>	
+	<?php if (ss_optionExists('Web Pay Company Name')) { ?>
+	<TR>
+		<TD ALIGN="LEFT"><STRONG>Company Name :</STRONG></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardCompany"}</TD>
+	</TR>	
+	<?php } ?>
+	
+	<?php 
+		$cvv2Link = ss_optionExists('Web Pay CVV2');
+		if ($cvv2Link !== false) { 
+	?>
+	<TR>
+		<TD ALIGN="LEFT"><STRONG>CVV2 Number :</STRONG></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field_display fieldset="FieldSet" field="TrCreditCardCVV2"}</TD>
+	</TR>	
+	<?php } ?>

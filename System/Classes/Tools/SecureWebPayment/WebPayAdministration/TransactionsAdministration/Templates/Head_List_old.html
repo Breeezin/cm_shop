@@ -1,0 +1,110 @@
+<!--- New record and Search --->
+<SCRIPT language="javascript">
+<!--
+
+	String.prototype.isNaN = function(){return isNaN(this.split(",").join(""));}
+	
+	function test() {
+		total = "100";
+		if (total.isNaN()) alert('ok 100'); else alert("no 100");
+		
+		if (total.isNaN()) alert('ok 100'); else alert("no 100");
+		/*for(i=0; i < num.length; i++) {
+			
+			if (num[i] != '.') {
+				temp = parseInt(num[i]);
+				if (isNaN(temp)) {
+					alert("Total is not in numeric format. Please enter again.");
+					return false;
+				}
+			}
+			*/
+		
+	
+	}
+	
+	function newTransaction(theForm) {
+		
+
+		index = theForm.Method.selectedIndex;
+		if (index >= 0) {
+			fuseaction = theForm.Method.options[index].value;
+			total = theForm.Total.value;
+			if (total.isNaN()) {			
+				theForm.action = "{tmpl_var Script_Name}?act=" + fuseaction + ".New&tr_total="+total;
+				alert(theForm.action);
+				theForm.submit();								
+			} else {
+				alert("Total is not in numerice format. Please enter it again.");
+				return;
+			}			
+		} else {
+			alert("Please select the new transaction method.");
+			return ;
+		}
+	
+	}
+//-->
+</SCRIPT>
+<TABLE WIDTH="100%" ALIGN="CENTER" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+	<TR>
+		<!--- button for adding a new record --->
+		<!---
+		<FORM METHOD="POST">
+			<INPUT TYPE="HIDDEN" NAME="act" VALUE="{tmpl_var act}">
+			<INPUT NAME="BreadCrumbs" TYPE="HIDDEN" VALUE="{tmpl_var BreadCrumbs}">
+			<INPUT TYPE="HIDDEN" NAME="RFA" VALUE="{tmpl_var RFA}">
+		<TD ALIGN="LEFT">
+			<TABLE width="100%"	cellpadding="0" cellspacing="0">
+				<TR>
+					<TD>Total: </TD>
+					<TD>{tmpl_var CurrencySymbol}<INPUT SIZE="5" TYPE="TEXT" NAME="Total">{tmpl_var CurrencyCode}</TD>
+				</TR>
+				<TR>
+					<TD>Method</TD>
+					<TD>
+						<SELECT name="Method">
+						{tmpl_loop Processors}																
+							<option value="{tmpl_row_var wpp_name}">{tmpl_row_var wpp_display_name}</option>
+						{tmpl_end}
+						</SELECT>
+					</TD>
+				</TR>
+				<TR>
+					<TD>&nbsp;</TD>
+					<TD>
+					<INPUT type="button" name="Submit" value="Submit" onclick="javascript:newTransaction(this.form);">
+					</TD>
+				</TR>
+			</TABLE>
+		</TD>
+		</FORM>
+		--->
+		<!--- Search Options Selector --->
+		<FORM ACTION="{tmpl_var RFA}&CurrentPage=1" METHOD="POST">
+			<TD ALIGN="RIGHT">
+				<TABLE CELLPADDING="0" CELLSPACING="0" BORDER="0">
+				<TR><TD>
+				<TABLE WIDTH="100%"  CELLPADDING="0" CELLSPACING="0" BORDER="0">
+					<TR><TD ALIGN="LEFT">Search : </TD><TD ALIGN="RIGHT"><INPUT SIZE="18" TYPE="TEXT" VALUE="{tmpl_var SearchKeyword}" NAME="SearchKeyword"></TD></TR>
+				</TABLE>
+				</TD></TR>
+				<TR><TD>
+				<TABLE WIDTH="100%"  CELLPADDING="0" CELLSPACING="0" BORDER="0">
+					<TR><TD ALIGN="LEFT"><SELECT NAME="RowsPerPage" OnChange="this.form.submit()">
+					<OPTION VALUE="{tmpl_var RowsPerPage}">{tmpl_var RowsPerPage} Rows/Page</OPTION>
+					<OPTION>10</OPTION>
+					<OPTION>25</OPTION>
+					<OPTION>50</OPTION>
+					<OPTION>100</OPTION>
+				</SELECT></TD><TD ALIGN="RIGHT"><INPUT TYPE="SUBMIT" VALUE="Go" NAME="Go"  CLASS="adminButtons"></TD></TR>
+				</TABLE>
+				</TD></TR>
+				</TABLE>				
+			</TD>
+		</FORM>
+	</TR>
+</TABLE>
+
+
+

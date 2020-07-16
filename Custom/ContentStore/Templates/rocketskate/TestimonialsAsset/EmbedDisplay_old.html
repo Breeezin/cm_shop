@@ -1,0 +1,29 @@
+<?
+	ss_DumpVarDie($data);
+?>
+<tmpl_if condition="$data['ListQuery']->numRows()">
+
+<div class="textTestimonials"><span id="testimonial{tmpl_var as_id}"></span><br>
+<span class="textTestimonialsDate"><span id="testimonialName{tmpl_var as_id}"></span><span id="testimonialDate{tmpl_var as_id}"></span></span></div>
+                           			
+<script language="Javascript">
+	function updateTestimonial{tmpl_var as_id}() {
+		var testimonialSpan{tmpl_var as_id} = document.getElementById('testimonial{tmpl_var as_id}');
+		var testimonialNameSpan{tmpl_var as_id} = document.getElementById('testimonialName{tmpl_var as_id}');
+		var testimonialDateSpan{tmpl_var as_id} = document.getElementById('testimonialDate{tmpl_var as_id}');
+		testimonialSpan{tmpl_var as_id}.innerHTML = testimonials{tmpl_var as_id}[currentTestimonial{tmpl_var as_id}].t;
+		testimonialNameSpan{tmpl_var as_id}.innerHTML = testimonials{tmpl_var as_id}[currentTestimonial{tmpl_var as_id}].n;
+		testimonialDateSpan{tmpl_var as_id}.innerHTML = testimonials{tmpl_var as_id}[currentTestimonial{tmpl_var as_id}].d;
+		currentTestimonial{tmpl_var as_id} = (currentTestimonial{tmpl_var as_id}+1) % testimonials{tmpl_var as_id}.length;
+		setTimeout('updateTestimonial{tmpl_var as_id}()',7000);
+	}
+	var t = new Array();
+	<tmpl_loop query="ListQuery">
+
+	t[t.length] = {t:'{tmpl_row_var_js te_text}', n:'{tmpl_row_var_js te_customer}', d:'<tmpl_if condition="strlen($row['te_date'])">{tmpl_row_var_date format=", d/m/y" name="te_date"}</tmpl_if>'};
+	</tmpl_loop>
+	testimonials{tmpl_var as_id} = t;
+	currentTestimonial{tmpl_var as_id} = 0;
+	updateTestimonial{tmpl_var as_id}();
+</script>
+</tmpl_if>

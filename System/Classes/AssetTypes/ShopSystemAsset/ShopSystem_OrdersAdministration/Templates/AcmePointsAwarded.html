@@ -1,0 +1,16 @@
+<p>Hello {tmpl_var first_name},</p>
+<tmpl_if condition="$data['CurrentLevel'] == 0">
+<p>You have been awarded <strong>{tmpl_var Points}</strong> points for your latest order!</p>
+<tmpl_else>
+<p>You have been awarded <strong>{tmpl_var Points}</strong> points for one of your referrals orders!</p>
+</tmpl_if>
+
+<p>Your current points total is now <strong>{tmpl_var Total}</strong> points.</p>
+
+<tmpl_if condition="$data['Total'] >= 4000">
+<p>Because you have reached 4000 points, you may now login and select a free box from our Frequent Buyer Program rewards page!</p>
+<tmpl_else>
+<p>Once you reach 4000 points, you may login and select a free box from our Frequent Buyer Program rewards page!</p>
+</tmpl_if>
+
+<p>Please note that we cannot allocate points for older orders received before the Frequent Buyer Program was established.</p>

@@ -1,0 +1,58 @@
+php_value include_path .:/var/www/chroot/shop:/usr/share/php:/usr/share/php/fpdf
+php_value default_charset  "UTF-8"
+#php_value memory_limit 1024M
+#php_value max_input_variables 99999
+#php_value allow_url_fopen Off
+
+# 1 WEEK
+<FilesMatch "\.(jpg|jpeg|png|gif|swf|css|js)$">
+Header set Cache-Control "max-age=172800, public"
+</FilesMatch>
+
+
+# Turn on the engine..
+RewriteEngine On
+
+RewriteCond	%{HTTP_USER_AGENT}  internal\ dummy\ connection	[OR]
+RewriteCond	%{HTTP_USER_AGENT}  xget
+RewriteRule	.*	null.html	[L]
+
+RewriteRule css\/.*	-	[L]
+RewriteRule js\/.*	-	[L]
+RewriteRule junk\/.*	-	[L]
+RewriteRule fonts\/.*	-	[L]
+RewriteRule catalog\/.*	-	[L]
+RewriteRule new.php	-	[L]
+
+# Allow full access to Contentstore Asset
+RewriteRule .well-known - [L]
+RewriteRule robots.txt - [L]
+RewriteRule googleabscdefg.html - [L]
+RewriteRule Custom\/ContentStore\/Layouts - [L]
+RewriteRule Custom\/ContentStore\/Templates - [L]
+RewriteRule Custom\/ContentStore\/Assets - [L]
+RewriteRule Custom\/Cache\/Incoming - [L]
+
+# Allow restricted access to Classes and Libraries
+RewriteRule ^(System\/Classes|System\/Libraries|Custom\/Classes|Custom\/Libraries).*(gif|jpg|jpeg|png|css|js|html|htc|htm)$ - [L]
+
+# Allow restricted access to other folders
+#RewriteRule .*(gif|jpg|jpeg|png|css|js|html|htc|htm)$ - [L]
+RewriteRule images\/.*(gif|jpg|jpeg|png|css|js|html|htc|htm)$ - [L]
+RewriteRule Images\/.*(gif|jpg|jpeg|png|css|js|html|htc|htm)$ - [L]
+
+RewriteRule DashBoard\/.*	-	[L]
+RewriteRule acqra\/.*	-	[L]
+RewriteRule acqra_unionpay\/.*	-	[L]
+
+RewriteRule  robots.txt  -       [L]
+RewriteRule  sitemap.xml  -       [L]
+RewriteRule  rss.php  -       [L]
+RewriteRule  favicon.ico  -       [L]
+
+RewriteRule  acme-sitemap.xml  -       [L]
+
+RewriteCond  %{HTTP_HOST}  www\.acmerockets\.com
+RewriteRule  ^$			index.php?act=Asset.Display&AssetID=798		[L]     # homepage asset without redir
+
+RewriteRule .* index.php [L]

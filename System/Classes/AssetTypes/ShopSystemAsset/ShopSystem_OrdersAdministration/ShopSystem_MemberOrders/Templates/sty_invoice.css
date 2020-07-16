@@ -1,0 +1,191 @@
+ 
+body, table, .contenttext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666666;
+	text-decoration: none;
+}
+a {
+	color: #666666;
+	text-decoration: none;
+}
+a:hover {
+	color: #666666;
+	text-decoration: none;
+}
+.heading {
+	font-size: 36px;
+	color: #336699;
+	font-weight: bold;
+
+
+
+}
+
+.subHeading {
+
+}
+
+.subSubHeading {
+
+}
+
+.formbutton {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #333333; background-color: #D0CCB7; border: 1px solid; cursor: hand; border-color: #FFFFFF #333333 #000000 #FFFFFF}
+
+.required { font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: Red}
+
+.EmailForm { border: 3px; border-color: #000000; background-color: #EEEEEE}
+
+.MenuLink {
+	COLOR: #333333;
+	TEXT-DECORATION: none;
+	font-size : 9px;
+	line-height: 15pt;
+	text-transform: uppercase;
+
+}
+
+.MenuLink:hover {
+	COLOR: #999999; TEXT-DECORATION: underline; font-size : 9px;	line-height: 15pt;
+	text-transform: uppercase;
+}
+
+
+
+
+
+/* Category listing */
+.onlineShop_ProductListingHeader, loginTable {
+	background-color: #E1DDD2;
+	padding : 0 0 0 5;
+	border:  1px #CCC5B5 solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+.onlineShop_DotLine {
+	background-image: url(Images/Shop/dot-line.gif);
+}
+.onlineShop_CategorySelect {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #333333;
+}
+
+/* Shop Basket */
+.onlineShop_BasketTable {
+
+}
+.onlineShop_BasketHeaderRow {
+	background-color: #666666;
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #ffffff;
+}
+.onlineShop_basketQuantityField {
+
+}
+.onlineShop_totalChargeRow {
+	background-color: #E1DDD2;
+	padding : 0 0 0 5;
+	border:  1px #CCC5B5 solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+
+/* Category listing AND product detail */
+.onlineShop_attributeTableHeader {
+
+}
+.onlineShop_attribute {
+
+}
+.onlineShop_optionTableHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+.onlineShop_optionSelector {
+
+}
+.onlineShop_priceTableHeader {
+
+}
+.onlineShop_price {
+
+}
+.onlineShop_SpecialPrice { 
+	color: #CC0000
+}
+.onlineShop_ProductName {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #4A708A;
+}
+.onlineShop_ProductDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+}
+
+/* Product detail */
+.onlineShop_separatorHR {
+
+}
+
+/* Checkout */
+.onlineShop_checkoutSectionHeading {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+}
+.onlineShop_userDetailTable {
+
+}
+.onlineShopBasketOddRow {
+
+	background-color: #EFEFEF;
+}
+.onlineShopBasketTotalNZ {
+
+	padding : 0 0 0 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #999999;
+}
+.onlineShopBasketSubTotal {
+	padding : 0 0 0 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #999999;
+
+
+}
+.onlineShopBasketTotal {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #CC0000;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #666666;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #666666;
+
+
+}

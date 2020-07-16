@@ -1,0 +1,30 @@
+.textContact {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #672819;
+}
+.textContact:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #672819;
+}
+.textHeading {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #9B1B00;
+}
+.Bodytext,body,p,td,table {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+	color: #672819; 
+	text-decoration: none
+}
+.textSubHeading {
+	font-size: 12px;
+	font-weight: bold;
+	color: #672819;
+}
+.Border {
+	border: 1px solid #E7C4AB;
+}

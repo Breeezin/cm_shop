@@ -1,0 +1,87 @@
+<p>
+	<input class=forumButton onClick="document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}'; return false;" type=submit value="Back to thread list" name=SUBMIT>
+</p>
+<div align=center></div>
+<table height=20 cellspacing=0 cellpadding=2 width="100%" border=0>
+	<tbody>
+		<tr>
+			<td>
+			<tmpl_if condition="$data['Thread']['thr_locked'] != 1">
+				<input class=forumButton onClick="document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=Reply&thr_id=<?=$data['Thread']['thr_id'];?>&fm_id=1';" type="submit" value="Post Reply" name="SUBMIT2">
+			</tmpl_if>
+			<tmpl_if condition="$data['IsAdmin']">
+				<tmpl_if condition="$data['Thread']['thr_locked'] != 1">
+					<input class=forumButton onClick="if (confirm('Are you sure you want to lock this thread? Click OK to lock')) { document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=ToggleThreadLock&thr_id={tmpl_eval print(ss_HTMLEditFormat($data['Thread']['thr_id']))}&Status=1'; } return false;" type=submit value="Lock Thread" name=SUBMIT2>
+				<tmpl_else>
+					<input class=forumButton onClick="if (confirm('Are you sure you want to unlock this thread? Click OK to unlock')) { document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=ToggleThreadLock&thr_id={tmpl_eval print(ss_HTMLEditFormat($data['Thread']['thr_id']))}&Status=0'; } return false;" type=submit value="Unlock Thread" name=SUBMIT2>
+				</tmpl_if>
+			</tmpl_if>
+			</td>
+			<td>&nbsp;</td>
+			<td width=200>
+				<div align=right></div>
+				<table cellspacing=0 cellpadding=0 align=right border=0>
+					<tbody>
+						<tr>
+							<td class=SmallText width=80>
+    							<div align=center>Page Number</div>
+							 </td>
+							{tmpl_var_raw PageThruHTML}
+						</tr>
+					</tbody>
+				</table>
+				<div align=right></div>
+				<div class=SmallText align=center></div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<p>
+	<strong>{tmpl_eval print(ss_HTMLEditFormat($data['Thread']['thr_subject']))}</strong>
+</p>
+<tmpl_loop query="Q_Messages">	
+	<table class=forumMainBorder cellspacing=0 cellpadding=10 width="100%" border=0>
+		<tbody>
+			<tr>
+				<td class=forumThreadCreatedMain colspan=2>
+					<table class=SmallText cellspacing=0 cellpadding=0 width="100%" border=0>
+						<tbody>
+							<tr>
+								<td>{tmpl_row_var_date format="d.m.Y" name="fm_timestamp"} <span class=forumTime>{tmpl_row_var_date format="g:ia" name="fm_timestamp"}</span><a name="Message{tmpl_row_var fm_id}" style="text-decoration:none;">&nbsp;</a></td>
+								<td align=right>
+									<tmpl_if condition="$data['IsAdmin']">
+										<tmpl_if condition="$row['fm_id'] == 1">
+											<input class=forumButton onClick="if (confirm('Are you sure you want to delete this message?\n\nThe entire thread will be deleted.\n\nThis operation cannot be undone. Click OK to delete')) { document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=DeleteMessage&thr_id={tmpl_row_var fm_thr_id}&fm_id={tmpl_row_var fm_id}'; } return false;" type=submit value=Delete name=SUBMIT>
+										<tmpl_else>
+											<input class=forumButton onClick="if (confirm('Are you sure you want to delete this message?\n This operation cannot be undone. Click OK to delete')) { document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=DeleteMessage&thr_id=tmpl_row_var fm_thr_id}&fm_id={tmpl_row_var fm_id}'; } return false;" type=submit value=Delete name=SUBMIT>
+										</tmpl_if>
+										
+									</tmpl_if>
+									<tmpl_if condition="$data['Thread']['thr_locked'] != 1">
+										<input class=forumButton onClick="document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=Reply&thr_id={tmpl_row_var fm_thr_id}&fm_id={tmpl_row_var fm_id}&Quote=1';" type="submit" value="Quote" name="SUBMIT2">
+										<input class=forumButton onClick="document.location='{tmpl_var_js CurrentServer}{tmpl_var_js AssetPath}?Service=Reply&thr_id={tmpl_row_var fm_thr_id}&fm_id={tmpl_row_var fm_id}';" type="submit" value="Reply" name="SUBMIT2">
+									</tmpl_if>
+								</td>
+							 	</tr>
+						 </tbody>
+					 </table>
+				 </td>
+			</tr>
+			<tr valign=top>
+				<td class=forumThreadPostInfo width=150>
+					<tmpl_if condition="strlen($row['fm_poster_email'])">
+						<div align=center><a href="mailto:{tmpl_row_var fm_poster_email}">{tmpl_row_var fm_poster_firstname} {tmpl_row_var fm_poster_lastname}</a>
+						<br /><br /><br />
+						Posts: {tmpl_row_var Posts}</div>
+					<tmpl_else>
+						<div align=center>{tmpl_row_var fm_poster_firstname} {tmpl_row_var fm_poster_lastname}
+						</div>
+					</tmpl_if>
+				</td>
+				<td class=forumThreadMessage>{tmpl_row_var_raw fm_content}</td>
+		 	</tr>
+		</tbody>
+ 	</table>
+ 	<br />
+</tmpl_loop>

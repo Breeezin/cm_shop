@@ -1,0 +1,39 @@
+	<tmpl_if condition="$data['RRP'] !== null">
+		<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 推荐价格:</strong>		
+			<span id="RRP{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw RRP}</span>&nbsp;
+			<tmpl_if condition="$data['CurrencyConverter']">
+				<span id="RRP{tmpl_var pr_id}approx">{tmpl_var_raw RRPApprox}</span>
+			</tmpl_if>
+		<br />
+	</tmpl_if>
+	
+	<tmpl_if condition="$data['NormalPrice'] !== null">
+		<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 价格:</strong>		
+			<span id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">
+			<tmpl_if condition="$data['OnSpecial']">
+				<span class="onlineShop_oldPrice">{tmpl_var_raw NormalPrice}</span>
+			<tmpl_else>
+				{tmpl_var_raw NormalPrice}
+			</tmpl_if></span>&nbsp;
+			<tmpl_if condition="$data['CurrencyConverter']">
+				<span id="normalPrice{tmpl_var pr_id}approx">
+<tmpl_if condition="$data['OnSpecial']">
+					<span class="onlineShop_oldPrice">{tmpl_var_raw NormalPriceApprox}</span>
+				<tmpl_else>
+					{tmpl_var_raw NormalPriceApprox}
+				</tmpl_if>	</span>
+			</tmpl_if>
+		<br />
+	</tmpl_if>
+	
+	<tmpl_if condition="$data['OnSpecial']">
+		<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 特别价格:</strong>
+			<span id="specialPrice{tmpl_var pr_id}" class="onlineShop_price">
+				{tmpl_var_raw SpecialPrice}</span>&nbsp;
+			<tmpl_if condition="$data['CurrencyConverter']">
+				<span id="specialPrice{tmpl_var pr_id}approx">{tmpl_var_raw SpecialPriceApprox}</span>
+			</tmpl_if>
+		<br />
+	</tmpl_if>
+	
+	<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 包括航运价格</strong><br>

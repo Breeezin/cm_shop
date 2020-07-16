@@ -1,0 +1,26 @@
+<p class="noPrint">
+<input type="button" name="print" onclick="window.print();" value="Print">
+</p>
+<A HREF='<?php getBackURL(); ?>'>Back</A>
+<form action="index.php?act=OnlineShop.BrokenBoxCheckList" method="post">
+
+<h1>Geneva</h1>
+Finalise this ?&nbsp;<input type='checkbox' name='finalise' value='1' />
+<input type='submit'/>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Product Name</strong></td>
+		<td><strong>Stock Code</strong></td>
+		<td><strong>Qty Broken/Unavailable</strong></td>
+		<td><strong>Qty -> McGorry</strong></td>
+	</tr>
+<tmpl_loop query="Q_StockS">
+	<tr>
+		<td valign="top">{tmpl_row_var pr_name}</td>
+		<td valign="top">{tmpl_row_var pro_stock_code}</td>
+		<td valign="top">{tmpl_row_var pro_stock_unavailable}</td>
+		<td valign="top"><input name='Send_{tmpl_row_var pr_id}' size=4 value='{tmpl_row_var sm_qty}'/></td>
+	</tr>
+</tmpl_loop>
+</table>
+</form>

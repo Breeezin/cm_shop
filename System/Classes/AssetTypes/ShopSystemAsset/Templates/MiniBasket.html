@@ -1,0 +1,32 @@
+<tmpl_if condition="count($data['Basket']['Products'])">
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable" style="width:100%">
+		<tr>
+			<td colspan="3"><div align="center"><a href="{tmpl_var AssetPath}/Service/Basket">View Basket</a></div></td>
+		</tr>
+	<? $flipFlop = 0; foreach($data['Basket']['Products'] as $item) { 
+			$data['Name'] = $item['Product']['pr_name'];
+			$data['Options'] = $item['Product']['Options'];
+			$data['Qty'] = $item['Qty'];
+			$data['Key'] = $item['Key'];
+			$data['StockCode'] = $item['Product']['pro_stock_code'];
+			$data['UnitPrice'] = $item['Product']['Price'];
+			$flipFlop = 1-$flipFlop;
+			$data['Class'] = '';
+			if ($flipFlop == 1) $data['Class'] = 'onlineShopBasketOddRow';
+	?>
+        <tr align="left" valign="middle">
+        	<td class="{tmpl_var Class}"><strong>{tmpl_var Name}<tmpl_if condition="strlen($data['Options'])"> ({tmpl_var Options})</tmpl_if></strong> </td>
+        	<td align="right" class="{tmpl_var Class}">{tmpl_var Qty}</td>
+        	<td align="right" class="{tmpl_var Class}">{tmpl_eval print($data['This']->formatPrice('display',$data['Qty']*$data['UnitPrice']))}</td>
+   		</tr>
+	<? } ?>
+		</tr>
+		<tr>
+        	<td>&nbsp;</td>
+        	<td align="right" class="onlineShopBasketSubTotal">Total: </td>
+        	<td align="right" class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['SubTotal']))}</td>
+		</tr>
+	</table>
+<tmpl_else>
+	<p>You currently have no items in your basket.</p>
+</tmpl_if>

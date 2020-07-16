@@ -1,0 +1,44 @@
+<FORM NAME="PaymentForm" METHOD="POST" ACTION="{TMPL_VAR FormAction}">
+
+<TABLE BORDER="0" WIDTH="100%" cellpadding="5" cellspacing="0">
+   <TR>
+	<TH ALIGN="LEFT" WIDTH="45%">Reference :</TH><TD><?=ss_getTrasacationRef($data['Fields']['tr_id'])?></TD></TR>
+   <TR>
+	<TH ALIGN="LEFT">Total :</TH><TD><?=$data['Fields']['cn_currency_symbol']?><?=$data['Fields']['tr_total']?> <?=$data['Fields']['cn_currency_code']?>
+	<?php  if (strpos($data['ChargedIn'], $data['Fields']['cn_currency_code']) === false) { ?>
+	<small>(note: {tmpl_var_raw ChargedIn} will be charged)</small>
+	<?php } ?></TD></TR> <TR>
+	<TH ALIGN="LEFT">Please Make Cheque Payable To :</TH><TD valign="top"><?=$data['PayableTo']?></TD></TR>
+	<TH ALIGN="LEFT" valign="top">Please Send Cheque To Address :</TH><TD valign="top"><?=$data['ToAddress']?></TD></TR>
+
+    <TR><TD colspan="2" align="right">&nbsp;</TD></TR>
+    <TR><TD colspan="2" align="right">&nbsp;</TD></TR>
+    <TR><TD colspan="2" align="center">
+        <INPUT type="submit" name="Submit" value="Process"  class="PaymentButton">
+    </TD></TR>
+
+
+    {tmpl_if $data['Type'] == 'Shop'}
+    <TR><TD colspan="2" align="right">&nbsp;</TD></TR>
+    <TR><TD colspan="2" align="right">&nbsp;</TD></TR>
+    <TR>
+		<TD colspan="2" align="right">
+		<table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+            	<tr align="center">
+            		<td class="onlineShopShopProgressBarCell">1 - Basket</td>
+            		<td class="onlineShopShopProgressBarCell">2 - Checkout</td>
+            		<td class="onlineShopShopProgressBarON">3 - Payment</td>
+            		<td class="onlineShopShopProgressBarCell">4 - Finished</td>
+            	
+       		 </tr>
+            	</table>
+            	</TD>
+            	</TR>
+    {tmpl_end}
+</TABLE>	
+
+
+<input type="hidden" name="tr_token" value="{tmpl_var_raw tr_token}">
+<input type="hidden" name="tr_id" value="{tmpl_var_raw tr_id}">
+<input type="hidden" name="BackURL" value="{tmpl_var_raw BackURL}">
+</form>

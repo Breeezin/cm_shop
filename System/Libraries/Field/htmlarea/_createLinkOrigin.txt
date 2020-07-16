@@ -1,0 +1,59 @@
+/*
+HTMLArea.prototype._createLink = function(link) {
+
+	var editor = this;
+	var outparam = null;
+	if (typeof link == "undefined" || link == null) {
+		link = this.getParentElement();
+		if (link && !/^a$/i.test(link.tagName))
+			link = null;
+	}
+	if (link) {
+		outparam = {
+		f_href   : link.href,
+		f_title  : link.title,
+		f_target : link.target,
+		f_name   : link.name
+		};
+		//alert("link is not null");
+	} else {	
+		//alert("link is null");
+	}
+	
+	//this._popupDialog("link.html", function(param) {
+	this._popupDialog("index.php?FuseAction=AssetSelector.LinkDisplay", function(param) {
+		if (!param)
+			return false;
+			
+		var a = link;
+		if (!a) {
+			
+			editor._doc.execCommand("createlink", false, param.f_href);
+			a = editor.getParentElement();
+			var sel = editor._getSelection();
+			var range = editor._createRange(sel);
+			if (!HTMLArea.is_ie) {
+				a = range.startContainer;
+				if (!/^a$/i.test(a.tagName))
+					a = a.nextSibling;
+			} else {
+			
+			}
+			
+			
+		} else {
+			
+			a.href = param.f_href.trim();
+		}
+		
+		// nam&matt
+		//if (!/^a$/i.test(a.tagName)) return false;
+		//alert(param.f_target+ " " + param.f_title);
+		a.target = param.f_target.trim();
+		a.title = param.f_title.trim();
+		a.name = param.f_name.trim();
+		editor.selectNodeContents(a);
+		editor.updateToolbar();
+	}, outparam);
+};
+*/

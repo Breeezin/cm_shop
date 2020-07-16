@@ -1,0 +1,15 @@
+<TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
+	{tmpl_loop ListQuery}
+	<TR ALIGN="LEFT" VALIGN="TOP">		
+		<TD><P><FONT COLOR="#776047"><STRONG>{tmpl_row_var_date Name="nei_timestamp" Format="d M Y"}</STRONG></FONT><BR>
+		<SPAN CLASS="NewsText">{tmpl_row_var nei_headline}</SPAN>
+		<BR>
+			<A HREF="index.php/News" CLASS="NewsMoreInfo">more info</A><BR>
+		</P>
+		</TD>
+	</TR>
+	<TR ALIGN="LEFT" VALIGN="TOP">
+		<TD COLSPAN="2" CLASS="dotline">&nbsp;</TD>
+	</TR>
+	{tmpl_end}
+</TABLE>

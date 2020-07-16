@@ -1,0 +1,35 @@
+{tmpl_errors name="Errors"}
+<tmpl_if_query_has_rows query="Q_ShippedToday">
+<table border="1" width="100%">
+	<tr>
+		<td><strong>Date Shipped</strong></td>
+		<td><strong>Order ID</strong></td>
+		<td><strong>DUA Number</strong></td>
+		<td><strong>Customer Last Name</strong></td>
+	</tr>
+	<tmpl_loop query="Q_ShippedToday">
+	<tr>
+		<td>{tmpl_row_var_date name="shp_date" format="d M Y"}</td>
+		<td>{tmpl_row_var or_tr_id}</td>
+		<td>{tmpl_row_var shp_customs_number}</td>
+		<td>{tmpl_row_var or_purchaser_lastname}</td>
+	</tr>
+	</tmpl_loop>
+</table>
+<p>
+Total number of boxes shipped: <?=$data['Q_ShippedToday']->numRows();?>
+</p>
+<form method="post" action="index.php?act=OnlineShop.AcmeShippingReport">
+<table>
+	<tr><td>Total Cost:</td><td><input type="text" name="Amount" value="{tmpl_var Amount}"></td></tr>
+	<tr><td>Reference:</td><td><input type="text" name="Ref" value="{tmpl_var Ref}"></td></tr>
+	<tr><td>Paid?:</td><td><input type="checkbox" name="Paid" value="1" style="border:0px;"></td></tr>
+	<tr><td></td><td><input type="submit" name="Submit" value="Submit"></td></tr>
+</table>
+</form>
+<tmpl_else>
+<p>
+	All boxes shipped have already been allocated to a shipping charge.
+</p>
+</tmpl_if>
+<input type="button" name="jump" value="View Shipping Charges History" onclick="document.location='index.php?act=shopsystem_shipping_charges.List';"> 

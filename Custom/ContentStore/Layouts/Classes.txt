@@ -1,0 +1,5 @@
+.textHeader:Header
+.textSubHeaders:SubHeaders
+.textWelcome:Welcome Text
+.textQuotes:Quotes
+.GoldText:Gold Text

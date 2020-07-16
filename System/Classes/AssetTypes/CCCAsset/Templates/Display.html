@@ -1,0 +1,29 @@
+<TABLE WIDTH="100%">
+{tmpl_evaluate $counter = 1}
+{tmpl_loop ListQuery}
+<?php
+	if (substr($row['cit_content'],0,3) == '<p>') {
+		$row['cit_content'] = substr($row['cit_content'],3);
+	}
+	if (substr($row['cit_content'],-4,4) == '</p>') {
+		$row['cit_content'] = substr($row['cit_content'],0,-4);
+	}
+	$row['Number'] = ++$data['CurrentRow'];
+?>
+<TR CLASS="CCC{tmpl_evaluate $rowClass = $counter%2==0?'Odd':'Even'; print($rowClass)}">
+		<TD>
+			<p>	
+			<span class="CCCNumber">{tmpl_row_var Number}. </span><a href="Javascript:toggleDisplay('CCC{tmpl_row_var Number}');">{tmpl_row_var cit_title}</a><br />
+			<span id="CCC{tmpl_row_var Number}" style="display:none;">
+			{tmpl_row_var_parse cit_content}
+			</span>
+			</p>
+		</TD>
+</TR>
+<TR ALIGN="LEFT" VALIGN="TOP">
+	<TD COLSPAN="2" CLASS="dotline">&nbsp;</TD>
+</TR>
+{tmpl_evaluate $counter++}
+{tmpl_end}
+<TR><TD colspan="2">{tmpl_var_raw PageThru}</TD></TR>
+</TABLE>

@@ -1,0 +1,12 @@
+<TABLE width="100%" cellpadding="3" cellspacing="0">
+<?php 
+	foreach($data['Results'] as $row) {
+?>
+	<TR>
+		<TH align="right" width="20%" nowrap>{tmpl_row_var name}</TH>
+		<TD align="left">{tmpl_row_var value}</TD>
+	</TR>
+<?php 
+	} 
+?>
+</TABLE>

@@ -1,0 +1,92 @@
+<p class="noPrint">
+<input type="button" name="print" onclick="window.print();" value="Print">
+</p>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Order #</strong></td>
+		<td><strong>Date</strong></td>
+		<td><strong>Client Name</strong></td>
+		<td><strong>Shipping Address</strong></td>
+		<td><strong>Boxes</strong></td>
+		<td><strong>Notes</strong></td>
+		<td><strong>Customer Notes</strong></td>
+	</tr>
+<tmpl_loop query="Q_Orders">
+	<?php 
+		// Get shipping details
+		$shippingDetails = unserialize($row['or_shipping_details']);
+		$data['ShippingDetailsHTML'] = '';
+		foreach($shippingDetails['ShippingDetails'] as $key => $aValue) {
+			if ($key != 'first_name' and $key != 'last_name' and $key != 'Email') {
+				$data['ShippingDetailsHTML'] .= $aValue."<BR>";
+			}
+		}		
+	
+		$np = 0;
+		// Get products in order
+		if( IsSet( $row['in_swiss_products'] ) )
+		{
+			$p = unserialize($row['in_swiss_products']);
+			$data['products'] = '';
+			foreach ($p as $product => $qty) {
+				$data['products'] .= $qty.' x '.ss_HTMLEditFormat($product).'<br />';	
+				$np++;
+			}
+		}
+
+		if( $np === 0 )
+			continue;
+
+		// Get notes
+		$Q_Notes = query("
+			SELECT * FROM shopsystem_order_notes
+			WHERE orn_or_id = {$row['or_id']}
+			ORDER BY orn_id
+		");
+		$notes = '';
+		while ($note = $Q_Notes->fetchRow()) {
+			$notes .= date('d/m/Y H:i',ss_SQLtoTimeStamp($note['orn_timestamp'])).' '.ss_HTMLEditFormat($note['orn_text']).'<br>';
+		}
+		$notes .= '&nbsp;';
+		
+		// Get customer comments - gift/special instructions
+		$details = unserialize($row['or_details']);
+		$data['Spec'] = '';
+		if (array_key_exists('GiftMessage',$details)) {
+			$data['Spec'] = $details['GiftMessage'];
+		}
+		$data['Spec'] .= '';
+		
+		// Loop thru products in the order and only allow it if its not marked shipped
+		$o = unserialize($row['or_basket']);
+		$display = true;
+		foreach ($o['Basket']['Products'] as $p) {
+			if (array_key_exists('InvoiceNumbers',$p) and is_array($p['InvoiceNumbers'])) {
+				foreach ($p['InvoiceNumbers'] as $id => $number) {
+					if (strlen($number) and $number == $row['inv_id']) {
+						if (array_key_exists($id,$p['Shipped']) and strlen($p['Shipped'][$id])) {
+							// Its already been shipped
+							$display = false;
+						}
+					}
+				}
+			} else {
+				$display = false;	
+			}
+			
+		}
+		
+		if ($display) {
+	?>		
+	<tr>
+		<td valign="top">{tmpl_row_var or_tr_id}</td>
+		<td valign="top">{tmpl_row_var_date name="or_recorded" format="d M y"}</td>
+		<td valign="top">{tmpl_row_var in_destination}</td>
+		<td valign="top">{tmpl_var_raw ShippingDetailsHTML}</td>
+		<td valign="top">{tmpl_var_raw products}</td>
+		<td valign="top"><?=$notes?></td>
+		<td valign="top">{tmpl_var Spec}&nbsp;</td>
+	</tr>
+	<?	}	?>
+</tmpl_loop>
+</table>

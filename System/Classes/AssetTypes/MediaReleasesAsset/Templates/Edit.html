@@ -1,0 +1,32 @@
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+ 	<tr>
+ 		<td align="left" valign="top"><img src="Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+                    	<td><img src="Images/h-manage-media-releases.gif" width="214" height="26"></td>
+				 </tr>
+    				<tr>
+                    	<td align="left" valign="top">
+							{tmpl_admin_link label="Manage Media Releases" url="index.php?act=MediaReleasesAdministration.List&as_id={$data['as_id']}" target="MediaReleasesManager" description="Click here to manage your media releases."}                    	
+               		 </td>
+				 </tr>
+                	<tr>
+                		<td><img src="Images/h-config.gif" width="172" height="26"></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+							{tmpl_admin_main_config_link id="DisplayOptions" description="Click here to edit configuration settings."}</td>                		
+           			 </td>
+           		 </tr>
+                	</table></td>
+	</tr>
+</table>
+
+<div id="DisplayOptions" style="display:none;">
+<p>Notification email address: {tmpl_fieldset_field fieldset="FieldSet" field="AST_MEDIARELEASES_NOTIFICATION_EMAIL_ADDRESS"}</p>
+<p>Display {tmpl_fieldset_field fieldset="FieldSet" field="AST_MEDIARELEASES_RELEASES_PER_PAGE"} media releases per page. Leave blank to display all.</p>
+<p>
+	Please tick the user groups that will be allowed to upload new media releases:
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_MEDIARELEASES_UPLOAD_USERGROUPS"}	
+</p>
+</div>

@@ -1,0 +1,47 @@
+<STYLE MEDIA="screen">
+	#screenView {visibility:visible}
+	#printView  {
+	visibility:hidden;
+	position: absolute;
+	height: 0px;
+	width: 0px;
+	left: 0px;
+	top: 0px;
+}
+</STYLE>
+<STYLE MEDIA="print">
+	#screenView {visibility:hidden;
+	position: absolute;
+	height: 0px;
+	width: 0px;
+	left: 0px;
+	top: 0px;}
+	#printView  {visibility:visible}
+</STYLE>
+</head>
+
+<DIV ID="screenView">
+<TABLE STYLE="vertical-align:middle" ALIGN="CENTER">
+	<TR><TD ALIGN="CENTER"><IMG SRC="{tmpl_var Directory}/{tmpl_var url}" STYLE="padding:3px;border:1px solid black"></TD></TR>
+	<TR><TD ALIGN="RIGHT"><A HREF="javascript:window.print()">Print</A> | <A HREF="{tmpl_var AssetPath}?Service=Show&Image={tmpl_var Previous}">Previous</A> | <A HREF="{tmpl_var AssetPath}?Service=Show&Image={tmpl_var Next}">Next</A> | <A HREF="javascript:window.close()">Close</A></SMALL></TD></TR>
+	<TR>
+		<TD>
+			<strong>{tmpl_var title}</strong>			
+			<P>{tmpl_var description}</P>
+		</TD>
+	</TR>
+</TABLE>
+
+
+</DIV>
+<DIV ID="printView">  
+    <TABLE STYLE="vertical-align:middle" ALIGN="CENTER">
+      <TR>
+        <TD ALIGN="CENTER"><IMG SRC="{tmpl_var Directory}/{tmpl_var url}" STYLE="padding:3px;border:1px solid black"></TD>
+      </TR>
+      <TR> 
+        <TD STYLE="font-size:12pt"> <strong>{tmpl_var title}</strong>			
+			<P>{tmpl_var description}</P></TD>
+      </TR>
+    </TABLE>
+</DIV>

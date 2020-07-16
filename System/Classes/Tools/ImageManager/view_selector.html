@@ -1,0 +1,51 @@
+<HTML>
+	
+<HEAD>
+<TITLE>Image Browser</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=<?=$GLOBALS['cfg']['Web_Charset']?>">
+<style type="text/css">
+<!--
+BODY, TABLE, TD {
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+-->
+</style>
+</HEAD>
+	<BODY bgcolor="#FFFFFF" text="#333333" link="#666666" vlink="#999999" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+	<TABLE WIDTH="512" CELLPADDING="0" CELLSPACING="0">
+	<TR>
+		<TD ROWSPAN="2" WIDTH="256">
+		<DIV STYLE="height:262px;width:256px;overflow:auto">
+			<TABLE BORDER="0" >
+				<TR><TD ALIGN="LEFT">Filename</TD><TD>Dimensions</TD></TR>
+				<TMPL_LOOP NAME="files">
+				<TR CLASS="{TMPL_VAR rowClass}">
+					<TD><A HREF="javascript:document.images.Preview.src = 'index.php?act=ImageManager.get&Image={TMPL_Var URL escape='url'}&Size=256x256>';currentURL='{TMPL_Var URL}';void(0);">{TMPL_VAR fileName}</A></TD>
+					<TD>{TMPL_VAR dimensions}</TD>
+				</TR>
+				</TMPL_LOOP>
+			</TABLE>
+		</DIV>
+		</TD>
+		<TD align="center" VALIGN="middle" WIDTH="260" HEIGHT="256" STYLE="padding-left:4px"><IMG NAME="Preview" SRC="" ALT="Preview Here"></TD>
+	</TR>
+	<TR><TD ALIGN="CENTER"><SMALL>Preview images may be reduced in size.</SMALL></TD></TR>
+	<SCRIPT LANGUAGE="Javascript">
+		currentURL = "Not Set";
+	</SCRIPT>	
+	<FORM ACTION="{TMPL_VAR __SELF__}" enctype="multipart/form-data" method="post">
+		<INPUT TYPE="HIDDEN" NAME="act" VALUE="ImageManager.upload">
+		<INPUT TYPE="HIDDEN" NAME="Directory"  VALUE="{TMPL_VAR Directory escape='html'}">
+		<INPUT TYPE="HIDDEN" NAME="RFA"        VALUE="{TMPL_VAR BackURL escape='html'}">
+		<TR>
+			<TD><INPUT TYPE="FILE" NAME="NewFile" SIZE="5"><INPUT TYPE="SUBMIT" VALUE="Upload"></TD>
+			<TD ALIGN="RIGHT"><INPUT TYPE="BUTTON" OnCLick="if (currentURL != 'Not Set') {window.opener.{TMPL_Var Save}(currentURL); window.close()} else { alert('Please choose an image.')}" VALUE="Select"><INPUT TYPE="BUTTON" OnCLick="if (currentURL != 'Not Set') {if (confirm('Are you sure you wish to delete ' + currentURL + '?')) {document.location='{TMPL_VAR Self}?act=ImageManager.delete&Image=' + escape(currentURL) + '&RFA={TMPL_VAR BackURL escape='url'}'}} else {alert('Please choose an image.')}" VALUE="Delete"><INPUT TYPE="BUTTON" OnClick="window.close()" VALUE="Cancel"></TD>	
+		</TR>
+	</FORM>
+	</TABLE>
+	</BODY>
+</HTML>
+
+	

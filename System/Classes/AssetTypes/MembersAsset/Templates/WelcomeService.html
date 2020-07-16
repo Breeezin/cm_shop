@@ -1,0 +1,24 @@
+{tmpl_var_raw EditableContent}
+<?php
+if( $data['IssueCount'] > 0 )
+	if( $data['NewCount'] > 0 )
+		echo "<a href='/Members/Service/Messages#New' title='You have a new message'><h1>You have {$data['NewCount']} new message(s)</h1></a>";
+
+$usID = ss_getUserID();
+$theUser = getRow("SELECT * FROM Users WHERE us_id = ".(int)$usID );
+
+if( ( $theUser['us_account_credit'] > 0 ) && ( $foo = getCurrencyEntry( $theUser['us_credit_from_gateway_option'] ) ) )
+{
+	echo "<br />You have a credit of ".$foo['po_currency']." ".$theUser['us_account_credit']." in our system<br />";
+}
+?>
+<br />
+<a href='/Members/Service/Edit'>Edit your profile address</a><br />
+<a href='/Members/Service/Messages'>Go to your messages</a><br />
+<?php if( $data['AbandonedCount'] > 0 ) { ?>
+<a href='/Members/Service/Unpaid'>Review your Current Unpaid Orders</a><br />
+<?php } ?>
+<a href='/Members/Service/Paid'>Review your Current Paid Orders</a><br />
+<a href='/Members/Service/WishList'>Go to your Wish List</a><br />
+<!--a href='/Members#Suggested'>Go to Suggested Llamas</a><br /-->
+<a href="index.php?act=Security.Logout">Logout</a>

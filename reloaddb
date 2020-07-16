@@ -1,0 +1,16 @@
+devsite='http:\/\/shop.iconcepts.local'
+sdevsite='https:\/\/shop.iconcepts.local'
+mysqladmin -f drop shop
+mysqladmin create shop
+mysql -f --default-character-set=latin1  shop < shop.sql
+mysql -f --default-character-set=latin1  shop < assets.sql
+echo "grant all on shop.* to uSd7sDf8@'127.0.0.1' identified by 'hFd8sdfU'" | mysql common
+mysqladmin -f drop common
+mysqladmin create common
+bzcat common.sql.bz2 | mysql -f common
+echo "grant all on common.* to _Shared@'127.0.0.1' identified by 'bfgv98kjm6'" | mysql common
+cat Custom/GlobalSettings.config | sed -e "s/HTTP_DEVELOPMENT_URL/$devsite/" | sed -e "s/HTTPS_DEVELOPMENT_URL/$sdevsite/" > Custom/GlobalSettings.php
+chown www-data:www-data Custom/GlobalSettings.php
+chmod 640 Custom/GlobalSettings.php
+echo "update configuration set cfg_plaintext_server = '$devsite\/' where cfg_id = 1;" | mysql shop
+echo "update configuration set cfg_secure_server = '$sdevsite\/' where cfg_id = 1;" | mysql shop

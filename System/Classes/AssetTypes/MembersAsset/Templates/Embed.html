@@ -1,0 +1,3 @@
+{tmpl_loop Q_Subscriptions}
+	{tmpl_row_var ms_name} {tmpl_eval print(ss_getSubscriptionPrice($row['ms_id']));}<BR>
+{tmpl_end}

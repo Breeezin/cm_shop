@@ -1,0 +1,19 @@
+{tmpl_errors name="Errors"}
+<tmpl_if condition="$data['Done'] == false">
+<p>
+Please enter the current bank balance:
+</p>
+<form method="post" action="index.php?act=OnlineShop.AcmeBank">
+<table>
+	<tr><td>Balance:</td><td><input type="text" name="Amount" value="{tmpl_var Amount}"></td></tr>
+	<tr><td></td><td><input type="submit" name="Submit" value="Submit"></td></tr>
+</table>
+</form>
+
+<tmpl_else>
+
+<p>
+Bank balance recorded.  You may now <a href="Javascript:window.close();void(0);">close this window</a>.
+</p>
+
+</tmpl_if>

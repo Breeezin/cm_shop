@@ -1,0 +1,35 @@
+<tmpl_if condition="$data['tableTags']"> 
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="5">
+</tmpl_if>
+	<tmpl_eval expression="foreach ($data['fields'] as $data['field']) {">	
+			<tmpl_if condition="strlen($data['field']->note)">
+		<TR>
+				<TD COLSPAN="3">
+					<SPAN CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</SPAN>
+				</TD>
+		</TR>
+			</tmpl_if>
+		<TR <tmpl_if condition="$data['tableTags']">CLASS="{tmpl_if array_key_exists($data['field']->name,$data['errors'])}AdminErrorField{/tmpl_if}"</tmpl_if>>
+			<TD VALIGN="TOP" ALIGN="middle" WIDTH="5" CLASS="AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></TD>
+			<TH VALIGN="TOP" align=left width="33%"><SPAN CLASS="AdminDisplayName">
+			<?php if(!is_subclass_of($data['field'],'hiddenfield') and get_class($data['field']) != 'hiddenfield') {?>
+				{tmpl_eval print($data['field']->displayName)}</SPAN>
+			<?php } ?>
+			</TH>
+			<TD>			
+				{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName'];  print($data['field']->display(false, $formName));}
+			</TD>
+		</TR>
+		<tmpl_if condition="$data['field']->verify">
+			<TR <tmpl_if condition="$data['tableTags']">CLASS="{tmpl_if array_key_exists($data['field']->name.'_V',$data['errors'])}AdminErrorField{/tmpl_if}"</tmpl_if>>
+				<TD VALIGN="TOP" ALIGN="middle" WIDTH="5" CLASS="AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></TD>
+				<TH VALIGN="TOP" align=left width="33%"><SPAN CLASS="AdminDisplayName">
+					Verify {tmpl_eval print($data['field']->displayName)}</SPAN>
+				</TH>
+				<TD>{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName'];  print($data['field']->display(true, $formName));}</TD>
+			</TR>
+		</tmpl_if>	
+	</tmpl_eval>
+<tmpl_if condition="$data['tableTags']"> 	
+</TABLE>
+</tmpl_if>

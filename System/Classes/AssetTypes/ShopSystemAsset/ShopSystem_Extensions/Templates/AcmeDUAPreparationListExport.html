@@ -1,0 +1,78 @@
+<?php 
+	print("Name of client\tStreet Address\tState\tPostal Code\tCountry (ISO code)\tTotal Llamas\tTransit Doc Number\tInvoice Number\tTotal Euros\n");
+	$countries = array();
+	while ($row = $data['Q_Orders']->fetchRow()) {
+		// Get shipping details
+		$shippingDetails = unserialize($row['or_shipping_details']);
+		//ss_DumpVar($shippingDetails['ShippingDetails']);
+		$sd = $shippingDetails['ShippingDetails'];
+		$row['StreetAddress'] = trim($sd['0_50A1']);
+		if (strlen(trim($sd['0_50A2']))) $row['StreetAddress'] .= ', '.trim($sd['0_50A2']);
+		$row['PostalCode'] = trim($sd['0_B4C0']);
+		if (array_key_exists('0_50A3',$sd)) {
+			// state and country are separate	
+			$row['State'] = trim($sd['0_50A4']);
+			$row['Country'] = trim($sd['0_50A3']);
+		} else {
+			// combined state and country
+			$row['State'] = trim(substr($sd['0_50A4'],0,strpos($sd['0_50A4'],'<BR>')));
+			$row['Country'] = trim(substr($sd['0_50A4'],strpos($sd['0_50A4'],'<BR>')+4));
+		}
+		
+		// find the country code
+		if (!array_key_exists($row['Country'],$countries)) {
+			$Q_Country = query("
+				SELECT * FROM countries
+				WHERE cn_name LIKE '".escape($row['Country'])."'
+			");		
+			if ($Q_Country->numRows() > 0) {
+				$country = $Q_Country->fetchRow();
+				$countries[$row['Country']] = sprintf("%03d",$country['cn_id']);
+			} else {
+				$countries[$row['Country']] = 0;
+			}
+		}
+		$row['Country'] = $countries[$row['Country']];
+		
+//		if ($row['TrDoID'] == null) $row['TrDoID'] = '';
+//		Hack - Rex, 20060817, stop showing external products here
+		if ($row['TrDoID'] == null) continue;
+		
+		// Loop thru products in the order and only allow it if its not marked shipped
+		$o = unserialize($row['or_basket']);
+		$display = true;
+		if (is_array($o['Basket']['Products'])) {
+			foreach ($o['Basket']['Products'] as $p) {
+				if (array_key_exists('InvoiceNumbers',$p) and is_array($p['InvoiceNumbers'])) {
+					foreach ($p['InvoiceNumbers'] as $id => $number) {
+						if (strlen($number) and $number == $row['inv_id']) {
+							if (array_key_exists($id,$p['Shipped']) and strlen($p['Shipped'][$id])) {
+								// Its already been shipped
+								$display = false;
+							}
+						}
+					}
+				} else {
+					$display = false;	
+				}			
+			}
+		}
+		if ($display) {	
+			$outputValues = array();
+			array_push($outputValues,$row['in_destination']);
+			array_push($outputValues,$row['StreetAddress']);
+			array_push($outputValues,$row['State']);
+			array_push($outputValues,$row['PostalCode']);
+			array_push($outputValues,$row['Country']);
+			array_push($outputValues,$row['in_units']);
+			array_push($outputValues,$row['TrDoID']);
+			array_push($outputValues,$row['inv_id']);
+			array_push($outputValues,$row['in_total_value']);
+			for($i=0;$i<count($outputValues);$i++) {
+				if ($i > 0) print("\t");
+				print(trim($outputValues[$i]));	
+			}
+			print("\n");
+		}	
+	}
+?>

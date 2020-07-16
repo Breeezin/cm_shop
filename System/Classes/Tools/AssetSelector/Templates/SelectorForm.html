@@ -1,0 +1,70 @@
+<SCRIPT>
+	function linkAsset(as_id,as_name,AssetPath,AssetParentID,AssetParentPath) {
+		document.getElementById("PrvFrm").src = "index.php?act=Asset.Display&as_id=" + as_id;
+		document.forms.linkForm.as_id.value = as_id;
+	}
+
+	function checkForm() {
+		if (document.forms.linkForm.Ast_Link_URL.value != "") {
+			return true;	
+		}
+		
+		if (document.forms.linkForm.as_id.value == "") {
+			alert("Please select an asset to link to, or enter a URL to create a new link asset.");
+			return false;
+		} else {
+			var anchorTarget = document.forms.linkForm.AnchorTarget.value;
+			if (anchorTarget.length > 0) {
+				if (anchorTarget.substr(0, 1) != '##') {
+					anchorTarget = '##' + anchorTarget;
+				}
+			}
+			var linkURL = 'ASSET://' + document.forms.linkForm.as_id.value 
+									 + anchorTarget;
+			window.opener.soEditor.insertLinkA(linkURL, document.forms.linkForm.Target.value, '', document.forms.linkForm.AnchorName.value);
+			window.close();
+			return false;
+		}
+		return true;
+	}
+</SCRIPT>
+<FORM ACTION="index.php?act=#ATTRIBUTES.act#&Do_#ATTRIBUTES.act#=Yes" ONSUBMIT="return checkForm()" ENCTYPE="MULTIPART/FORM-DATA" NAME="linkForm">
+<TABLE BORDER="0">
+	<TR>
+	<TD valign="top">{tmpl_eval $treeResult = new Request("Asset.Tree",array('OnClick' => 'linkAsset','OpenAssets' => array('1' => 1,),'FilterByAdmin'		=>	true,));}
+
+		<DIV ID="AssetTree" STYLE="width:275;height:250; overflow:auto;border:solid black 1px;" CLASS="treeBackground">
+			<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+				<TR STYLE="height:5"><TD></TD>
+				</TR><TR>
+				<TD ID="mainTree">
+				{tmpl_eval print($treeResult->display);}
+				</TD></TR>
+			</TABLE>
+		</DIV>
+	</TD>
+	<TD valign="top"><IFRAME ID="PrvFrm" SRC="about:blank" WIDTH="290" HEIGHT="250" NAME="PreviewFrame"></IFRAME></TD>
+	</TR>
+</TABLE>
+<TABLE BORDER="0" WIDTH="100%">
+	<TR>
+	<TD width="15%">Select Above, or new URL : 	</TD><TD><INPUT TYPE="TEXT" NAME="Ast_Link_URL" STYLE="width:100%" VALUE=""></TD>
+	</TR>
+	<TR>
+	<TD>Open In (Target) :</TD><TD><SELECT NAME="Target"><OPTION VALUE="">Same Window/Frame</OPTION><OPTION VALUE="_blank">New Window</OPTION><OPTION VALUE="_top">Top Frame</OPTION></SELECT></TD>
+	</TR>
+	<TR>
+		<TD>Name Anchor :<BR><SMALL>e.g. "top"</SMALL></TD>
+		<TD><INPUT TYPE="TEXT" NAME="AnchorName" VALUE="" STYLE="width:100%"></TD>
+	</TR>	   
+	<TR>
+		<TD>Link To Named Anchor :<BR><SMALL>e.g. #top</SMALL></TD>
+		<TD><INPUT TYPE="TEXT" NAME="AnchorTarget" VALUE="" STYLE="width:100%"></TD>
+	</TR>	   
+</TABLE>	 
+	<BR>
+	<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="">
+	<INPUT TYPE="SUBMIT" NAME="ACTION" VALUE="Link">
+	
+	<INPUT TYPE="BUTTON" onClick="window.close()" VALUE="Cancel">
+</FORM>

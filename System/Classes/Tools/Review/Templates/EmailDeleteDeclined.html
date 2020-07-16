@@ -1,0 +1,21 @@
+<HTML>
+	<HEAD>
+		<STYLE>
+			p {
+				font-family: Verdana,Arial, Helvetica, sans-serif;
+				font-size: 10pt;
+			}
+		</STYLE>
+	</HEAD>	
+	<BODY>
+		<P>
+			{tmpl_var AuthorFirstName},
+		</P>
+		<P>
+			{tmpl_var Reviewer} has declined your delete request for the following {tmpl_var as_type}:<BR>{tmpl_var AssetPath}
+		</P>
+		<P>
+			You may <A HREF="<?=$GLOBALS['cfg']['currentServer']?>admin">log into your administration area</A> and view any comments by the reviewer.
+		</P>
+	</BODY>
+</HTML>			

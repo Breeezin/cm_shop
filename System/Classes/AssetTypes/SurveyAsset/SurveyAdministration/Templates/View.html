@@ -1,0 +1,20 @@
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="5">
+<tmpl_eval expression="foreach ($data['fields'] as $data['field']) {">
+	<?php if(!is_subclass_of($data['field'],'hiddenfield') and get_class($data['field']) != 'hiddenfield') {?>
+		<TR>
+			<TD VALIGN="TOP" ALIGN="middle" WIDTH="5" CLASS="AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></TD>
+			<TH VALIGN="TOP" align=left width="33%"><SPAN CLASS="AdminDisplayName">
+
+				{tmpl_eval print($data['field']->displayName)}</SPAN>
+				<tmpl_if condition="strlen($data['field']->note)">
+					<BR><SPAN CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</SPAN>
+				</tmpl_if>
+
+			</TH>
+			<TD>
+				{tmpl_eval $formName ='adminForm'; if (array_key_exists('formName', $data))  $formName = $data['formName']; print($data['field']->displayValue($data['field']->value));}
+			</TD>
+		</TR>
+		<?php } ?>
+	</tmpl_eval>
+</TABLE>

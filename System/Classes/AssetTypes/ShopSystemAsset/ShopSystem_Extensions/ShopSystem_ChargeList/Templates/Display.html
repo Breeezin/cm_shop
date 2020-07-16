@@ -1,0 +1,205 @@
+<?php
+/*
+	if( array_key_exists( "ChargeList", $GLOBALS['cfg'] )
+	 && is_array( $GLOBALS['cfg']['ChargeList'] ) )
+		foreach( $GLOBALS['cfg']['ChargeList'] as $currency => $cl )
+			if( $cl != $data['List'] )
+				echo "<br /><a href='index.php?act=ShopSystem_ChargeList.Display&List=".$cl."'>Swap to Chargelist #".$cl."</a><br/>";
+*/
+?>
+<?php echo "There are ".$data['OrdersCount']." orders left to charge, next one in line is<br />"; ?>
+<tmpl_if condition="$data['Q_Orders']->numRows() == 0">
+<p>
+There are currently no items in your charge list.
+</p>
+<tmpl_else>
+<table width="100%" cellspacing="0" cellpadding="3">
+
+<? $firstTime = true; $oddEven = true; ?>
+
+<tmpl_loop query="Q_Orders">
+
+<tmpl_if condition="$firstTime">
+<tr>
+	<td><strong>Order ID</strong></td>
+	<td><strong>Total</strong></td>
+	<td><strong>CHF</strong></td>
+<!--	<td><strong>Total in CHF</strong></td> -->
+	<?
+		$details = unserialize($row['tr_payment_details_szln']);
+		foreach($details as $detail => $data['value']) {
+			if ($detail == 'TrCreditCardType') $data['value'] = $data['ccTypes'][$data['value']];	
+	?>
+			<td><strong><?=str_replace('TrCreditCard','',$detail);?></strong></td>
+	<?
+		}
+	?>
+	<td><strong>Copy to paste buffer</strong></td>
+	<td><strong>Authorisation Number</strong></td>
+	<td></td>
+</tr>
+<? $firstTime = false; ?>
+</tmpl_if>
+<?php
+	$data['rowClass'] = $oddEven ? 'AdminEvenRow' : 'AdminOddRow';
+	$oddEven = !$oddEven;
+?>
+
+<tr class="{tmpl_var rowClass}">
+	<tmpl_if condition="$row['or_country'] != 840">
+		<td><font color='purple'>{tmpl_row_var tr_id}</font></td>
+	<tmpl_else>
+		<td>{tmpl_row_var tr_id}</td>
+	</tmpl_if>
+	<td>{tmpl_row_var tr_total} {tmpl_row_var tr_currency_code}</td>
+	<td><?php  echo number_format( ss_getExchangeRate( $row['tr_currency_code'], 'CHF' ) * $row['tr_total'], 2, '.', '' ); ?></td>
+<!--	<td><?php echo number_format( ss_getExchangeRate( $row['tr_currency_code'], 'CHF' ) * $row['tr_total'], 2 ); ?> CHF</td> -->
+	<?
+		$details = unserialize($row['tr_payment_details_szln']);
+		foreach($details as $detail => $data['value']) {
+			if ($detail == 'TrCreditCardType') $data['value'] = $data['ccTypes'][$data['value']];	
+			if ($detail == 'TrCreditCardNumber') $data['value'] = preg_replace( '/[^0-9]/', '', $data['value'] );	
+
+	?>
+		<td>{tmpl_var value}</td>
+	<?php
+			}
+		// paste stuff here
+		$foo = $row['tr_total']."|";
+		$foo .= preg_replace( '/[^0-9]/', '', $details['TrCreditCardNumber'])."|";
+		$foo .= $details['TrCreditCardExpiry'][0].$details['TrCreditCardExpiry'][1].$details['TrCreditCardExpiry'][5].$details['TrCreditCardExpiry'][6]."|";
+		$foo .= $details['TrCreditCardCVV2']."|";
+		$foo .= $row['tr_id']."|";
+		$foo .= preg_replace( '/\//', '|', $details['TrCreditCardExpiry'])."|";
+		$foo .= preg_replace( '/\./', ',', $row['tr_total'])."|";
+		$foo .= $details['TrCreditCardExpiry'][5].$details['TrCreditCardExpiry'][6]."|";
+		$foo .= number_format( ss_getExchangeRate( $row['tr_currency_code'], 'CHF' ) * $row['tr_total'], 2, '.', '' )."|";
+
+		echo "<td><a href='javascript:void(0);' onclick='toClip(\"$foo\");'>copy</a></td>";
+	?>
+	<form method="post" action="index.php?act=ShopSystem_ChargeList.UpdateAuthorisationNumber&or_id={tmpl_row_var or_id}&BackURL=<?print(ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List']))?>">
+		<td nowrap>
+			<input name="or_authorisation_number" type="text" size="25" maxlength="63" value="{tmpl_row_var or_authorisation_number}">
+			<input type="submit" name="Save" Value="Save">
+		</td>
+	</form>
+	
+	<td align="right">
+		<a href="index.php?act=OnlineShop.MarkProperty&Property=CardDenied<?print("&or_id={$row['or_id']}&tr_id={$row['tr_id']}&BackURL=".ss_URLEncodedFormat("index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={$row['or_id']}&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])))?>">Mark Card Denied</a>
+	</td>
+<?php
+if( $data['OneAtATime'] )
+	$onlyRow = $row;
+/*
+<form>
+	<td align="right">
+		<select name="jumperSelect" onChange="jumper(this)"><option value="#">Manage</option>
+			<option value="index.php?act=OnlineShop.MarkPaidNotShipped<?print("&or_id={$row['or_id']}&tr_id={$row['tr_id']}&SendEmail=1&BackURL=".ss_URLEncodedFormat("index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={$row['or_id']}&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])))?>">Mark Paid/Not Shipped</option>
+			<tmpl_if condition="strlen( $row['or_authorisation_number'] ) == 0">
+				<option value="index.php?act=OnlineShop.MarkProperty&Property=CardDenied<?print("&or_id={$row['or_id']}&tr_id={$row['tr_id']}&BackURL=".ss_URLEncodedFormat("index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={$row['or_id']}&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])))?>">Mark Card Denied</option>
+			</tmpl_if>
+			<option value="index.php?act=OnlineShop.MarkPaid<?print("&or_id={$row['or_id']}&tr_id={$row['tr_id']}&BackURL=".ss_URLEncodedFormat("index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={$row['or_id']}&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])))?>">Mark Paid</option>
+			<option value="index.php?act=OnlineShop.MarkProperty&Property=Standby<?print("&or_id={$row['or_id']}&tr_id={$row['tr_id']}&BackURL=".ss_URLEncodedFormat("index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={$row['or_id']}&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])))?>">Mark Standby</option>
+			<option value="index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id=<? echo $row['or_id']."&BackURL=".ss_URLEncodedFormat('index.php?act=ShopSystem_ChargeList.Display&List='.$data['List'])?>">Remove from Chargelist</option>
+		</select>
+	</td>
+</form>
+*/ ?>
+</tr>
+</tmpl_loop>
+</table>
+<?php
+if( $data['OneAtATime'] )
+{
+	// show address
+	$shippingDetails = unserialize( $onlyRow['or_shipping_details'] );
+
+	$state_country = $shippingDetails['PurchaserDetails']['0_50A4'];
+	$pos = strpos( $state_country, "<BR>" );
+	if( $pos )
+	{
+		$state = substr( $state_country, 0, $pos );
+		$country = substr( $state_country, $pos + 4 );
+	}
+	else
+	{
+		$state = $state_country;
+		$country = $state_country;
+	}
+
+	$firstname = $shippingDetails['PurchaserDetails']['Name'];
+	$surname = "";
+	if( strlen( $shippingDetails['PurchaserDetails']['0_B4BF'] ) )
+		$surname = $shippingDetails['PurchaserDetails']['0_B4BF'];
+	else
+		if( $pos = strpos( $firstname, " " ) )
+		{
+			$surname = substr( $firstname, $pos+1 );
+			$firstname = substr( $firstname, 0, $pos );
+		}
+
+	$purchaser_street_address = strip_tags($shippingDetails['PurchaserDetails']['0_50A1']);
+	$purchaser_city = strip_tags($shippingDetails['PurchaserDetails']['0_50A2']);
+	$purchaser_state = strip_tags($state);
+	$purchaser_country = strip_tags($country);
+	$purchaser_postcode = strip_tags($shippingDetails['PurchaserDetails']['0_B4C0']);
+	$purchaser_telephone = strip_tags($shippingDetails['PurchaserDetails']['0_B4C1']);
+	$purchaser_email_address = strip_tags($shippingDetails['PurchaserDetails']['Email']);
+	$purchaser_name = $firstname." ".$surname;
+
+	echo "<table>";
+	echo "<tr><td>$purchaser_name</td></tr>";
+	echo "<tr><td>$purchaser_street_address</td></tr>";
+	echo "<tr><td>$purchaser_city</td></tr>";
+	echo "<tr><td>$purchaser_country</td></tr>";
+	echo "<tr><td>$purchaser_state</td></tr>";
+	echo "<tr><td>$purchaser_postcode</td></tr>";
+	echo "</table>";
+
+}
+?>
+<?php if( false ) { ?>
+<a href="index.php?act=ShopSystem_ChargeList.Process" target="_blank"> Process charge list with E-Global </a>
+<?php } ?>
+<SCRIPT language="Javascript">
+<!--
+
+	/*for(var i=0;i<rowCount;i++) {
+		theRow = document.getElementById('row'+i);
+		rowPositions[i] = getPageOffsetTop(theRow);
+	}*/
+
+	function confirmDelete(URL) {
+		if ( confirm("Are you sure you want to delete this record ?") ) {
+			document.location=URL;
+		}
+	}
+
+	function toClip( copyme ) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+	   const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"].  
+	   getService(Components.interfaces.nsIClipboardHelper);  
+	   gClipboardHelper.copyString(copyme);
+	}
+	
+	function jumper(selectList) {		
+		urlAppend = selectList.options[selectList.selectedIndex].value;
+		var winOpenReg = new RegExp('windowOpen:');
+		if(urlAppend.search(winOpenReg) != -1) {	
+			urlAppend = urlAppend.replace(winOpenReg, '');
+			 w = 550;
+		     h = 700;
+		     x = Math.round((screen.availWidth-w)/2); //center the top edge
+		     y = Math.round((screen.availHeight-h)/2); //center the left edge
+		     popupWin = window.open(urlAppend, 'Win', "width="+w+",height="+h+",toolbar=0,location=0,scrollbars=1,statusbar=1,menubar=0,resizable=1,top="+y+",left="+x+",screeenY="+y+",screenX="+x);
+		
+		     popupWin.creator=self;		
+			 popupWin.focus();
+		} else {
+			selectList.form.reset();
+			document.location = urlAppend;
+		}
+	}
+//-->
+</SCRIPT>
+</tmpl_if>

@@ -1,0 +1,118 @@
+/* @override http://puroexpress2.local/Custom/ContentStore/Layouts/puroexpress/sty_main.css */
+
+body{font-family:"Myriad Pro","Segoe UI",Helvetica, Arial, sans-serif; color:#4e4e4e; opacity: 0.9; font-size: 80%; line-height: 1.5em;}
+/* **************** CONTENT OBJECTS ***************** */
+/* ====== Default spacing ====== */
+h1, h2, h3, h4, h5, h6, ul, ol,dl, p,blockquote {padding:0px;}
+h1, h2, h3, h4, h5, h6,img{padding-bottom:0px;}
+pre{margin: 10px;}
+table h1,table h2,table h3, table h4, table h5, table h6, table p, table ul, table ol, table dl,
+ul h1,ul h2,ul h3, ul h4, ul h5, ul h6, ul p, ul ul, ul ol, ul dl,
+ol h1,ol h2,ol h3, ol h4, ol h5, ol h6, ol p, ol ul, ol ol, ol dl {padding:0;}
+/* ====== Elements ====== */
+img{display:block;}
+em{font-style: italic;}
+strong{font-weight:bold;}
+hr{border: 5px solid #e2e2e2; border-width: 0 0 5px 0; margin: 20px 10px 10px 10px;}
+code{color:#0B8C8F;}
+/* ====== Headings ====== */
+/* .h1-.h6 classes should be used to maintain the semantically appropriate heading levels - NOT for use on non-headings */
+h1, .h1{ color:#000;
+	font: normal normal 196% Georgia, "Times New Roman", Times, serif;
+}
+h2, .h2{ color: #6f0f13;
+	font: normal normal 230% Georgia, "Times New Roman", Times, serif;
+}
+h3, .h3{ color: #6f0f13;
+	font: normal normal 146.5% Georgia, "Times New Roman", Times, serif;
+}
+h4, .h4{font-size:123.1%; font-weight:normal; font-style: normal; color: #6f0f13;}
+h5, .h5{ color: #6f0f13;
+	font: normal bold 108% Georgia, "Times New Roman", Times, serif;
+}
+h6, .h6{font-size:108%; font-weight:normal;  font-style: italic; color: #6f0f13;}
+/* if additional headings are needed they should be created via additional classes, never via location dependant styling */
+.category{font-size:108%; font-weight:normal; font-style: normal; text-transform:uppercase; color: #333;}
+.category a{color: #333;}
+.important a{font-weight:bold;}
+/* links */
+a { color: #9a6d29;text-decoration: none }
+a:focus, a:hover { text-decoration: underline }
+a:visited { color: #896022;}
+
+
+/* Buttons */
+
+.grey-button, a.grey-button, a.TellAFriendLink {
+		background: #837767 url(Images/button-bg-grey.gif) repeat-x 0 top;
+	border: #645b4f solid 1px;
+	padding:5px 8px;
+	color: #000;
+	text-shadow: #c8c3bc 1px 1px 1px;
+	display: inline-block;
+	margin: 5px 0px;
+}
+
+.gold-button, a.gold-button {
+	background:#9e732e url(Images/button-bg-gold.gif) repeat-x 0 top;
+	border: #8c7652 solid 1px;
+	padding:5px 8px;
+	color: #000;
+	text-shadow: #c8c3bc 1px 1px 1px;
+	display: inline-block;
+	margin: 5px 0px;
+	font-weight: bold;
+}
+
+.gold-button:hover {
+	background: #947f5f;
+}
+
+.red-button, a.red-button {
+	background: #6f0f13 url(Images/button-bg-red.gif) repeat-x 0 top;
+	border: #5e0d10 solid 1px;
+	padding:5px 8px;
+	color: #fff;
+	text-shadow: #52080a 1px 1px 1px;
+	display: inline-block;
+	margin: 5px 0px;
+}
+
+.red-button:hover {
+background: #520a0d;
+}
+
+.red-button-cart, a.red-button-cart {
+	background: #6f0f13 url(Images/button-bg-red.gif) repeat-x 0 top;
+	border: #5e0d10 solid 1px;
+	padding:5px 8px;
+	color: #fff;
+	text-shadow: #52080a 1px 1px 1px;
+	display: inline-block;
+	margin: 5px 0px;
+}
+
+.red-button-cart:hover {
+background: #520a0d;
+}
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.curvybox {
+	border-radius:5px;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+}
+
+.boxshadow {
+	-moz-box-shadow: 1px 1px 2px #d5d5d5;
+	-webkit-box-shadow: 1px 1px 2px #d5d5d5;
+	box-shadow: 1px 1px 2px #d5d5d5;
+}
+ 

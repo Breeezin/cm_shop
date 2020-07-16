@@ -1,0 +1,20 @@
+<p>
+Please select a subscription type:<BR>
+<FORM name="Subscription" method="POST" action="{tmpl_var_url AssetPath}">
+{tmpl_errors Errors}
+<TABLE cellpadding="0" cellspacing="0" width="100%">	
+{tmpl_loop Q_Subscriptions}
+	<TR>
+		<TD valign="baseline"><input type="radio" name="SubscriptionType" value="{tmpl_row_var ms_id}" <?php $sub = $data['SubscriptionType']==$row['ms_id']?'CHECKED':''; print($sub);?>>{tmpl_row_var ms_name}</TD>
+		<TD valign="baseline">{tmpl_eval print(ss_getSubscriptionPrice($row['ms_id']));}</TD>
+	</TR>		
+{tmpl_end}	
+	<TR><TD colspan="2">{tmpl_var_raw PaymentOptions}</TD></TR>
+</TABLE>
+<input type="hidden" name="us_id" value="{tmpl_var us_id}">
+<input type="hidden" name="tr_id" value="{tmpl_var tr_id}">
+<input type="hidden" name="tr_token" value="{tmpl_var tr_token}">
+<input type="hidden" name="Do_Service" value="yes">
+<input type="hidden" name="Service" value="Subscription">
+</FORM>
+</P>

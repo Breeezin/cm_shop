@@ -1,0 +1,286 @@
+<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+	<!--<script type="text/javascript" src="System/Libraries/Field/FCKeditor/dialog/js/fck_image.js"></script>-->
+	<script type="text/javascript" src="System/Libraries/Field/FCKeditor/dialog/js/fck_dialog_common.js"></script>
+	<script language="Javascript">
+		//var oEditor = window.opener.FCKLastDialogInfo.Editor;
+		dialogArguments = window.opener.FCKLastDialogInfo;
+		var oEditor = dialogArguments.Editor;
+		var FCK		= oEditor.FCK ;
+		
+		// Get the selected image (if available).
+		var oImage = FCK.Selection.GetSelectedElement( 'IMG' ) ;
+		var oImageOriginal ;
+	</script>
+</tmpl_if>
+
+<script type="text/javascript" src="System/Classes/MDI/Templates/fake_popup.js"></script>
+<SCRIPT>
+var gWidth = "{tmpl_var ImageWidth}";
+var isInite = true;
+	function continueok() {		
+		document.forms.embedForm.ImageWidth.value = '';
+		document.forms.embedForm.ImageHeight.value = '';
+		
+		if (window.frames.AssetInfo.document.forms.AssetInfo.FileName.value.length) {
+			if (isInite) {			
+				if (gWidth.length) {
+					document.forms.embedForm.ImageWidth.value = '{tmpl_var ImageWidth}';
+					document.forms.embedForm.ImageHeight.value = '{tmpl_var ImageHeight}';
+					
+				}
+			} else {
+				document.forms.embedForm.ImageWidth.value =  window.frames.AssetInfo.document.forms.AssetInfo.ImageWidth.value;
+				document.forms.embedForm.ImageHeight.value = window.frames.AssetInfo.document.forms.AssetInfo.ImageHeight.value;
+				
+				
+			}
+			document.getElementById('SelectedAssetPath').innerHTML += " - " + window.frames.AssetInfo.document.forms.AssetInfo.ImageWidth.value + "x" +window.frames.AssetInfo.document.forms.AssetInfo.ImageHeight.value
+			var width = parseInt(window.frames.AssetInfo.document.forms.AssetInfo.ImageWidth.value);
+			var heigth = parseInt(window.frames.AssetInfo.document.forms.AssetInfo.ImageHeight.value);
+			if (!isNaN(width) && !isNaN(heigth)) {
+				document.forms.embedForm.ImageWidthRatio.value = width/heigth;					
+				document.forms.embedForm.ImageHeightRatio.value = heigth/width;
+			}
+			
+		}
+		
+		isInite = false
+		return true;
+				
+	}
+	
+	function adjustValue(theName, targetName, ratio) {
+		var theForm = document.forms.embedForm;		
+		var theValue = parseInt(theForm[theName].value);
+		var theRatio = parseFloat(theForm[ratio].value);
+		if (isNaN(theValue)) {
+			document.forms.embedForm.ImageWidth.value =  window.frames.AssetInfo.document.forms.AssetInfo.ImageWidth.value;
+			document.forms.embedForm.ImageHeight.value = window.frames.AssetInfo.document.forms.AssetInfo.ImageHeight.value;				
+			return true;
+		}
+		theForm[targetName].value = Math.round(theValue * theRatio);
+	}
+	
+	var imageAssetSelected = false;
+		
+<tmpl_if condition="!ss_optionExists('Admin FCK Editor')">
+	popup_resize_to(620, 400);
+	popup_set_title('Image Selector');
+</tmpl_if>
+	//window.resizeTo(620, 380);
+	function getSelectValue(aField) {
+		return document.forms.embedForm[aField].options[document.forms.embedForm[aField].selectedIndex].value;
+	}
+	
+	function embedAsset(as_id,AssentName,AssetPath,AssetParentID,AssetParentPath,as_type) {		
+		document.getElementById('SelectedAssetPath').innerHTML = AssetPath;
+		document.getElementById('PreviewFrame').src = "index.php?act=Asset.Embed&as_id=" + as_id;
+		document.forms.embedForm.as_id.value = as_id;		
+		
+		if ({tmpl_var HasOption}) {
+			if (as_type == 'Image') {
+				document.getElementById('ImageInfo').style.display = '';
+				imageAssetSelected = true;
+				var assetInfoFrame = document.getElementById('AssetInfo');
+				assetInfoFrame.src = "index.php?act=Asset.GetInfo&Caller=parent.continueok();&as_id="+as_id;				
+				
+			} else {
+				document.getElementById('ImageInfo').style.display = 'none';
+				imageAssetSelected = false;
+				//document.getElementById('ImageHeight').style.display = 'none';				
+			}
+		}
+	}
+	function checkForm() {
+	
+		if (document.forms.embedForm.Ast_Image_FileField.value != "") {
+			document.forms.embedForm.Filename.value = document.forms.embedForm.Ast_Image_FileField.value;
+			return true;	
+		}
+		var selectedAsset = document.forms.embedForm.as_id.value;
+		if (selectedAsset == "") {
+			alert("Please select an asset to embed.");
+			return false;
+		}
+		/*
+		IMG alt="EMB: 513" src="index.cfm?fuseaction=assetDisplay&amp;as_id=513" name=image2.jpg></P>
+		*/
+		var fields = ["f_url", "f_alt", "f_align", "f_border", "f_horiz", "f_vert"];
+       
+		
+        document.forms.embedForm.f_url.value = "index.cfm?fuseaction=assetDisplay&amp;as_id="+selectedAsset;		       
+		document.forms.embedForm.f_alt.value = "EMB: "+selectedAsset;
+        
+  		var param = new Object();
+		param.f_url = "index.php?act=Asset.EmbedImage&as_id="+selectedAsset;
+		param.f_alt = "EMB: "+selectedAsset;
+		if (imageAssetSelected) {
+			var sizeinfo = document.forms.embedForm.ImageWidth.value + "x"+ document.forms.embedForm.ImageHeight.value;
+			param.f_url += "&Size=" + sizeinfo;
+			param.f_alt += " "+ sizeinfo;
+		}
+		
+		/*
+		param.f_align = getSelectValue("f_align");
+		param.f_border = document.forms.embedForm.f_border.value;
+		param.f_horiz = document.forms.embedForm.f_horiz.value;
+		param.f_vert = document.forms.embedForm.f_vert.value;
+		*/
+		
+		<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+			if (!oImage) oImage = FCK.CreateElement( 'IMG' ) ;
+			//alert(param.f_url+' '+param.f_alt);
+			oImage.src = param.f_url;
+			oImage.alt = param.f_alt;
+			//SetAttribute( oImage, "alt"   , param.f_alt ) ;		
+			window.close();
+		<tmpl_else>
+			popup_opener().Dialog._return(param);		
+			popup_close();
+		</tmpl_if>
+
+//		window.opener.Dialog._return(param);		
+//		window.close();
+		
+		return true;
+	}
+	
+</SCRIPT>
+<P>
+Choose an existing asset from the tree, or to upload a new image now, click the browse button.
+</P>
+<FORM ACTION="index.php?act={tmpl_var_url act}&DoAction=Yes" ENCTYPE="MULTIPART/FORM-DATA" NAME="embedForm" method="post">
+<TABLE BORDER="0">
+	<TR>
+	<TD valign="top">
+		
+		
+		<DIV ID="AssetTree" STYLE="width:275;height:250; overflow:auto;border:solid black 1px;" CLASS="treeBackground">
+			<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+				<TR STYLE="height:5"><TD></TD>
+				</TR><TR>
+				<TD ID="mainTree">
+				{tmpl_var_raw TreeResult}
+				</TD></TR>
+			</TABLE>
+		</DIV>
+	</TD>
+	<TD valign="top"><IFRAME ID="PreviewFrame" SRC="about:blank"  WIDTH="300" HEIGHT="200" NAME="PreviewFrame"></IFRAME><BR>
+	<span id="SelectedAssetPath">&nbsp;</span>
+	<BR><SMALL>Preview: Images may be smaller than actual size.</SMALL><BR>	
+	<INPUT TYPE="FILE"   VALUE="" NAME="Ast_Image_FileField" SIZE="10em">
+	<INPUT TYPE="HIDDEN" NAME="Filename" VALUE="">
+	<INPUT TYPE="SUBMIT" NAME="ACTION" VALUE="Upload">
+	</TD></TR>	
+</TABLE>
+<!------
+<fieldset style="float: left; margin-left: 5px;">
+<legend>Layout & Spacing</legend>
+	<TABLE width="100%">
+		<TR><TD width="15%">Alignment:</TD><TD><select size="1" name="align" id="f_align" title="Positioning of this image">
+				  <option value=""                             >Not set</option>
+				  <option value="left"                         >Left</option>
+				  <option value="right"                        >Right</option>
+				  <option value="texttop"                      >Texttop</option>
+				  <option value="absmiddle"                    >Absmiddle</option>
+				  <option value="baseline" selected="1"        >Baseline</option>
+				  <option value="absbottom"                    >Absbottom</option>
+				  <option value="bottom"                       >Bottom</option>
+				  <option value="middle"                       >Middle</option>
+				  <option value="top"                          >Top</option>
+			</select></TD></TR>
+		<TR><TD>Border thickness:</TD><TD><input type="text" name="border" id="f_border" size="5" title="Leave empty for no border"></TD></TR>	
+		<TR><TD>Horizontal:</TD><TD><input type="text" name="horiz" id="f_horiz" size="5" title="Horizontal padding"></TD></TR>	
+		<TR><TD>Vertical:</TD><TD><input type="text" name="horiz" id="f_vert" size="5" title="Horizontal padding"></TD></TR>			
+	</TABLE>
+</FIELDSET>
+---->
+	<INPUT TYPE="HIDDEN" NAME="f_url" VALUE="">
+	
+	<INPUT TYPE="HIDDEN" NAME="f_alt" VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="">
+	
+
+	<p>
+	<INPUT TYPE="button" NAME="ACTION" VALUE="Select" onclick="checkForm()">
+	&nbsp;
+	<INPUT TYPE="BUTTON" onClick="popup_close()" VALUE="Cancel">&nbsp;&nbsp;
+	<span style="{tmpl_if !strlen($data['ImageHeight'])}display:none{tmpl_end}" id="ImageInfo">Width: 
+	<input type="text" name="ImageWidth" size="2" value="{tmpl_var ImageWidth}" onchange="adjustValue('ImageWidth', 'ImageHeight', 'ImageHeightRatio');"> Height: <input type="text" name="ImageHeight" size="2" value="{tmpl_var ImageHeight}" onchange="adjustValue('ImageHeight', 'ImageWidth', 'ImageWidthRatio');">
+	<input type="hidden" name="ImageWidthRatio" value="1">
+	<input type="hidden" name="ImageHeightRatio" value="1">
+	</span> 
+	</p>
+</FORM>
+<IFRAME id="AssetInfo" name="AssetInfo" src="" style="display:none"></IFRAME>
+<script language="javascript">
+
+	function dump(o) {
+		var s = '';
+		for (var prop in o) {
+			s += prop + ' = ' + o[prop] + '<BR>';
+		}		
+		newwin = window.open();		
+		newwin.document.write(s);
+	}
+	function init() {
+		var theID = null;
+		var theWidth = '';
+		var theHeight = '';
+		var loadAssetID = '{tmpl_var as_id}';
+//		var arg = window.opener.Dialog._arguments;
+		<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+			if (oImage) {
+				var r_url = oImage.src; //GetAttribute( oImage, 'src', '' );
+				var r_alt = oImage.alt; //GetAttribute( oImage, 'alt', '' );
+				var arg = {f_url: r_url, f_alt: r_alt};
+			} else {
+				arg = 0;	
+			}
+		<tmpl_else>
+			var arg = popup_opener().Dialog._arguments;
+		</tmpl_if>
+	
+		if (loadAssetID.length) {
+			theID = loadAssetID;								
+		} else {			
+			if (arg) {
+				
+				if (arg.f_url != null && arg.f_alt.length)  {											
+					result = arg.f_alt.match(re);									
+					
+									
+					
+					var str = arg.f_alt;
+					var re = new RegExp("[0-9]+","i");
+					counter = 0;
+					while(str.search(re) != -1) {
+						result = str.match(re);
+						str = str.replace(re,'');														
+						if (counter == 0) {
+							theID = result[0];
+							
+						} else if (counter == 1) {
+							theWidth = result[0];
+							
+						} else {
+							theHeight = result[0];
+							
+						}
+						counter++;
+					}			
+				
+					//alert('index.php?act={tmpl_var_url act}&as_id='+theID+ '&ImageWidth=' + theWidth + '&ImageHeight=' +theHeight);
+					document.location = 'index.php?act={tmpl_var_url act}&as_id='+theID+ '&ImageWidth=' + theWidth + '&ImageHeight=' +theHeight;							
+				}
+			} 
+		}
+		//alert(theID);
+		//alert(MTreeRoot.nodes[theID].onClick);
+		if (theID) eval(MTreeRoot.nodes[theID].onClick);	
+	}
+
+init();
+
+</SCRIPT>
+

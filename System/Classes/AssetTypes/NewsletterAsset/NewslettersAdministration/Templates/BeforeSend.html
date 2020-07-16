@@ -1,0 +1,29 @@
+<form method="post" action="index.php?act=Newsletter.BeforeSend&DoAction=Yes&nl_id={tmpl_var nl_id}">
+<p>
+	You have selected to send the "{tmpl_var Subject}" newsletter to {tmpl_var UserCount} {tmpl_var_pluralize name="UserCount" singular="member" plural="members"} of the following {tmpl_var_pluralize name="GroupCount" singular="group" plural="groups"}:
+	<ul>
+	<tmpl_loop query="Q_UserGroups">
+		<li>{tmpl_row_var ug_name}</li>
+	</tmpl_loop>
+	</ul>
+	You may <a href="index.php?act=Newsletter.Recipients&nl_id={tmpl_var nl_id}" target="NewsletterRecipientsPreview" onclick="res=window.open('','NewsletterRecipientsPreview','width=640,height=480,scrollbars=yes,menubar=yes,resizable=yes');res.focus();">review the recipients</a> before sending if you wish.
+</p>
+<p>
+	Please select an archive status for this newsletter and then click "Send Newsletter" to send:
+</p>
+<p style="margin-left:20px;">
+	<tmpl_loop query="Q_NewsletterArchiveAssets">
+		<?
+			$result = new Request("Asset.PathFromID",array(
+				'as_id'	=>	$row['as_id'],
+			));
+			$data['ArchiveAssetPath'] = ss_withoutPreceedingSlash($result->value);
+		?>
+		<input style="border:0px;" type="radio" name="ArchiveStatus" value="{tmpl_row_var as_id}"> {tmpl_var ArchiveAssetPath}<br />
+		<input style="border:0px;" type="radio" name="ArchiveStatus" value="{tmpl_row_var as_id}Current"> {tmpl_var ArchiveAssetPath} - Current<br />
+	</tmpl_loop>
+	<input checked style="border:0px;" type="radio" name="ArchiveStatus" value="null"> Admin Only - Not available via any newsletter archives on your website<br />
+</p>
+<input type="submit" name="DoAction" value="Send Newsletter" onclick="if (confirm('Are you sure you want to send the newsletter to {tmpl_var UserCount} {tmpl_var_pluralize name="UserCount" singular="person" plural="people"}?')) return true; else return false;">
+<input type="submit" name="Cancel" value="Cancel">
+</form>

@@ -1,0 +1,12 @@
+mv lyt_default_cigarexport.php lyt_default_chinesesite.php
+mv lyt_empty_cigarexport.php lyt_empty_chinesesite.php
+mv lyt_home_cigarexport.php lyt_home_chinesesite.php
+mv lyt_nolink_cigarexport.php lyt_nolink_chinesesite.php
+mv lyt_notitle_cigarexport.php lyt_notitle_chinesesite.php
+mv lyt_popup2_cigarexport.php lyt_popup2_chinesesite.php
+mv lyt_popupFlash_cigarexport.php lyt_popupFlash_chinesesite.php
+mv lyt_popupImage_cigarexport.php lyt_popupImage_chinesesite.php
+mv lyt_popup_cigarexport.php lyt_popup_chinesesite.php
+mv lyt_print_cigarexport.php lyt_print_chinesesite.php
+mv lyt_shop2_cigarexport.php lyt_shop2_chinesesite.php
+mv lyt_subpage_cigarexport.php lyt_subpage_chinesesite.php

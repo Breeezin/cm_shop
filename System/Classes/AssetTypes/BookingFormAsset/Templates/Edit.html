@@ -1,0 +1,28 @@
+<table width="100%">
+<tr><td><a href="javascript:void(0);" onclick="res=window.open('{tmpl_var SecureSite}index.php?act=WebPayAdministration.List&as_id=&as_id={tmpl_var as_id}','OrderManager','width=640,height=480,scrollbars=yes,menubar=yes,resizable=yes');res.focus();return false;"><img src="Images/but-orders.gif" width="115" height="113" border="0" alt="Manage Bookings"></a>
+</td><td width="15">&nbsp;
+</td><td>
+	<table>
+		<tr>
+			<td>Email Recipient : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_EMAIL_RECIPIENT"} (Defaults to main website email address)</td>
+		</tr>
+		<tr>
+			<td>Email Subject : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_EMAIL_SUBJECT"} (Defaults to &quot;Website Enquiry&quot;)</td>
+		</tr>
+		<tr>
+			<td>Submit Button Text : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_SUBMIT_BUTTON"} (Defaults to &quot;Submit&quot;)</td>
+		</tr>
+	</table>			
+</td></tr></table>
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_FIELDS"}
+<FIELDSET TITLE="Thank You Page" style="padding:5px;">
+	<LEGEND>Thank You Page</LEGEND>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_THANK_YOU_PAGE"}
+</FIELDSET>
+<FIELDSET TITLE="After Payment Thank You Page" style="padding:5px;">
+	<LEGEND>After Payment Thank You Page</LEGEND>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_BOOKINGFORM_PAYMENT_THANK_YOU_PAGE"}
+</FIELDSET>

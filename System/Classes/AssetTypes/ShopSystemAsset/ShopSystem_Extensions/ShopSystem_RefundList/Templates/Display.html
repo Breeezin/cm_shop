@@ -1,0 +1,91 @@
+<?php echo "There are ".$data['OrdersCount']." orders left to <h1>refund</h1>, next one in line is<br />"; ?>
+<tmpl_if condition="$data['Q_Orders']->numRows() == 0">
+<p>
+You have finished the refund list.
+</p>
+Click <a href='index.php?act=ShopSystem_ChargeList.Display&List=<?=$data['List']?>'>Here</a> to swap to the charge list
+<tmpl_else>
+<table width="100%" cellspacing="0" cellpadding="3">
+
+<? $firstTime = true; $oddEven = true; ?>
+
+<tmpl_loop query="Q_Orders">
+
+<tmpl_if condition="$firstTime">
+<tr>
+	<td><strong>Order ID</strong></td>
+	<td><strong>Total</strong></td>
+	<?
+		$details = unserialize($row['tr_payment_details_szln']);
+		foreach($details as $detail => $data['value']) {
+			if ($detail == 'TrCreditCardType') $data['value'] = $data['ccTypes'][$data['value']];	
+	?>
+			<td><strong><?=str_replace('TrCreditCard','',$detail);?></strong></td>
+	<?
+		}
+	?>
+	<td><strong>Copy to paste buffer</strong></td>
+	<td><strong>Authorisation Number</strong></td>
+	<td></td>
+</tr>
+<? $firstTime = false; ?>
+</tmpl_if>
+<?php
+	$data['rowClass'] = $oddEven ? 'AdminEvenRow' : 'AdminOddRow';
+	$oddEven = !$oddEven;
+?>
+
+<tr class="{tmpl_var rowClass}">
+	<td>{tmpl_row_var tr_id}</td>
+	<td>{tmpl_row_var Amount} {tmpl_row_var tr_currency_code}</td>
+	<?
+		$details = unserialize($row['tr_payment_details_szln']);
+		foreach($details as $detail => $data['value']) {
+			if ($detail == 'TrCreditCardType') $data['value'] = $data['ccTypes'][$data['value']];	
+			if ($detail == 'TrCreditCardNumber') $data['value'] = preg_replace( '/[^0-9]/', '', $data['value'] );	
+
+	?>
+		<td>{tmpl_var value}</td>
+	<?php
+			}
+		// paste stuff here
+		$foo = $row['Amount']."|";
+		$foo .= preg_replace( '/[^0-9]/', '', $details['TrCreditCardNumber'])."|";
+		$foo .= $details['TrCreditCardExpiry'][0].$details['TrCreditCardExpiry'][1].$details['TrCreditCardExpiry'][5].$details['TrCreditCardExpiry'][6]."|";
+		$foo .= $details['TrCreditCardCVV2']."|";
+		$foo .= $row['tr_id']."|";
+		$foo .= preg_replace( '/\//', '|', $details['TrCreditCardExpiry'])."|";
+		$foo .= preg_replace( '/\./', ',', $row['tr_total'])."|";
+		$foo .= $details['TrCreditCardExpiry'][5].$details['TrCreditCardExpiry'][6]."|";
+		$foo .= number_format( ss_getExchangeRate( $row['tr_currency_code'], 'CHF' ) * $row['tr_total'], 2, '.', '' )."|";
+
+		echo "<td><a href='javascript:void(0);' onclick='toClip(\"$foo\");'>copy</a></td>";
+	?>
+	<form method="post" action="index.php?act=ShopSystem_RefundList.UpdateAuthorisationNumber&or_id={tmpl_row_var rfd_or_id}&BackURL=<?print(ss_URLEncodedFormat('index.php?act=ShopSystem_RefundList.Display'))?>">
+		<td nowrap>
+			<input name="rfd_authorisation_number" type="text" size="25" maxlength="63" value="{tmpl_row_var rfd_authorisation_number}">
+			<input type="submit" name="Save" Value="Save">
+		</td>
+	</form>
+</tr>
+
+</tmpl_loop>
+</table>
+<SCRIPT language="Javascript">
+<!--
+
+	/*for(var i=0;i<rowCount;i++) {
+		theRow = document.getElementById('row'+i);
+		rowPositions[i] = getPageOffsetTop(theRow);
+	}*/
+
+	function toClip( copyme ) {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+	   const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"].  
+	   getService(Components.interfaces.nsIClipboardHelper);  
+	   gClipboardHelper.copyString(copyme);
+	}
+
+//-->
+</SCRIPT>
+</tmpl_if>

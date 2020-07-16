@@ -1,0 +1,89 @@
+<!--- New record and Search --->
+<TABLE WIDTH="100%" ALIGN="CENTER" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+	<TR>
+		<!--- button for adding a new record --->
+		<FORM ACTION="{TMPL_VAR script_name}" METHOD="POST">
+			<INPUT TYPE="HIDDEN" NAME="act" VALUE="{TMPL_VAR prefix}Administration.New">
+			<INPUT NAME="BreadCrumbs" TYPE="HIDDEN" VALUE="{TMPL_VAR NAME='global.breadCrumbs' ESCAPE='html'}">
+			<INPUT TYPE="HIDDEN" NAME="RFA" VALUE="{TMPL_VAR rfa}">
+		<TD ALIGN="LEFT">
+			{TMPL_VAR parentHiddenField}
+			<INPUT TYPE="SUBMIT" NAME="SubmitButton" 
+				VALUE="New {TMPL_VAR singular}" CLASS="adminButtons">
+		</TD>
+		</FORM>
+		
+		<!--- Search Options Selector --->
+		<FORM ACTION="{TMPL_VAR rfa}&CurrentPage=1" METHOD="POST">
+			<TD ALIGN="RIGHT">
+				<TABLE CELLPADDING="0" CELLSPACING="0" BORDER="0">
+				<TR><TD>
+				<TABLE WIDTH="100%"  CELLPADDING="0" CELLSPACING="0" BORDER="0">
+					<TR><TD ALIGN="LEFT">Search :</TD><TD ALIGN="RIGHT"><INPUT SIZE="10" TYPE="TEXT" VALUE="{TMPL_VAR searchKeyword}" NAME="SearchKeyword"></TD></TR>
+				</TABLE>
+				</TD></TR>
+				<TR><TD>
+				<TABLE WIDTH="100%"  CELLPADDING="0" CELLSPACING="0" BORDER="0">
+					<TR><TD ALIGN="LEFT"><SELECT NAME="RowsPerPage" OnChange="this.form.submit()">
+					<OPTION VALUE="{TMPL_VAR rowsPerPage}">{TMPL_VAR rowsPerPage} Rows/Page</OPTION>
+					<OPTION>10</OPTION>
+					<OPTION>25</OPTION>
+					<OPTION>50</OPTION>
+					<OPTION>100</OPTION>
+					<OPTION VALUE="{TMPL_VAR numRows}">{TMPL_VAR numRows}</OPTION>
+				</SELECT></TD><TD ALIGN="RIGHT"><INPUT TYPE="SUBMIT" VALUE="Go" NAME="Go"  CLASS="adminButtons"></TD></TR>
+				</TABLE>
+				</TD></TR>
+				</TABLE>				
+			</TD>
+		</FORM>
+	</TR>
+</TABLE>
+
+
+<!--- Display the fields from the table --->
+<TMPL_IF NAME="hasRows">
+<TABLE WIDTH="100%" ALIGN="CENTER" BORDER="0" CELLSPACING="0" CELLPADDING="2">
+	<TMPL_LOOP NAME="rows">
+		<FORM>
+		<TR CLASS="{TMPL_VAR rowClass}">
+			<TMPL_LOOP NAME="cells">
+ 		    	<TD ALIGN="LEFT">{TMPL_VAR fieldValue}</TD>
+		  	</TMPL_LOOP>
+		    <TD ALIGN="RIGHT" VALIGN="BOTTOM">
+			<SELECT NAME="jumperSelect" onChange="jumper(this)">
+				<OPTION VALUE="#">Manage</OPTION>
+				<OPTION VALUE="{TMPL_VAR global.script_name}?act={TMPL_VAR global.prefix}Administration%2EEdit&{TMPL_VAR NAME='global.tablePrimaryKey'}={TMPL_VAR index}&BreadCrumbs={TMPL_VAR NAME='breadCrumbs' ESCAPE='url'}&RFA={TMPL_VAR NAME='rfa' ESCAPE='url'}">View/Edit Detail</OPTION>
+				<TMPL_IF NAME="childCount">				
+				<TMPL_LOOP NAME="children">				
+					<OPTION VALUE="{TMPL_VAR global.script_name}?act={TMPL_VAR prefix}Administration%2EList&{TMPL_VAR linkField}={TMPL_VAR parentKey}&BreadCrumbs={TMPL_VAR NAME='breadCrumbs' ESCAPE='url'}">{TMPL_VAR childplural}</OPTION>
+				</TMPL_LOOP>
+				</TMPL_IF>
+				<OPTION STYLE="background-color:red; color:white" VALUE="javascript:confirmDelete('{TMPL_VAR global.script_name}?act={TMPL_VAR global.prefix}Administration%2EDelete&{TMPL_VAR global.tablePrimaryKey}={TMPL_VAR index}&RFA={TMPL_VAR NAME='rfa' ESCAPE='url'}')">Delete</OPTION>
+			</SELECT>
+		 	</TD>
+	    </TR>
+		</FORM>
+	</TMPL_LOOP>
+</TABLE>
+</TMPL_IF>
+
+<DIV ALIGN="CENTER">{TMPL_VAR pagethru}</DIV>
+
+<!--- Supporting Javascript Functions --->
+<SCRIPT language="Javascript">
+<!--
+	function confirmDelete(URL) {
+		if ( confirm("Are you sure you want to delete this record ?") ) {
+			document.location=URL;
+		}
+	}
+	
+	function jumper(selectList) {
+		urlAppend = selectList.options[selectList.selectedIndex].value;
+		selectList.form.reset();
+		document.location = urlAppend;
+	}
+//-->
+</SCRIPT>
+	

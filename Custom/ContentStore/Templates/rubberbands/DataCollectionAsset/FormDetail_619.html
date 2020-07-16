@@ -1,0 +1,48 @@
+<form method="POST" action="http://www.securesite.co.nz/snazzyMailer/snazzyMailer.cfm" onSubmit="MM_validateForm('000!name!T','','R','001!email!E','','RisEmail','002!message!TA','','R');return document.MM_returnValue">
+	<input type="hidden" name="redirect" value="http://affordablecaravans.im.co.nz/Thankyou">
+	<input type="hidden" name="To" value="toM@innovativemedia.co.nz">
+	<input type="HIDDEN" name="From" value="info@affordablecaravans.co.nz">
+	<input type="hidden" name="Subject" value="Enquiry Form Affordable Caravans">
+	<input type="hidden" name="000!enquiry!TA" value="This is an enquiry for [STK Number]-[Make]-[Model]">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+				<table border="0" cellspacing="0" cellpadding="5">
+					<tr valign="top">
+						<td width="37%"><b>Your	name:</b></td>
+						<td colspan="2">
+							<input name="001!name!T" type="text" class="FieldSpecial" size="30">
+						</td>
+				    </tr>
+					<tr valign="top">
+						<td><strong>Phone Number:</strong></td>
+						<td colspan="2"><input name="001!phone!T" type="text" class="FieldSpecial" size="30"></td>
+				    </tr>
+					<tr valign="top">
+						<td width="37%"><b>	Email address:</b></td>
+						<td colspan="2">
+							<input name="002!email!E" type="text" class="FieldSpecial" size="30">
+						</td>
+				    </tr>
+					<tr valign="top">
+						<td width="37%">
+							<div align="left"><b>Query:</b></div>
+						</td>
+						<td colspan="2">
+							<textarea name="003!message!TA" cols="30" class="FieldSpecial"></textarea>
+						</td>
+				    </tr>
+					<tr valign="top">
+						<td width="37%">&nbsp;</td>
+						<td width="63%">
+							<div align="left">
+								<input name="imageField" type="image" src="/Custom/ContentStore/Layouts/Images/i-send-query.gif" width="129" height="28" border="0">
+</div>
+						</td>
+					    <td width="63%">{tmpl_embed_asset assetid="579"}</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>

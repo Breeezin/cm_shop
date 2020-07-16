@@ -1,0 +1,115 @@
+<fieldset title="Product Details">
+	<legend>Product Details</legend>
+<table width="100%" cellspacing="0" cellpadding="2">
+	<tmpl_eval expression="$displayFields = true; foreach ($data['fields'] as $data['field']) {">
+		<tmpl_eval expression="if ($data['field']->name == 'pr_image1_thumb' || $data['field']->name == 'pr_image1_normal'		|| $data['field']->name == 'pr_image1_large'		|| $data['field']->name == 'pr_image2_normal'		|| $data['field']->name == 'pr_image2_large'		|| $data['field']->name == 'pr_image3_normal'		|| $data['field']->name == 'pr_image3_large'			|| $data['field']->name == 'ExtendedOptions') { $displayFields = false; }">
+		<tmpl_if condition="$displayFields">
+		<tmpl_if condition="$data['field']->name !='pr_dig_id'">	
+		<TR CLASS="{tmpl_if array_key_exists($data['field']->name,$data['errors'])}AdminErrorField{/tmpl_if}">
+			<TD VALIGN="TOP" ALIGN="RIGHT" WIDTH="5" CLASS="AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></TD>
+			<TD VALIGN="TOP" WIDTH="20%"><SPAN CLASS="AdminDisplayName">
+				{tmpl_eval print($data['field']->displayName)}</SPAN>
+				<tmpl_if condition="strlen($data['field']->note)">
+					<BR><SPAN CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</SPAN>
+				</tmpl_if>
+			</TD>
+			<TD WIDTH="80%">{tmpl_eval print($data['field']->display(false, 'adminForm'))}</TD>
+		</TR>
+		{tmpl_else}
+			{tmpl_eval print($data['field']->display(false, 'adminForm'))}			
+		</tmpl_if>
+		</tmpl_if>
+	</tmpl_eval>
+</TABLE>
+
+</fieldset>
+<fieldset title="Pricing">
+	<legend>Pricing</legend>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="2">
+	<tmpl_eval expression="$displayFields = false; foreach ($data['fields'] as $data['field']) {">
+		<tmpl_eval expression="if ($data['field']->name == 'ExtendedOptions') { $displayFields = true; }">
+		<tmpl_if condition="$displayFields">
+		<TR CLASS="{tmpl_if array_key_exists($data['field']->name,$data['errors'])}AdminErrorField{/tmpl_if}">
+			<TD WIDTH="100%">{tmpl_eval print($data['field']->display(false, 'adminForm'))}</TD>
+		</TR>
+		</tmpl_if>
+	</tmpl_eval>
+</TABLE>
+</fieldset>
+<fieldset title="Images">
+	<legend>Images</legend>
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="2">
+	<?php if (ss_optionExists('Shop Product Images') AND (!ss_optionExists('Shop Product No Thumbnail Images') OR !ss_optionExists('Shop Product No Normal Images') OR !ss_optionExists('Shop Product No Large Images'))) {?>
+	<tr>
+		<td width="5"></td>
+		<td width="20%"><SPAN CLASS="AdminDisplayName">Image 1</SPAN><BR><SPAN CLASS="AdminNote">This image will be displayed in search results and category listings</SPAN></td>
+		<td>
+			<table style="border-bottom:1px solid black;" width="350">
+				<tr>
+				<?php if (!ss_optionExists('Shop Product No Thumbnail Images') ) {?>
+				<th align="left">Thumbnail</th>
+				<?php } ?>
+				<?php if (!ss_optionExists('Shop Product No Normal Images') ) {?>
+				<th  align="left">Normal</th>
+				<?php } ?>
+				<?php if (!ss_optionExists('Shop Product No Large Images') ) {?>
+				<th  align="left">Large</th>
+				<?php } ?>
+				</tr>
+				<tr>
+				<?php if (!ss_optionExists('Shop Product No Thumbnail Images') ) {?>
+					<td width="33%">{tmpl_eval print($data['fields']['pr_image1_thumb']->display(false, 'adminForm'))}</td>
+				<?php } ?>
+				<?php if (!ss_optionExists('Shop Product No Normal Images') ) {?>
+					<td width="33%">{tmpl_eval print($data['fields']['pr_image1_normal']->display(false, 'adminForm'))}</td>
+				<?php } ?>
+				<?php if (!ss_optionExists('Shop Product No Large Images') ) {?>
+					<td width="33%">{tmpl_eval print($data['fields']['pr_image1_large']->display(false, 'adminForm'))}</td>
+				<?php } ?>	
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<?php } ?>
+	<?php
+		 if (ss_optionExists('Shop Product Images')) {
+		 for ($currentImage=2; $currentImage <= ss_optionExists('Shop Product Images');$currentImage++) {
+	?>
+	<?php if (!ss_optionExists('Shop Product No Normal Images') OR !ss_optionExists('Shop Product No Large Images')) {?>
+	<tr>
+		<td></td>
+		<td><SPAN CLASS="AdminDisplayName">Image <?=$currentImage;?></SPAN></td>
+		<td>
+			<table style="border-bottom:1px solid black;" width="350">
+				<tr>
+					<?php if (!ss_optionExists('Shop Product No Thumbnail Images') ) {?>
+						<td width="33%">&nbsp;</td>
+					<?php } ?>		
+					<?php if (!ss_optionExists('Shop Product No Normal Images') ) {?>			
+					<td width="33%">{tmpl_eval print($data['fields']['pr_image'.$currentImage.'_normal']->display(false, 'adminForm'))}</td>
+					<?php } ?>
+					<?php if (!ss_optionExists('Shop Product No Large Images') ) {?>
+					<td width="33%">{tmpl_eval print($data['fields']['pr_image'.$currentImage.'_large']->display(false, 'adminForm'))}</td>
+					<?php } ?>
+				</tr>
+			</table>
+		</td>
+	</tr>	
+	<?php 		} // if 
+	?>
+	
+	<?php
+		 	} // for
+		}	// if
+	?>	
+	
+</TABLE>
+</fieldset>
+<?php 
+		$rootFolder = str_replace('index.php','',$_SERVER['SCRIPT_FILENAME']);
+		$customFolder = $rootFolder.'Custom/Classes/OnlineShopAdministration';		
+		$name = 'inc_formFields.php';
+		if (file_exists($customFolder.'/'.$name)) {			
+			include($customFolder."/".$name);
+		}
+	?>

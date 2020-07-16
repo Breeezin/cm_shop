@@ -1,0 +1,38 @@
+<div class="price">
+	<tmpl_if condition="$data['RRP'] !== null">
+		<strong>RRP:</strong>
+		<span id="RRP{tmpl_var pr_id}">{tmpl_var_raw RRP}</span>
+		<tmpl_if condition="$data['CurrencyConverter']">
+			<br /><span id="RRP{tmpl_var pr_id}approx">{tmpl_var_raw RRPApprox}</span>
+		</tmpl_if>
+		<br />
+	</tmpl_if>
+	<tmpl_if condition="$data['NormalPrice'] !== null">
+		<strong>Price:</strong>
+		<span id="normalPrice{tmpl_var pr_id}">
+		<tmpl_if condition="$data['OnSpecial']">
+			<span class="price-old">{tmpl_var_raw NormalPrice}</span>
+    <tmpl_else>
+			{tmpl_var_raw NormalPrice}
+		</tmpl_if>
+  </span><br />
+  <tmpl_if condition="$data['CurrencyConverter']">
+		<span id="normalPrice{tmpl_var pr_id}approx" >
+    <tmpl_if condition="$data['OnSpecial']">
+			<span class="price-old">{tmpl_var_raw NormalPriceApprox}</span>
+			<tmpl_else>
+				{tmpl_var_raw NormalPriceApprox}
+			</tmpl_if>
+			</span>
+		</tmpl_if>
+		<br />
+	</tmpl_if>
+	<tmpl_if condition="$data['OnSpecial']">
+		<strong>{tmpl_var SpecialDescription}</strong>&nbsp;<strong>Price:</strong>
+		<span id="specialPrice{tmpl_var pr_id}" class="price-new">{tmpl_var_raw SpecialPrice}</span>
+		<tmpl_if condition="$data['CurrencyConverter']">
+			<span id="specialPrice{tmpl_var pr_id}approx">{tmpl_var_raw SpecialPriceApprox}</span>
+		</tmpl_if>
+		<br />
+	</tmpl_if>
+</div>

@@ -1,0 +1,41 @@
+<link href="../../Layouts/sty_shop.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+-->
+</style>
+<link href="../../Layouts/sty_main.css" rel="stylesheet" type="text/css">
+<tmpl_loop query="Q_Product">
+	<form name="ProductDetail{tmpl_row_var pr_id}" action="">
+	
+					<tmpl_if condition="strlen($row['Image'])">
+					
+					
+				 <span style="margin-bottom:5px;"></span> </tmpl_if>
+				    <div align="center"><a href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName">
+				    </a>
+                       		<tmpl_if condition="strlen($row['Image'])">
+								
+							</tmpl_if>
+				            <table width="190" border="0" cellspacing="0" cellpadding="0">
+                            	<tr>
+                            		<td colspan="2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            				<tr>
+                            					<td width="28"><img src="Images/featured-arrow.gif" width="28" height="15"></td>
+                            					<td><a href="%7Btmpl_row_var%20ProductDetailLink%7D" class="featuredLInk">{tmpl_row_var pr_name}</a></td>
+                   					 </tr>
+                            				</table>
+                       			 </td>
+                       		 </tr>
+                            	<tr>
+                            		<td colspan="2"><img src="Images/featured-line.gif" width="162" height="10"></td>
+                       		 </tr>
+                            	<tr>
+                            		<td><a href="{tmpl_row_var ProductDetailLink}"><img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></a></td>
+                            		<td width="50"><div align="center"><a href="%7Btmpl_row_var%20ProductDetailLink%7D" class="featuredSmall">view<br>
+				more</a></div>
+                       			 </td>
+                       		 </tr>
+                            	</table>
+     </div>
+</form>
+</tmpl_loop>

@@ -1,0 +1,36 @@
+<style type="text/css">
+.right {
+	text-align: right;
+}
+th {
+	text-align: left;
+	font-weight: strong;
+}
+</style>
+<h3>Minimum Stock Levels</h3>
+<table border="1">
+	<tr>
+		<td>Box Name</td>
+		<td>Code</td>
+		<td>Minimum</td>
+		<td>Actual</td>
+	</tr>
+	<tmpl_loop query="Q_Missing">
+	<tr>
+		<td style="text-align: left;" width="150"><strong>{tmpl_row_var pr_name}</strong></td>
+		<td style="text-align: left;" ><strong>{tmpl_row_var pro_stock_code}</strong></td>
+		<td class="right">{tmpl_row_var pr_stock_warning_level}</td>	
+		<tmpl_if condition="$row['pr_stock_warning_level'] >= $row['pro_stock_available']">
+			<td class="right" style="color:red">
+		<tmpl_else>
+			<td class="right">
+		</tmpl_if>
+		{tmpl_row_var pro_stock_available}</td>	
+	</tr>
+	</tmpl_loop>
+</table>
+
+<tmpl_if_var_strlen name="Note">
+<h3>Note</h3>
+{tmpl_var_br Note}
+</tmpl_if>

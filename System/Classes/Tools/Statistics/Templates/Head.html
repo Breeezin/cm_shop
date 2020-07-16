@@ -1,0 +1,154 @@
+<SCRIPT LANGUAGE="Javascript">	
+	
+	function showhide(name, setOpened) {	
+		var theForm = document.StatsForm;
+		var allDivs = new Array({tmpl_var_raw DivIDs});		
+		var el=document.getElementById(name);			
+		var newOpened = '';
+		if (el.style.display == '') { 
+			el.style.display='none'; 			
+		} else { 
+			el.style.display=''; 
+		}
+		
+		if (setOpened) {
+			for(var i=0; i < allDivs.length; i++) {
+				var el=document.getElementById(allDivs[i]);	
+				if (el) {
+					if (el.style.display == '') { 
+						if (newOpened.length) newOpened += ',';
+						newOpened += allDivs[i];
+					} 
+				}
+			}
+			theForm.Opened.value = newOpened;
+		}			
+	}	
+
+	function confirmReset(msgPart, type) {
+		
+		if (confirm('Are you sure you want to reset all '+msgPart+' for your website?')) {
+			document.location = 'index.php?act=Statistics.Reset&Type='+type;
+		}
+		
+	}
+	
+	function getStats(theForm, type) {
+		
+		url = 'index.php?act=Statistics.'+type + 'Search&DateFrom='+theForm[type+'DateFrom'].value + '&DateTo=' + theForm[type+'DateTo'].value;
+		openWindow(url, "StatsWindow", 650, 600);
+		
+	}
+	
+	function openWindow(url, name, width, height ) {		
+	     w = width
+	     h = height
+	     x = Math.round((screen.availWidth-w)/2); //center the top edge
+	     y = Math.round((screen.availHeight-h)/2); //center the left edge
+	     
+	     popupWin = window.open(url, "Preview", "width="+w+",height="+h+",toolbar=0,location=0,scrollbars=1,statusbar=1,menubar=0,resizable=1,top="+y+",left="+x+",screeenY="+y+",screenX="+x);
+	
+	     popupWin.creator=self;	    
+	     popupWin.focus();	     
+	     return popupWin;
+	}
+</SCRIPT>
+<FORM name="StatsForm" method="POST" action="index.php?act=Statistics.Display">
+	<INPUT type="hidden" name="Opened" value="{tmpl_var Opened}">
+
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+ 	<tr>
+ 		<td align="left" valign="top"><img src="{tmpl_var Dir}/Templates/Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    			<tmpl_if condition="array_key_exists('DateRanage', $data['StatsTypes'])">
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats1.gif" width="206" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p class="bodytextBlue">						
+						<a href="javascript:void(0);" onClick="showhide('DateRanageStats', true)" class="bodytextBlue">Click
+    								here to view statistics for a
+    							specified	date	range. <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9" border="0"></a></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				 </tmpl_if>
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats2.gif" width="139" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('PagesStats', true)" class="bodytextBlue">Click
+    								here to view page usage statistics.</a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats3.gif" width="114" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('ReferralsStats', true)" class="bodytextBlue">Click
+    								here to view where your users are coming
+    								from. <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9" border="0"></a></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				 <tmpl_if condition="array_key_exists('Shop', $data['StatsTypes']) and count($data['StatsTypes']['Shop']['assets'])">
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats4.gif" width="130" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('ShopStats', true)" class="bodytextBlue">Click
+    								here to see which products are the most popular
+    								and sought after. </a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				 </tmpl_if>
+				 <tmpl_if condition="array_key_exists('Search', $data['StatsTypes']) and count($data['StatsTypes']['Search']['assets'])">
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats5.gif" width="179" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('SearchStats', true)" class="bodytextBlue">Click
+    								here to see what users are searching
+    								for	on your site.</a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				 </tmpl_if>
+				 <tmpl_if condition="array_key_exists('DataCollection', $data['StatsTypes']) and count($data['StatsTypes']['DataCollection']['assets'])">
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats6.gif" width="185" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('DataCollectionStats', true)" class="bodytextBlue">Click
+    								here to view statistics for your data collection.</a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				  </tmpl_if>
+				  <tmpl_if condition="array_key_exists('RandomImages', $data['StatsTypes']) and count($data['StatsTypes']['RandomImages']['assets'])">
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats7.gif" width="205" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('RandomImagesStats', true)" class="bodytextBlue">Click
+    								here to view which random images are being
+    								clicked on the most.</a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+				  </tmpl_if>
+    				<tr>
+    					<td><img src="{tmpl_var Dir}/Templates/Images/h-stats8.gif" width="120" height="26"></td>
+				 </tr>
+    				<tr>
+    					<td align="left" valign="top"><p><a href="javascript:void(0);" onClick="showhide('DiskSpaceStats', true)" class="bodytextBlue">Click
+    								here to view your disk usage.</a> <img src="{tmpl_var Dir}/Templates/Images/go-arrow.gif" width="9" height="9"></p>
+        						<p>&nbsp;</p>
+					 </td>
+				 </tr>
+    		</table>
+	 </td>
+  </tr>
+</table>

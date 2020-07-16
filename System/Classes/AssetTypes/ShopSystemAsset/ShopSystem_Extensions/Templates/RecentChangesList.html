@@ -1,0 +1,25 @@
+Recent Product Administration
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>When</strong></td>
+		<td><strong>Email</strong></td>
+		<td><strong>Who</strong></td>
+		<td><strong>Operation</strong></td>
+		<td><strong>Key</strong></td>
+		<td><strong>pr_name</strong></td>
+		<td><strong>StockCode</strong></td>
+		<td><strong>What</strong></td>
+	</tr>
+<tmpl_loop query="Q_ChangesProducts">
+	<tr>
+		<td valign="top">{tmpl_row_var au_timestamp}</td>
+		<td valign="top">{tmpl_row_var us_email}</td>
+		<td valign="top">{tmpl_row_var us_first_name} {tmpl_row_var us_last_name}</td>
+		<td valign="top">{tmpl_row_var au_operation}</td>
+		<td valign="top">{tmpl_row_var au_key}</td>
+		<td valign="top">{tmpl_row_var pr_name}</td>
+		<td valign="top">{tmpl_row_var pro_stock_code}</td>
+		<td valign="top">{tmpl_row_var au_notes}</td>
+	</tr>
+</tmpl_loop>
+</table>

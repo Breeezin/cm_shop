@@ -1,0 +1,68 @@
+<script language="Javascript">
+	var submitted = false;
+	function submitOnce() {
+		if (!submitted) {
+			submitted = true;
+			return true;	
+		}	
+		return false;
+	}
+</script>
+<tmpl_loop query="Q_Asset">
+<TABLE WIDTH="100%">
+	<FORM NAME="theForm" ACTION="index.php?act=Review.ReviewAsset&DoAction=Yes" METHOD="POST" onsubmit="return submitOnce();">
+		<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="{tmpl_row_var as_id}">
+	<TR>
+		<TD VALIGN="TOP" WIDTH="20%"><STRONG>Name:</STRONG></TD>
+		<TD VALIGN="TOP" WIDTH="80%">{tmpl_row_var as_name}</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP"><STRONG>Location:</STRONG></TD>
+		<TD VALIGN="TOP"><?	
+					$temp = new Request('Asset.PathFromID',array(
+						'as_id'	=>	$row['as_id'],
+					));
+					$row['AssetPath'] = $temp->value;
+				?>{tmpl_row_var AssetPath}</TD>
+	</TR>
+	<tmpl_if condition="$row['as_pending_serialized'] == 'Delete'">
+		<TR>
+			<TD VALIGN="TOP"><STRONG>View Live Item:</STRONG></TD>
+			<TD VALIGN="TOP">
+				<p>
+				<A TARGET="_BLANK" HREF="index.php?act=Asset.Display&as_id={tmpl_row_var as_id}">Click here</A>
+				</p>
+				<STRONG>
+					<p>Author has requested deletion of this page.</p>
+					<p>Click Accept to delete this page.</p>
+				</STRONG>
+			</TD>
+		</TR>	
+	
+	<tmpl_else>
+	<TR>
+		<TD VALIGN="TOP"><STRONG>View New Version:</STRONG></TD>
+		<TD VALIGN="TOP">
+			<A TARGET="_BLANK" HREF="index.php?act=Asset.Display&as_id={tmpl_row_var as_id}&PendingCereal=1">Click here</A>
+		</TD>
+	</TR>
+	</tmpl_if>
+	<TR>
+		<TD VALIGN="TOP"><STRONG>Author:</STRONG></TD>
+		<TD VALIGN="TOP"><a href="mailto:{tmpl_row_var us_email}">{tmpl_row_var us_first_name} {tmpl_row_var us_last_name}</a></TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP"><STRONG>Author Comments:</STRONG></TD>
+		<TD VALIGN="TOP"><tmpl_if condition="strlen($row['AssetAuthorComments'])"><?=ss_HTMLEditFormatWithBreaks($row['AssetAuthorComments']);?><tmpl_else>None</tmpl_if></TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP"><STRONG>Reviewer Comments:</STRONG><BR>These will be seen by the author.</TD>
+		<TD VALIGN="TOP"><TEXTAREA ROWS="5" COLS="40" NAME="AssetReviewerComments" STYLE="width:100%">{tmpl_row_var AssetReviewerComments}</TEXTAREA></TD>
+	</TR>
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD><INPUT TYPE="IMAGE" NAME="AcceptChanges" SRC="Images/but-accept.gif" STYLE="border:0px;" onclick="return confirm('Are you sure?');"> <INPUT TYPE="IMAGE" NAME="DeclineChanges" SRC="Images/but-decline.gif" STYLE="border:0px;"></TD>
+	</TR>
+	</FORM>
+</TABLE>
+</tmpl_loop>

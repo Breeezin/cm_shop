@@ -1,0 +1,22 @@
+<table>
+{tmpl_evaluate $counter = 1}
+{tmpl_loop ListQuery}
+<tr class="News{tmpl_evaluate $rowClass = $counter%2==0?'Odd':'Even'; print($rowClass)}">
+		<td>
+			<span class="textQuotes"><b>{tmpl_row_var nei_headline}</b></span> <span class="footerText">{tmpl_row_var_date Name="nei_timestamp" Format="d M Y"}</span><br>
+{tmpl_row_var_parse nei_body}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       </td>
+		<td width="100">
+		{tmpl_if strlen($row['nei_image'])}
+			<img alt="{tmpl_row_var nei_headline}" src="../../NewsAsset/%7Btmpl_var%20Images%7DNewsImages/%7Btmpl_row_var%20NeItImage%7D" border="0">
+		{tmpl_else}
+			&nbsp;
+		{tmpl_end}
+		</td>
+</tr>
+<tr align="LEFT" valign="TOP">
+	<td colspan="2" class="dotline">&nbsp;</td>
+</tr>
+{tmpl_evaluate $counter++}
+{tmpl_end}
+<tr><td colspan="2">{tmpl_var_raw PageThru}</td></tr>
+</table>

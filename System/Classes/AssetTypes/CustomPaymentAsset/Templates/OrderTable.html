@@ -1,0 +1,28 @@
+<table width="90%" border="0" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF" class="Border">
+    <tr> 
+      <td bgcolor="#eaeadf"><strong>Product</strong></td>
+      <td  bgcolor="#eaeadf"><div align="right" class="QuotesWhite"><strong>Price 
+          </strong></div></td>
+      <td bgcolor="#eaeadf"><div align="right" class="QuotesWhite"><strong>Quantity</strong></div></td>
+      <td bgcolor="#eaeadf"><div align="right" class="QuotesWhite"><strong>Total</strong></div></td>
+    </tr>
+	    <?php foreach($data['Products'] as $id => $detail) { ?>
+    <input name="Product_<?=$id?>" type="hidden" value="<?=$detail['price']?>">
+	<tr> 
+      <td><?=ss_HTMLEditFormat($detail['name'])?></td>
+    <td><div align="right">
+		NZ $ <?=$detail['price']?>
+		</div></td>
+    <td><div align="right"> 
+        <?=$data['Atts']["Quantity_$id"]?>
+      </div></td>
+    <td><div align="right">
+    <?=$data['Atts']["Total_$id"]?>       
+      </div></td>
+  </tr>       
+  <?php } ?>
+ <tr>       
+      <td colspan="3" bgcolor="#eaeadf"><div align="right" class="QuotesWhite"><strong>Total</strong></div></td>
+      <td bgcolor="#eaeadf"><div align="right" class="QuotesWhite"><?=$data['Atts']["Total"]?></div></td>
+    </tr>
+  </table>

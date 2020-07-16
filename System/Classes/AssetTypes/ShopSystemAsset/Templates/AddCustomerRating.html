@@ -1,0 +1,56 @@
+<tmpl_if condition="array_key_exists('Done',$data)">
+<p>
+	Thank you.  Your rating has been recorded.
+</p>
+<p>
+	<tmpl_if condition="strlen($data['LastSearch'])">
+		<a href="{tmpl_var LastSearch}"><img border="0" src="Images/but-continue_shopping.gif" /></a>
+	</tmpl_if>
+</p>
+<tmpl_else>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>
+			<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable">
+				<tr>
+					<td colspan="3">
+						{tmpl_var_raw Error}
+						<p>This system works only if you are a confirmed client who has purchased this llama before. If you are a client but have not bought through our new upgraded site, the system will not recognize your e-mail. We could not technically solve this.</p>
+						<p>Please enter your email address and then click the add rating button.</p>
+					</td>
+				</tr>
+				<tr><td><table class="onlineShop_checkoutSectionTable" width="100%" cellspacing="0" cellpadding="5">
+				<form name="adder" action="{tmpl_var AssetPath}/Service/AddCustomerRating" method="post">
+					<input type="hidden" name="DoAction" value="Yes">
+					<input type="hidden" name="Product" value="{tmpl_var Product}">
+					<input type="hidden" name="Rating" value="{tmpl_var Rating}">
+				<tr>
+					<td><strong>Product:</strong></td>
+					<td>{tmpl_var ProductName}</td>
+				</tr>
+				<tr>
+					<td><strong>Rating:</strong></td>
+					<td>{tmpl_var Rating} out of 100</td>
+				</tr>
+				<tr>
+					<td><strong>Email Address:</strong></td>
+					<td>
+						<input type="text" maxlength="255" name="Email" size="30" value="{tmpl_var Email}">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<input type="submit" name="Add" value="Add Rating" onclick="if (this.form.Email.value.length == 0) {alert('Please enter your email address'); return false; }; return true;">
+					</td>
+				</tr>
+				</form>
+				</table>
+				</td></tr>
+			</table>
+		</td>
+	</tr>
+	
+</table>
+</tmpl_if>

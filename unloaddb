@@ -1,0 +1,4 @@
+mysqldump --default-character-set=latin1 --lock-tables=false -c --ignore-table=shop.assets shop > shop.sql
+mysqldump --default-character-set=latin1 --lock-tables=false -c shop assets > assets.sql
+mysqldump common > common.sql
+bzip2 common.sql

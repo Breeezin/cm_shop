@@ -1,0 +1,30 @@
+{tmpl_var_raw EditableContent}
+
+<h3>Orders</h3>
+<p>
+<ul>
+<?php foreach($data['Resources'] as $resource) { ?>
+	<li><a href="{tmpl_var AssetPath}/<?=$resource['as_name'];?>"><?=$resource['as_name'];?></a></li>
+<? } ?>
+</ul>
+</p>
+<h3>Edit Profile</h3>
+<p>
+<ul>
+	<li>If any of your details have changed, please <a href="{tmpl_var AssetPath}?Service=Edit">edit your profile</a>.</li>
+</ul>
+</p>
+{tmpl_if $data['MembersType'] == "Subscription"}
+<h3>Membership</h3>
+<p>
+<ul>
+	<li>{tmpl_var_raw RenewInfo}</li>
+</ul>
+</p>
+{tmpl_end}
+<h3>Logout</h3>
+<p>
+<ul>
+	<li>When you have finished, please be sure to <a href="/index.php?act=Security.Logout">logout</a>.</li>
+</ul>
+</p>

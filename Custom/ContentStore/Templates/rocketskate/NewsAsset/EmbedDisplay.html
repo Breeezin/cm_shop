@@ -1,0 +1,11 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+	{tmpl_loop ListQuery}
+	<tr align="LEFT" valign="TOP">
+		<td width="14"><img src="Images/arrow-news.gif" width="14" height="8"></td>		
+		<td class="textNews"><p><span class="textNewsDate">{tmpl_row_var_date Name="nei_timestamp" Format="d M Y"}</span><br>
+                <a href="../../NewsAsset/%7Btmpl_var%20AssetPath%7D" class="textNews">{tmpl_row_var nei_headline}</a><br>
+		</p>
+		</td>
+	</tr>
+	{tmpl_end}
+</table>

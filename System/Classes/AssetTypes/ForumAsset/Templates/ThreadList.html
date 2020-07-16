@@ -1,0 +1,75 @@
+<table class=forumMainBorder cellspacing=0 cellpadding=5 
+                  width="100%" border=0>
+    				<tbody>
+    					<tr>
+    						<td class=forumThreadTitle width=20>&nbsp;</td>
+    						<td class=forumThreadTitle>Thread</td>
+    						<td class=forumThreadTitle width=40><div align=center>Replies</div></td>
+    						<td class=forumThreadTitle width=40><div align=center>Views</div></td>
+    						<td class=forumThreadTitle width=120><div align=center>Last Post</div></td>
+					 </tr>
+					 <tmpl_loop query="Q_Threads">
+    					<tr>
+    						<td class=forumIconBackground width=20><div align=center><img height=16 src="Images/post-{tmpl_if $row['thr_locked']}dis{tmpl_end}allow.gif" width=16 {tmpl_if $row['thr_locked']}alt="Locked"{tmpl_end}></div></td>
+    						<td class=forumThread><a class=forumTitle href="{tmpl_var AssetPath}?Service=ViewThread&thr_id={tmpl_row_var thr_id}">{tmpl_row_var thr_subject}</a> {tmpl_row_var_raw PagesHTML}<br /><tmpl_if condition="strlen($row['FirstEmail'])"><a class=forumCreatorName href="mailto:{tmpl_row_var FirstEmail}"></tmpl_if>{tmpl_row_var FirstFirstName} {tmpl_row_var FirstLastName}<tmpl_if condition="strlen($row['FirstEmail'])"></a></tmpl_if></td>
+    						<td class=forumThreadReply width=40><div align=center>{tmpl_row_var Replies}</div></td>
+    						<td class=forumThreadViews width=40><div align=center>{tmpl_row_var thr_views}</div></td>
+    						<td class=forumThreadLastPost width=120><p align=right>{tmpl_row_var_date format="d.m.Y" name="LastDateTime"} <span class=forumTime>{tmpl_row_var_date format="g:ia" name="LastDateTime"}<br>
+    						</span>by <tmpl_if condition="strlen($row['LastEmail'])"><a class=forumuserName href="mailto:{tmpl_row_var LastEmail}"></tmpl_if>{tmpl_row_var LastFirstName} {tmpl_row_var LastLastName}<tmpl_if condition="strlen($row['LastEmail'])"></a></tmpl_if> <a href="{tmpl_var AssetPath}?Service=ViewThread&thr_id={tmpl_row_var thr_id}&CurrentPage={tmpl_row_var LastMessagePage}#Message{tmpl_row_var LastMessageID}"><img height=12 alt="View Last Post" src="images/post-viewpage.gif" width=10 border=0></a></p>
+						 </td>
+					 </tr>
+					 </tmpl_loop>
+				 </tbody>
+			   </table>
+    			<br>
+    			<table height=20 cellspacing=0 cellpadding=2 width="100%" border=0>
+    				<tbody>
+    					<tr>
+    						<td><input class=forumButton onClick="document.location='{tmpl_var CurrentServer}{tmpl_var AssetPath}?Service=NewThread';" type=submit value="New Thread" name=Submit5>
+						 </td>
+    						<td width=200>
+    							<div align=right></div>
+    							<table cellspacing=0 cellpadding=0 align=right border=0>
+    								<tbody>
+    									<tr>
+    										<td class=SmallText width=80><div align=center>Page Number</div></td>
+    										{tmpl_var_raw PageThruHTML}
+									 </tr>
+								 </tbody>
+							 </table>
+    						<div align=right></div>
+    						<div class=SmallText align=center></div>
+						 </td>
+					 </tr>
+				 </tbody>
+			   </table>
+			   <tmpl_if condition="ss_hasPermission('IsLoggedIn')">
+    			<br>
+    			<table height=20 cellspacing=0 cellpadding=2 width="100%" 
+                  border=0>
+    				<form action="{tmpl_var AssetPath}?Service=SaveSettings" method=post>
+    					<tbody>
+    						<tr>
+    							<td>
+    								<p><strong>Your Settings</strong> </p>
+    								<p>
+										<tmpl_eval expression="$data['State']=''"><tmpl_if condition="$data['Subscription'] == $data['as_id']"><tmpl_eval expression="$data['State']='checked'"></tmpl_if>    								
+    									<input {tmpl_var State} type="checkbox" name="Subscription" value="{tmpl_var as_id}"> Send me all new messages posted to this forum<br />
+    									<!--<input type=radio value="null" name=Subscribe> Send me all new messages posted to all forums<br />-->
+    									<!--<tmpl_eval expression="$data['State']=''"><tmpl_if condition="$data['Subscription'] == $data['as_id']"><tmpl_eval expression="$data['State']='checked'"></tmpl_if>
+    									<input {tmpl_var State} type=radio name="Subscription" value="{tmpl_var as_id}"> Send me all new messages posted to this forum<br />
+
+    									<tmpl_eval expression="$data['State']=''"><tmpl_if condition="$data['Subscription'] == $data['as_id'].'_fristpsot'"><tmpl_eval expression="$data['State']='checked'"></tmpl_if>
+    									<input {tmpl_var State} type=radio name="Subscription" value="{tmpl_var as_id}_fristpsot"> Send me the first post from new threads in this forum<br />
+
+    									<tmpl_eval expression="$data['State']=''"><tmpl_if condition="$data['Subscription'] == 'none'"><tmpl_eval expression="$data['State']='checked'"></tmpl_if>
+    									<input {tmpl_var State} type=radio name="Subscription" value="none"> Only send me new messages from threads I subscribe to<br />-->
+    								</p>
+    								<p>
+    									<input class=forumButton type=submit value="Save Settings" name=submit>
+    								</p>
+							 </td>
+						 </tr>
+				 </form>
+   				</table>
+   				</tmpl_if>

@@ -1,0 +1,523 @@
+<?
+	$row = $data['Q_OrderSheet']->fetchRow();
+	$data = array_merge($data,$row);
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_mainPrint.css" rel="stylesheet" type="text/css" media="print">
+</tmpl_if>
+<style type="text/css">
+.Bodytext,body,p,td,table {  font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333333; text-decoration: none}
+H1 {  
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#B44D00;
+}
+H3 {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #3E2116;
+}
+#categoryDescriptions p {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #B44D00; text-decoration: none}
+.AdminRequired { color: Red }
+.AdminErrorField { background : LightSkyBlue; }
+.AdminButtons { 	
+	font-size: 8pt; 
+	font-variant: small-caps; 
+	background-color: Silver;
+	padding-left:15px; 
+	padding-right:15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+}
+.AdminEvenRow { background : #EEEEEE; }
+.AdminOddRow {  }
+.BreadCrumbs {
+	font-size: 10px;
+	color: black;
+	text-decoration: none;
+}
+.BreadCrumbs:hover {
+	font-size: 10px;
+	color: black;
+	text-decoration: underline;
+}
+.dotline {
+	background-image: url(Images/dotline.gif);
+	background-repeat: repeat-x;
+	background-position: center;
+}
+.Border {
+	border: 1px solid #C9BFA7;
+}
+.CandyStripeHome {
+	background-image: url(Images/candy-home.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 237px;
+}
+.CandyStripeInside {
+	background-image: url(Images/candy-inside.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 136px;
+}
+.Copyright {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D7CF7D;
+	text-decoration: none;
+	padding-bottom: 10px;
+}
+.Grungefill {
+	background-image: url(Images/grunge-fill.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 387px;
+}
+A {
+	COLOR: #CC6600; 
+	text-decoration: underline;
+}
+.A_hover {
+	COLOR: #333333; 
+	text-decoration: underline;	
+}
+.textLight10 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+
+}
+.textLight11 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	text-decoration: none;
+	line-height: 18px;
+
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align: left;
+	padding-left: 5px;
+}
+.EmailFormAssetSubmitButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: FFFFFF;
+	font-weight: bold;	
+	font-size: 9px;
+	background-color: A4B75D;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: ffffff;
+	border-right-color: #ffffff;
+	border-bottom-color: #ffffff;
+	border-left-color: ffffff;
+	padding-left: 5px;
+	padding-right: 5px;	
+	text-align: center;
+}
+.noBorder {
+	background-color: transparent;
+	border: 0px solid ;	
+}
+
+.textWelcome {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 17px;
+	color: #CC6600;
+	font-weight: normal;
+
+}
+.textSubHeaders {
+	font-size: 11px;
+	color: #3092A7;
+	font-weight: bold;
+}
+.textSubHeaders {
+	font-size: 10px;
+	color: #87684E;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", Times, serif;
+
+}
+strong {
+	font-weight: bold;
+}
+.textNews {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textNewsDate {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+}
+.textNews:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textMed11 {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+}.textMed11link {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: underline;
+	line-height: 17px;
+}
+.Bannersml {
+	background-image: url(Images/banner-sml.jpg);
+	background-position: right top;
+}
+.Brownback {
+	width: 387px;
+	background-color: #3E2116;
+
+}
+.Line {
+	border-top-width: 1px;
+	border-bottom-width: 4px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #C9BFA7;
+	border-bottom-color: #C9BFA7;
+
+}
+.LineTop {
+	border-top-width: 4px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.LineBott {
+	border-top-width: 7px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.textsideLinks {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #EDEBD5;
+	text-decoration: none;
+	line-height: 17px;
+}
+li {
+	list-style-image: url(Images/bullet.gif);
+		MARGIN-TOP: 8px;
+	MARGIN-BOTTOM: 8px;
+}.onlineShopSizeQuick {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color:#C13129;
+}.textHeader {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #B44D00;
+}
+.Sizename {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: #D2CAB6;
+	padding: 4px 4px 4px 8px;
+
+}
+.SizeBrands {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: E9E5DC;
+	padding: 4px;
+
+}
+.SizeDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-right: 1px;
+	padding-left: 1px;
+
+
+}
+.Size {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-top: 5px;
+	padding-left: 5px;
+
+}
+.boxtopfill {
+	background-image: url(Images/top.gif);
+	background-repeat: repeat-x;
+
+
+}
+.boxleftfill {
+	background-image: url(Images/left.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxrightfill {
+	background-image: url(Images/right.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxbott {
+
+	background-image: url(Images/bott1.gif);
+	background-repeat: repeat-x;
+}
+.textQuotes {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 19px;
+	color: #87684E;
+	font-weight: normal;
+}
+.linevert {
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 14px;
+}
+.onlineShopPriceQuick {
+
+	border:  none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #3E2116;
+}
+.textFormsBold {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+	padding-right: 10px;
+}
+.Formbordertop {
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #CCCCCC;
+	padding-bottom: 5px;
+	padding-top: 5px;
+
+
+
+}
+.Formbordercenter {
+
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+}
+.textRed {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #C90000;
+	text-decoration: none;
+
+}
+.bannerleft {
+	background-image: url(Images/top-left.jpg);
+	background-repeat: no-repeat;
+	width: 32px;
+	background-position: left top;
+
+}
+.bannerright {
+
+	background-image: url(Images/top-right.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	width: 31px;
+}
+.bannermiddle {
+	background-image: url(Images/top-banner.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+	width: 687px;
+	height: 92px;
+
+}
+.text14 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+}
+.text12 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+
+}
+.Borderinvoice {
+	border: 1px solid #999999;
+
+}
+.text12Italic {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	font-style: italic;
+}
+.textNotes {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #999999;
+	text-decoration: none;
+}
+.Borderordersheet {
+	background-color: #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-position: center;
+	text-align: center;
+
+
+
+}
+</style>
+</head>
+
+<body>
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<div class="dontPrint">
+<table cellpadding=5>
+<form action="index.php" method="post" name="theForm">
+	<tr>
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<td><input type="button" value="Print" onclick="window.print();"></td>
+	<td><input type="submit" name="submit" value="Edit" onclick="this.form.action='index.php?act=shopsystem_order_sheets.Edit&ors_id={tmpl_var ors_id}';">
+	<td><input type="submit" name="submit" value="Scan Window" onclick="this.form.action='index.php?act=shopsystem_order_sheets.ScanWindow&ors_id={tmpl_var ors_id}'">
+	<td><input type="button" name="cancel" value="Return to List" onclick="document.location='{tmpl_var_js BackURL}';">
+	</td>
+	<tmpl_if condition="strlen($data['ors_paid']) == 0">
+		<td>This order has not been paid for.</td>
+	<tmpl_else>
+		<td>This order was marked paid on {tmpl_var_date name="ors_paid" format="d M Y"}</td>
+	</tmpl_if>
+	</tr>
+</form>
+</table>
+</div>
+<br />
+</tmpl_if>
+<h1>Picking list for Order sheet {tmpl_var ors_id}</h1>
+
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" class="Borderinvoice">
+					<tr valign="top">
+						<td  align="center" class="Borderordersheet">Stock Code</td>
+						<td  align="center" width="160" class="Borderordersheet">Description</td>
+						<td  align="center" class="Borderordersheet">Location.</td>
+						<td  align="center" class="Borderordersheet">Qty.</td>
+				 </tr>	
+				 	<? $data['TotalQty'] = 0; ?>
+				 	<tmpl_loop query="Q_OrderSheetItems">
+					<tr>
+						<td>{tmpl_row_var orsi_stock_code}</td>
+						<td>{tmpl_row_var orsi_pr_name}</td>
+						<td>{tmpl_row_var pr_location}</td>
+						<td align="right">{tmpl_row_var Boxes}</td>
+					</tr>
+						<? $data['TotalBoxes'] += $row['Boxes']; ?>
+					</tmpl_loop>
+				</table></td>
+			</tr>
+			</table></td>
+		     <td align="right"><table width="50%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+                	<tr valign="top">
+                		<strong>Number of Boxes</strong>               			 <p><?=$data['TotalBoxes']?></p>
+                		</td>
+           		 </tr>
+                	</table>
+	    	 <p><br>
+			</tr>
+		</table></td>
+	</tr>
+</table>
+</body>
+</html>

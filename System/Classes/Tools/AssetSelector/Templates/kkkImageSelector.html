@@ -1,0 +1,139 @@
+<SCRIPT>
+	function dump(o) {
+		var s = '';
+		for (var prop in o) {
+			s += prop + ' = ' + o[prop] + '\n';
+		}
+		//document.getElementById('dbg').innerHTML = '<pre>' + s + '</pre>';
+		alert(s);
+	}
+		
+	window.resizeTo(620, 380);
+	function getSelectValue(aField) {
+		return document.forms.embedForm[aField].options[document.forms.embedForm[aField].selectedIndex].value;
+	}
+	
+	function embedAsset(as_id,AssentName,AssetPath,AssetParentID,AssetParentPath) {
+		document.getElementById('SelectedAssetPath').innerHTML = AssetPath;
+		document.getElementById('PreviewFrame').src = "index.php?act=Asset.Display&as_id=" + as_id;
+		document.forms.embedForm.as_id.value = as_id;	
+	}
+	function checkForm() {
+	
+		if (document.forms.embedForm.Ast_Image_FileField.value != "") {
+			document.forms.embedForm.Filename.value = document.forms.embedForm.Ast_Image_FileField.value;
+			return true;	
+		}
+		var selectedAsset = document.forms.embedForm.as_id.value;
+		if (selectedAsset == "") {
+			alert("Please select an asset to embed.");
+			return false;
+		}
+		/*
+		IMG alt="EMB: 513" src="index.cfm?fuseaction=assetDisplay&amp;as_id=513" name=image2.jpg></P>
+		*/
+		var fields = ["f_url", "f_alt", "f_align", "f_border", "f_horiz", "f_vert"];
+       
+        document.forms.embedForm.f_url.value = "index.cfm?fuseaction=assetDisplay&amp;as_id="+selectedAsset;
+        document.forms.embedForm.f_alt.value = "EMB: "+selectedAsset;
+        
+  		var param = new Object();
+		param.f_url = "index.php?act=Asset.EmbedImage&as_id="+selectedAsset;
+		param.f_alt = "EMB: "+selectedAsset;
+		/*
+		param.f_align = getSelectValue("f_align");
+		param.f_border = document.forms.embedForm.f_border.value;
+		param.f_horiz = document.forms.embedForm.f_horiz.value;
+		param.f_vert = document.forms.embedForm.f_vert.value;
+		*/
+		
+		window.opener.Dialog._return(param);		
+		window.close();
+		
+		return true;
+	}
+</SCRIPT>
+<P>
+Choose an existing asset from the tree, or to upload a new image now, click the browse button.
+</P>
+<FORM ACTION="index.php?act={tmpl_var_url act}&DoAction=Yes" ENCTYPE="MULTIPART/FORM-DATA" NAME="embedForm" method="post">
+<TABLE BORDER="0">
+	<TR>
+	<TD valign="top">
+		
+		
+		<DIV ID="AssetTree" STYLE="width:275;height:250; overflow:auto;border:solid black 1px;" CLASS="treeBackground">
+			<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+				<TR STYLE="height:5"><TD></TD>
+				</TR><TR>
+				<TD ID="mainTree">
+				{tmpl_var_raw TreeResult}
+				</TD></TR>
+			</TABLE>
+		</DIV>
+	</TD>
+	<TD valign="top"><IFRAME ID="PreviewFrame" SRC="about:blank"  WIDTH="300" HEIGHT="200" NAME="PreviewFrame"></IFRAME><BR>
+	<span id="SelectedAssetPath">&nbsp;</span>
+	<BR><SMALL>Preview: Images may be smaller than actual size.</SMALL><BR>	
+	<INPUT TYPE="FILE"   VALUE="" NAME="Ast_Image_FileField" SIZE="10em">
+	<INPUT TYPE="HIDDEN" NAME="Filename" VALUE="">
+	<INPUT TYPE="SUBMIT" NAME="ACTION" VALUE="Upload">
+	</TD></TR>	
+</TABLE>
+<!------
+<fieldset style="float: left; margin-left: 5px;">
+<legend>Layout & Spacing</legend>
+	<TABLE width="100%">
+		<TR><TD width="15%">Alignment:</TD><TD><select size="1" name="align" id="f_align" title="Positioning of this image">
+				  <option value=""                             >Not set</option>
+				  <option value="left"                         >Left</option>
+				  <option value="right"                        >Right</option>
+				  <option value="texttop"                      >Texttop</option>
+				  <option value="absmiddle"                    >Absmiddle</option>
+				  <option value="baseline" selected="1"        >Baseline</option>
+				  <option value="absbottom"                    >Absbottom</option>
+				  <option value="bottom"                       >Bottom</option>
+				  <option value="middle"                       >Middle</option>
+				  <option value="top"                          >Top</option>
+			</select></TD></TR>
+		<TR><TD>Border thickness:</TD><TD><input type="text" name="border" id="f_border" size="5" title="Leave empty for no border"></TD></TR>	
+		<TR><TD>Horizontal:</TD><TD><input type="text" name="horiz" id="f_horiz" size="5" title="Horizontal padding"></TD></TR>	
+		<TR><TD>Vertical:</TD><TD><input type="text" name="horiz" id="f_vert" size="5" title="Horizontal padding"></TD></TR>			
+	</TABLE>
+</FIELDSET>
+---->
+	<INPUT TYPE="HIDDEN" NAME="f_url" VALUE="">
+	
+	<INPUT TYPE="HIDDEN" NAME="f_alt" VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="">
+
+	
+	<INPUT TYPE="button" NAME="ACTION" VALUE="Select" onclick="checkForm()">
+	
+	<INPUT TYPE="BUTTON" onClick="window.close()" VALUE="Cancel">
+</FORM>
+<script>
+	function init() {
+		var theID = null;
+		var loadAssetID = '{tmpl_var as_id}';
+		var arg = window.opener.Dialog._arguments;
+		
+		if (loadAssetID.length) {
+			theID = loadAssetID;								
+		} else {
+			if (arg) {
+				if (arg.f_url != null && arg.f_alt.length)  {						
+					re = new RegExp("[0-9]+","i");
+					result = arg.f_alt.match(re);									
+					theID = result[0];	
+					document.location = 'index.php?act={tmpl_var_url act}&as_id='+theID;							
+				}
+			} 
+		}
+		//alert(theID);
+		//alert(MTreeRoot.nodes[theID].onClick);
+		if (theID) eval(MTreeRoot.nodes[theID].onClick);
+	}
+	
+init();
+</SCRIPT>

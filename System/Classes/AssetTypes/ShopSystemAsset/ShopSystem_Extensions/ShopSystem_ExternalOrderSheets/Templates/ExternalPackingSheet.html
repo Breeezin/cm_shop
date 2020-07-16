@@ -1,0 +1,1366 @@
+<?
+	global $cfg;
+	$row = $data['Q_OrderSheet']->fetchRow();
+	$data = array_merge($data,$row);
+	$checkboxes = array();
+	$nocheckboxes = array();
+	$wontcheckboxes = array();
+	$trackcheckboxes = array();
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_mainPrint.css" rel="stylesheet" type="text/css" media="print">
+</tmpl_if>
+<style type="text/css">
+.Bodytext,body,p,td,table {  font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #333333; text-decoration: none}
+H1 {  
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#B44D00;
+}
+H3 {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #3E2116;
+}
+#categoryDescriptions p {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #87684E; text-decoration: none}
+.footerText:hover {  font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #B44D00; text-decoration: none}
+.AdminRequired { color: Red }
+.AdminErrorField { background : LightSkyBlue; }
+.AdminButtons { 	
+	font-size: 8pt; 
+	font-variant: small-caps; 
+	background-color: Silver;
+	padding-left:15px; 
+	padding-right:15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+}
+.AdminEvenRow { background : #EEEEEE; }
+.AdminOddRow {  }
+.BreadCrumbs {
+	font-size: 10px;
+	color: black;
+	text-decoration: none;
+}
+.BreadCrumbs:hover {
+	font-size: 10px;
+	color: black;
+	text-decoration: underline;
+}
+.dotline {
+	background-image: url(Images/dotline.gif);
+	background-repeat: repeat-x;
+	background-position: center;
+}
+.Border {
+	border: 1px solid #C9BFA7;
+}
+.CandyStripeHome {
+	background-image: url(Images/candy-home.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 237px;
+}
+.CandyStripeInside {
+	background-image: url(Images/candy-inside.gif);
+	background-repeat: repeat-y;
+	background-position: right center;
+	width: 136px;
+}
+.Copyright {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D7CF7D;
+	text-decoration: none;
+	padding-bottom: 10px;
+}
+.Grungefill {
+	background-image: url(Images/grunge-fill.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 387px;
+}
+A {
+	COLOR: #CC6600; 
+	text-decoration: underline;
+}
+.A_hover {
+	COLOR: #333333; 
+	text-decoration: underline;	
+}
+.textLight10 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+
+}
+.textLight11 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	text-decoration: none;
+	line-height: 18px;
+
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align: left;
+	padding-left: 5px;
+}
+.EmailFormAssetSubmitButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: FFFFFF;
+	font-weight: bold;	
+	font-size: 9px;
+	background-color: A4B75D;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: ffffff;
+	border-right-color: #ffffff;
+	border-bottom-color: #ffffff;
+	border-left-color: ffffff;
+	padding-left: 5px;
+	padding-right: 5px;	
+	text-align: center;
+}
+.noBorder {
+	background-color: transparent;
+	border: 0px solid ;	
+}
+
+.textWelcome {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 17px;
+	color: #CC6600;
+	font-weight: normal;
+
+}
+.textSubHeaders {
+	font-size: 11px;
+	color: #3092A7;
+	font-weight: bold;
+}
+.textSubHeaders {
+	font-size: 10px;
+	color: #87684E;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", Times, serif;
+
+}
+strong {
+	font-weight: bold;
+}
+.textNews {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textNewsDate {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+}
+.textNews:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #F7F5E5;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textMed11 {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+}.textMed11link {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: underline;
+	line-height: 17px;
+}
+.Bannersml {
+	background-image: url(Images/banner-sml.jpg);
+	background-position: right top;
+}
+.Brownback {
+	width: 387px;
+	background-color: #3E2116;
+
+}
+.Line {
+	border-top-width: 1px;
+	border-bottom-width: 4px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #C9BFA7;
+	border-bottom-color: #C9BFA7;
+
+}
+.LineTop {
+	border-top-width: 4px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.LineBott {
+	border-top-width: 7px;
+	border-top-style: solid;
+	border-top-color: #C9BFA7;
+
+}
+.textsideLinks {
+
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #EDEBD5;
+	text-decoration: none;
+	line-height: 17px;
+}
+li {
+	list-style-image: url(Images/bullet.gif);
+		MARGIN-TOP: 8px;
+	MARGIN-BOTTOM: 8px;
+}.onlineShopSizeQuick {
+
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color:#C13129;
+}.textHeader {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #B44D00;
+}
+.Sizename {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: #D2CAB6;
+	padding: 4px 4px 4px 8px;
+
+}
+.SizeBrands {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: E9E5DC;
+	padding: 4px;
+
+}
+.SizeDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-right: 1px;
+	padding-left: 1px;
+
+
+}
+.Size {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-top: 5px;
+	padding-left: 5px;
+
+}
+.boxtopfill {
+	background-image: url(Images/top.gif);
+	background-repeat: repeat-x;
+
+
+}
+.boxleftfill {
+	background-image: url(Images/left.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxrightfill {
+	background-image: url(Images/right.gif);
+	background-repeat: repeat-y;
+
+
+}
+.boxbott {
+
+	background-image: url(Images/bott1.gif);
+	background-repeat: repeat-x;
+}
+.textQuotes {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 19px;
+	color: #87684E;
+	font-weight: normal;
+}
+.linevert {
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 14px;
+}
+.onlineShopPriceQuick {
+
+	border:  none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #3E2116;
+}
+.textFormsBold {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+	padding-right: 10px;
+}
+.Formbordertop {
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #CCCCCC;
+	padding-bottom: 5px;
+	padding-top: 5px;
+
+
+
+}
+.Formbordercenter {
+
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+}
+.textRed {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #C90000;
+	text-decoration: none;
+
+}
+.bannerleft {
+	background-image: url(Images/top-left.jpg);
+	background-repeat: no-repeat;
+	width: 32px;
+	background-position: left top;
+
+}
+.bannerright {
+
+	background-image: url(Images/top-right.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+	width: 31px;
+}
+.bannermiddle {
+	background-image: url(Images/top-banner.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+	width: 687px;
+	height: 92px;
+
+}
+.text14 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+}
+.text12 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+
+}
+.Borderinvoice {
+	border: 1px solid #999999;
+
+}
+.text12Italic {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #333333;
+	font-style: italic;
+}
+.textNotes {
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #999999;
+	text-decoration: none;
+}
+.Borderordersheet {
+	background-color: #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-position: center;
+	text-align: center;
+
+
+
+}
+</style>
+</head>
+<?php
+
+$trackingOption = getField( 'select ve_tracking from vendor where ve_id = '.$data['Vendor'] );
+
+$title = '';
+$distributors = array();
+$distCountries = array();
+if( $dq = query( 'select * from Users where us_vendor_distributor = '.$data['Vendor'] ) )
+{
+	while( $distributor = $dq->fetchRow( ) )
+	{
+		if( $data['Distributor'] == $distributor['us_id'] )
+			$title = "<h2>Packing list for distributor {$distributor['us_first_name']} {$distributor['us_last_name']} {$distributor['us_0_50A1']} {$distributor['us_0_50A2']}  {$distributor['us_0_B4C0']}</h2>";
+
+		$distributors[$distributor['us_id']] = array();
+		$distributors[$distributor['us_id']]['Countries'] = array();
+		$distributors[$distributor['us_id']]['OrderRows'] = array();
+		$distributors[$distributor['us_id']]['OrderServices'] = array();
+		$distributors[$distributor['us_id']]['User'] = $distributor;
+		if( $dcn = query( "select cn_id from Countries where cn_ship_via_distributor = {$distributor['us_id']}" ) )
+			while( $dcnrw = $dcn->fetchRow( $dcn ) )
+			{
+				$distributors[$distributor['us_id']]['Countries'][] = $dcnrw['cn_id'];
+				$distCountries[$dcnrw['cn_id']] = $distributor['us_id'];
+			}
+	}
+
+	ss_log_message( "There is are distributors for this vendor, struct follow" );
+	ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $distributors );
+	ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $distCountries );
+}
+
+
+global $order_servicess;
+$order_servicess = array();
+global $order_rows;
+$order_rows = array();
+
+$services = query("select pr_id, pr_name from shopsystem_products where pr_is_service = 'true' and pr_ve_id = {$data['ors_ve_id']}");
+
+
+function output_order_rows( $order_rows, $order_servicess )
+{
+	$tl = array();
+	$pos = 0;
+
+	ss_log_message( "original" );
+	ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $order_rows );
+
+	// a bit of a mind bender, but sort these order rows into general groups, from the most services to the least (sum(pr_id) -> 0).
+	foreach( $order_servicess as $order_id => $order_services )
+	{
+		$sum = 0;
+		if( is_array( $order_services ) )
+			foreach( $order_services as $order_service )
+				$sum += $order_service;
+
+		if( !is_array( $tl[ $sum ] ) )
+			$tl[ $sum ] = array();
+
+		$tl[ $sum ][] = $order_id;
+	}
+
+	ss_log_message( "presorted" );
+	ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $tl );
+
+	krsort( $tl );
+
+	ss_log_message( "sorted" );
+	ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $tl );
+
+	foreach( $tl as $tla )
+		if( is_array( $tla ) )
+		{
+			foreach( $tla as $order_id )
+				if( array_key_exists( $order_id, $order_rows ) )
+				{
+					if( is_array( $order_rows[$order_id] ) )
+					{
+						foreach( $order_rows[$order_id] as $ident=>$packing_row )
+						{
+							echo $packing_row;
+							$pos++;
+							query( "update shopsystem_order_sheets_items set orsi_sheet_pos = $pos where $ident" );
+							ss_log_message( "update shopsystem_order_sheets_items set orsi_sheet_pos = $pos where $ident" );
+						}
+					}
+					else
+						ss_log_message( "Not array order_rows[$order_id]" );
+				}
+				else
+					ss_log_message( "unable to find order $order_id in array" );
+		}
+		else
+			ss_log_message( "tl element not array" );
+
+
+	/*
+	foreach( $order_rows as $packing_rows )
+		if( is_array( $packing_rows ) )
+			foreach( $packing_rows as $packing_row )
+				echo $packing_row;
+	*/
+}
+
+function save_packing_row( $last_row, $row, $data, $rowcount, $range )
+{
+	global $order_servicess;
+
+	if( !array_key_exists( $last_row['orsi_or_id'], $order_servicess ) )
+		$order_servicess[$last_row['orsi_or_id']] = array();
+
+	$packing_row = '';
+	static $DestTotal = 0;
+	static $DestCurrency = '';
+
+
+	//ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $range );
+	$OrderDetails = unserialize($last_row['or_basket']);
+	$est_packages = 0;
+	$found = false;
+	$freightAmount = 0;
+	$sdate = '';
+	$trackingNumber = NULL;
+	$price = '';
+	$pprice = 0;
+	$pcurrency = '';
+	$pname = $last_row['orsi_pr_name'];
+	$poptions = NULL;
+	$pid = 0;
+
+	if( is_array( $OrderDetails )
+		 && array_key_exists( 'Basket', $OrderDetails )
+		 && array_key_exists( 'Products', $OrderDetails['Basket'] ) )
+	{
+		if( array_key_exists( 'Freight', $OrderDetails['Basket'] )
+		 && array_key_exists( 'Amount', $OrderDetails['Basket']['Freight'] ) )
+			$freightAmount = $OrderDetails['Basket']['Freight']['Amount'];
+
+		$tmp = getRow( "select count(*) as num from shopsystem_order_sheets_items where orsi_or_id = {$last_row['or_id']} and orsi_ors_id = {$data['ors_id']}" );
+		$est_packages = ceil( $tmp['num'] / 3 );			// TODO, this could be far less dumb
+
+		foreach( $OrderDetails['Basket']['Products'] as $index => $value )
+		{
+			if( is_array( $value )
+			 && array_key_exists('Product', $value)
+			 && !strcmp($value['Product']['pro_stock_code'], $last_row['orsi_stock_code'] ) )
+//									 && array_key_exists('Qty', $value )	
+//									 && $value['Qty'] == $last_row['orsi_box_number'] )	
+			{
+//										print_r( $value ); die;	
+				if( array_key_exists( 'AddService', $value )
+				 && is_array( $value['AddService'] ) )
+					$poptions = $value['AddService'];
+
+				if( array_key_exists( 'pr_id', $value['Product'] ) )
+					$pid = $value['Product']['pr_id'];
+
+				if( array_key_exists( 'pr_name', $value['Product'] ) )
+					$pname = $value['Product']['pr_name'];
+
+				if( array_key_exists( 'pro_price', $value['Product'] ) )
+					$pprice = $value['Product']['pro_price'];
+
+				if( array_key_exists( 'pro_special_price', $value['Product'] ) and ( $value['Product']['pro_special_price'] > 0 ) )
+					$pprice = $value['Product']['pro_special_price'];
+
+				if( array_key_exists( 'pro_source_currency', $value['Product'] ) )
+					$pcurrency = $value['Product']['pro_source_currency'];
+
+				if( $shi = getRow( "select * from shopsystem_order_sheets_items where orsi_or_id = {$last_row['or_id']} and orsi_stock_code = '{$value['Product']['pro_stock_code']}'" ) )
+				{
+					$pprice = $shi['orsi_price'];
+					$pcurrency = getField ("select pro_source_currency from shopsystem_product_extended_options where pro_pr_id = $pid" );
+				}
+
+			}
+		}
+	}
+//							ss_log_message( 'Foo' );
+			// is one of the "padding" services present?
+/*
+	$blue = false;
+	if( $poptions )
+	{
+		foreach( $poptions as $foo=>$op )
+		{
+			$r = getRow( "select * from product_service_options join shopsystem_products on sv_pr_id_service = pr_id join shopsystem_product_extended_options on pro_pr_id = pr_id where sv_id = $op" );
+			if( stristr( $r['pr_name'], 'padding' ) )
+				$blue = true;
+		}
+	}
+				$packing_row .= '<tr 
+			$packing_row .= '<tr
+		else
+		if( $blue )
+			$packing_row .= "<tr bgcolor='7edee1'>";
+*/
+	if( strlen($last_row['or_cancelled']) || strlen($last_row['or_standby'])  )
+		$packing_row .= "<tr bgcolor='FF0000'>";
+	else
+		$packing_row .= "<tr>";
+
+	$dest = unserialize( $last_row['or_shipping_details']); 
+	
+	// Get customer comments - gift/special instructions
+	$details = unserialize($last_row['or_details']);
+//	$Spec = '';
+//	if (array_key_exists('GiftMessage',$details)) {
+//		$Spec = $details['GiftMessage'];
+//	}
+//	$Spec .= '&nbsp;';
+	$stock_code = $last_row['orsi_stock_code'];
+	if( $last_row['orsi_qty'] >= 1 )
+		$qty = $last_row['orsi_qty'];
+	else
+		$qty = $rowcount;
+
+	$weight = $last_row['pro_net_weight'].'g/'.$last_row['pro_weight'].'g';
+
+	$price = $pcurrency.' '.number_format($pprice, 2);
+	if( $DestTotal > 0 )
+		if( $DestCurrency )
+			if( $DestCurrency == $pcurrency )
+				$DestTotal += $qty*$pprice;
+			else
+				$DestTotal += $qty*ss_getExchangeRate($pcurrency,$DestCurrency)*$pprice;
+		else
+		{
+			$DestCurrency = $pcurrency;
+			$DestTotal += $qty*$pprice;
+		}
+	else
+	{
+		$DestCurrency = $pcurrency;
+		$DestTotal = $qty*$pprice;
+	}
+
+	if( $qty > 1 )
+	{
+		$price = ''.$qty.'x'.$pcurrency.' '.number_format($pprice, 2).'('.number_format($qty*$pprice, 2).')';
+		$done = false;
+		$oqty = $qty;
+		// look for a combo product with this in
+		$Q_combos = query( "select * from shopsystem_combo_products where cpr_pr_id = $pid and cpr_qty > 1 and cpr_qty <= $qty order by cpr_qty desc" );
+		while( $possible = $Q_combos->fetchRow())
+		{
+			$count = getField( "select count(*) from shopsystem_combo_products where cpr_element_pr_id = {$possible['cpr_element_pr_id']}" );
+			if( ($count == 1) && !($oqty%$possible['cpr_qty']) )
+			{
+				// yup this'll do, show this as alternate
+				$alternate = getRow( "select pro_stock_code, pr_name, pr_location, pro_source_currency, pro_price, pro_special_price from shopsystem_products join  shopsystem_product_extended_options on pr_id = pro_pr_id and pr_id = {$possible['cpr_element_pr_id']}" );
+
+				$aqty = $oqty/$possible['cpr_qty'];
+				$aprice = $alternate['pro_price'];
+				if( strlen( $alternate['pro_special_price'] ) )
+					$aprice = $alternate['pro_special_price'];
+
+				if( strlen( $alternate['pr_location'] ) )
+				//if( $alternate )
+				{
+					if( !$done )
+					{
+						$stock_code = "<strong>".$alternate['pro_stock_code']."</strong><br/><small>$stock_code</small>";
+						$pname = "<strong>".$alternate['pr_name']."</strong><br/><small>$pname</small>";
+						$qty = "<strong>".($oqty/$possible['cpr_qty'])."</strong><br/><small>$qty</small>";
+						$price = '<strong>'.$aqty.'x'.$alternate['pro_source_currency'].' '.number_format($aprice, 2).'('.number_format($aqty*$aprice, 2).')</strong><br/>'.$price;
+
+						$done = true;
+					}
+					else
+					{
+						$stock_code .= "<br/><small>".$alternate['pro_stock_code']."</strong>";
+						$pname .= "<br/><small>".$alternate['pr_name']."</strong>";
+						$qty .= "<br/><small>".($oqty/$possible['cpr_qty'])."</strong>";
+						$price = '<br/><small>'.$aqty.'x'.$alternate['pro_source_currency'].' '.number_format($aprice, 2).'('.number_format($aqty*$aprice, 2).')</small>';
+					}
+				}
+			}
+
+		}
+	}
+
+	$packing_row .= '<td><a target="_blank" name="';
+	$packing_row .= $last_row['or_tr_id'];
+	$packing_row .= '" href="index.php?act=OnlineShop.ViewOrder&or_id=';
+	$packing_row .= $last_row['or_id'];
+	$packing_row .= '&tr_id=';
+	$packing_row .= $last_row['or_tr_id'];
+	$packing_row .= '&as_id=514&BreadCrumbs=Administration%20:%20Orders%20:">';
+	$packing_row .= $last_row['or_tr_id'];
+	$packing_row .= '</a></td>';
+	$packing_row .= '<td>';
+	$packing_row .= $stock_code;
+	$packing_row .= '</td>';
+	$packing_row .= '<td>';
+	$packing_row .= $pname;
+	$packing_row .= '</td>';
+	$packing_row .= '<td align="right">';
+	$packing_row .= $qty;
+	$packing_row .= '</td>';
+	$packing_row .= '<td align="right">';
+	$packing_row .= print_r( $price, true );
+	$packing_row .= '</td>';
+	$packing_row .= '<td align="right">';
+	$packing_row .= $weight;
+	$packing_row .= '</td>';
+	$packing_row .= '<td>';
+	$packing_row .= $dest['ShippingDetails']['Name'];
+	$packing_row .= '</td>';
+/*	<td> $packing_row .= date('d/m/Y H:i',ss_SQLtoTimeStamp($last_row['or_recorded']));</td>  */
+	$packing_row .= '<td>';
+	$c = false;
+	// options selected
+
+	if( $poptions )
+	{
+		ss_log_message_r(  'Log:'.__FILE__.':'.__LINE__, $poptions );
+		$packing_row .= '<table width=100%>';
+		foreach( $poptions as $foo=>$op )
+		{
+			$sql = "select * from product_service_options join shopsystem_products on sv_pr_id_service = pr_id join shopsystem_product_extended_options on pro_pr_id = pr_id where sv_id = $op";
+			ss_log_message( $sql );
+			if( $r = getRow( $sql ) )
+			{
+				$packing_row .= "<tr bgcolor='{$r['pr_packing_list_colour']}'><td>";
+				$packing_row .= '<small>'.$r['pro_source_currency'].' '.number_format($qty*$r['pro_price'], 2).'</small>';
+				$packing_row .= " <strong>$qty x ".$r['pr_name'].'</strong>';
+				$packing_row .= "</td></tr>";
+			}
+			else
+			{
+				// umm, something gone wrong...
+				$packing_row .= "<tr>><td>";
+				$packing_row .= " <strong>Unknown or deleted service ID $op</strong><br />";
+				$packing_row .= "</td></tr>";
+			}
+			$c = true;
+
+			if( !in_array( $r['pr_id'], $order_servicess[$last_row['orsi_or_id']] ) )
+				$order_servicess[$last_row['orsi_or_id']][] = $r['pr_id'];
+		}
+		$packing_row .= '</table>';
+	}
+
+
+	// place to enter tracking numbers
+//			if( strlen($last_row['or_tracked_and_traced']) )
+	if( count( $range['tracking'] ) > 0 )
+	{
+		$packing_row .= '<table width=100%>';
+		foreach( $range['tracking'] as $track )
+			if( strlen( $track ) )
+			{
+				$packing_row .= "<tr bgcolor='00FF00'><td>";
+				$packing_row .= 'Tracking#:'.$track.'<br />';
+				$packing_row .= "</td></tr>";
+			}
+		$packing_row .= '</table>';
+	}
+
+	$packing_row .= '</td>';
+	$packing_row .= '<td>';
+	$c = false;
+	if( count( $range['shipped'] ) > 0 )
+		foreach( $range['shipped'] as $track )
+			if( strlen( $track ) )
+			{
+				$packing_row .= $track.'<br />';
+				$c = true;
+			}
+	if( !$c )
+		$packing_row .= '&nbsp;';
+	$packing_row .= '</td>';
+
+	$packing_row .= '<td>';
+	$c = false;
+	if( count( $range['wontship'] ) > 0 )
+		foreach( $range['wontship'] as $track )
+			if( strlen( $track ) )
+			{
+				$packing_row .= $track.'<br />';
+				$c = true;
+			}
+	if( !$c )
+		$packing_row .= '&nbsp;';
+	$packing_row .= '</td>';
+
+	$packing_row .= '<td>';
+	$c = false;
+	if( count( $range['nostock'] ) > 0 )
+		foreach( $range['nostock'] as $track )
+			if( strlen( $track ) )
+			{
+				$packing_row .= $track.'<br />';
+				$c = true;
+			}
+	if( !$c )
+		$packing_row .= '&nbsp;';
+	$packing_row .= '</td>';
+
+	$packing_row .= '</tr>';
+
+	if( $last_row['or_id'] != $row['or_id'] )
+	{
+		$packing_row .= '<tr>';
+		$packing_row .= '<td>';
+		$packing_row .= 'Destination<br />Address';
+		$packing_row .= '</td>';
+		$packing_row .= '<td colspan=3>';
+		//							print_r ($dest['ShippingDetails']);
+		if( strlen($last_row['or_cancelled']) || strlen($last_row['or_standby'])  )
+			$packing_row .= "Do not ship";
+		else
+		{
+			$packing_row .= $dest['ShippingDetails']['Name']."<br />";
+			if( strlen( $dest['ShippingDetails']['0_B4BF'] ) )
+				$packing_row .= $dest['ShippingDetails']['0_B4BF']."<br />";
+			$packing_row .= $dest['ShippingDetails']['0_50A1']."<br />";
+			$packing_row .= $dest['ShippingDetails']['0_50A2']."<br />";
+			$packing_row .= $dest['ShippingDetails']['0_50A4']."<br />";
+			$packing_row .= $dest['ShippingDetails']['0_B4C0']."<br />";
+			$packing_row .= 'Ph:'.$dest['ShippingDetails']['0_B4C1']."<br />";
+		//							$packing_row .= "Email:".$dest['ShippingDetails']['Email']."<br />";
+		//							$packing_row .= "Phone:".$dest['ShippingDetails']['0_B4C1']."<br />";
+		} //$packing_row .= $notes;
+		$packing_row .= '</td>';
+
+		$Q_Notes = query("
+			SELECT * FROM shopsystem_order_notes
+			WHERE orn_or_id = {$last_row['or_id']}
+			  and orn_show_packing > 0
+			ORDER BY orn_id
+		");
+		$notes = '';
+		while ($note = $Q_Notes->fetchRow())
+			$notes .= date('d/m/Y',ss_SQLtoTimeStamp($note['orn_timestamp'])).' '.ss_HTMLEditFormat($note['orn_text']).'<br>';
+		$notes .= '&nbsp;';
+				
+		$notes = trim( $notes );
+		if( strlen( $notes ) )
+		{
+			$packing_row .= '<td>';
+			$packing_row .= $DestCurrency.' '.number_format($DestTotal, 2).'<br />==========<br />';
+			$packing_row .= 'Admin Notes';
+			$packing_row .= '</td>';
+			$packing_row .= '<td colspan=2>';
+			if( strlen($last_row['or_tracked_and_traced']) )
+				$packing_row .= "Tracking Please!<br />";
+			$packing_row .= $notes;
+			$packing_row .= '</td>';
+		}
+		else
+		{
+			$packing_row .= '<td>';
+			$packing_row .= $DestCurrency.' '.number_format($DestTotal, 2).'<br />';
+			$packing_row .= '</td>';
+			$packing_row .= '<td colspan=2>';
+			$packing_row .= '</td>';
+		}
+		$DestCurrency = '';
+		$DestTotal = 0;
+
+		if( $data['ors_ve_id'] == 2 )			// swiss post only at this stage
+		{
+			if( !($PostAllocation = getRow( "select * from PostLabelAllocation where pl_sheet_id = {$data['ors_id']} and pl_or_id = {$last_row['or_id']}" ) ) )
+			{
+				// not found, fill it in, we need pl_num_packages, overrideable
+				// pl_license pl_license_item_from .. pl_license_item_to
+
+				$transaction = getRow( "select Transactions.* from Transactions join shopsystem_orders on or_tr_id = tr_id where or_id = {$last_row['or_id']}" );
+
+				$each_value = ($transaction['tr_order_total'] - $transaction['tr_incl_shipping'] - $transaction['tr_excl_shipping'])/$est_packages;
+				$each_currency = $transaction['tr_currency_code'];
+
+				$licenses = getSwisspostLicenses( );
+
+				if( $lastAllocation = getRow( "select * from PostLabelAllocation order by pl_id desc limit 1" ) )	// last one
+				{
+					$this_license = $lastAllocation['pl_license'];
+					$this_start = $lastAllocation['pl_license_item_to']+1;
+					$this_end = $lastAllocation['pl_license_item_to']+$est_packages;
+					if( $this_end > 9999 )		// next license time
+						for( $i = 0; $i < count( $licenses ); $i++ )
+							if( $this_license == $licenses[$i] )
+							{
+								$this_license = $licenses[$i+1];
+								$this_start = 1;
+								$this_end = $est_packages;
+							}
+
+					query( "insert into PostLabelAllocation (pl_sheet_id, pl_or_id, pl_num_packages, pl_license, pl_license_item_from, pl_license_item_to, pl_declared_value, pl_currency )"
+							." values ({$data['ors_id']}, {$last_row['or_id']}, $est_packages, '$this_license', $this_start, $this_end, $each_value, '$each_currency' )" );
+					$PostAllocation = ['pl_num_packages' => $est_packages, 'pl_license' => $this_license, 'pl_license_item_from' => $this_start, 'pl_license_item_to' => $this_end ];
+				}
+				else
+				{
+					query( "insert into PostLabelAllocation (pl_sheet_id, pl_or_id, pl_num_packages, pl_license, pl_license_item_from, pl_license_item_to, pl_declared_value, pl_currency )"
+							." values ({$data['ors_id']}, {$last_row['or_id']}, $est_packages, '$licenses[0]', 1, $est_packages, $each_value, '$each_currency')" );
+					$PostAllocation = ['pl_num_packages' => $est_packages, 'pl_license' => $licenses[0], 'pl_license_item_from' => 1, 'pl_license_item_to' => $est_packages ];
+				}
+			}
+
+			$packing_row .= '<td colspan=4>';
+			$packing_row .= "Number of packages <input type=\"text\" id=\"numPackages_".ss_HTMLEditFormat($last_row['or_id'])."\" name=\"numPackages_".ss_HTMLEditFormat($last_row['or_id'])."\" value=\"{$PostAllocation['pl_num_packages']}\" /><br />";
+			$packing_row .= "License {$PostAllocation['pl_license']}  ".sprintf( '%04d', $PostAllocation['pl_license_item_from'] )."..".sprintf( '%04d', $PostAllocation['pl_license_item_to'] );
+//			$packing_row .= " ( ".$PostAllocation['pl_or_id']." ) ";
+			$packing_row .= '</td>';
+		}
+
+		/*
+		$Spec = trim( $Spec );
+		if( $Spec != '&nbsp;' )
+		{
+			$packing_row .= '<td>';
+			$packing_row .= 'Cust. Notes';
+			$packing_row .= '</td>';
+			$packing_row .= '<td colspan=2>';
+			$packing_row .= $Spec;
+			$packing_row .= '</td>';
+			$packing_row .= '</tr>';
+		}
+		*/
+	}
+
+	return $packing_row;
+}					// End of function save_packing_row( $last_row, $row, $data, $rowcount, $range )
+?>
+
+<body>
+<tmpl_if condition="!array_key_exists('HideButtons',$data)">
+<div class="dontPrint">
+<table cellpadding=5>
+<form action="index.php" method="post" name="theForm">
+	<tr>
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<td><input type="button" value="Print" onclick="window.print();"></td>
+	<td><input type="submit" name="submit" value="Send Email" onclick="if (confirm('Are you should you would like to send this order?\n\nThis will currently send to im@admin.com and macbjorck@mac.com.')) { this.form.action='index.php?act=shopsystem_order_sheets.SendEmail&ors_id={tmpl_var ors_id}'; return true; } else { return false;}">
+	<td>
+	<input type="submit" name="submit" value="Edit" onclick="this.form.action='index.php?act=shopsystem_order_sheets.Edit&ors_id={tmpl_var ors_id}';">
+	</td>
+	<tmpl_if condition="strlen($data['ors_paid']) == 0">
+		<td><input type="submit" name="submit" value="Mark Paid" onclick="if (confirm('Are you should you would like to mark this order as paid?')) { this.form.action='index.php?act=shopsystem_order_sheets.MarkPaid&ors_id={tmpl_var ors_id}'; return true; } else { return false;}">
+		</td>
+	</tmpl_if>
+	<td>
+	<input type="button" name="PDF" value="Show PDF" onclick="window.open('index.php?act=shopsystem_order_sheets.ShowPDF&ors_id={tmpl_var ors_id}');">
+	</td>
+	<td>
+	<input type="button" name="CSV" value="Show CSV" onclick="window.open('index.php?act=shopsystem_order_sheets.ShowCSV&ors_id={tmpl_var ors_id}');">
+	</td>
+	<td>
+	<input type="button" name="CSV" value="Swisspost CSV" onclick="window.open('index.php?act=shopsystem_order_sheets.SwisspostCSV&ors_id={tmpl_var ors_id}');">
+	</td>
+	<td align="LEFT">
+	<input type=button value="Select All" onClick="checkAll()">
+	</td>
+	<td align="LEFT">
+	<input type=button value="Unselect All" onClick="uncheckAll()">
+	</td>
+	<td>
+	<input type="button" name="cancel" value="Return to List" onclick="document.location='{tmpl_var_js BackURL}';">
+	</td>
+	<tmpl_if condition="strlen($data['ors_paid']) == 0">
+		<td>This order has not been paid for.</td>
+	<tmpl_else>
+		<td>This order was marked paid on {tmpl_var_date name="ors_paid" format="d M Y"}</td>
+	</tmpl_if>
+	</tr>
+</form>
+</table>
+</div>
+<br />
+<h1>Order Sheet <?php echo $data['ors_id'];?></h1>
+<br />
+<br />
+<h2><?=$title?></h2>
+<?php
+
+
+			$Q_Sheets = query("SELECT * FROM shopsystem_order_sheets where ors_id <= {$data['ors_id']} and ors_ve_id = {$data['ors_ve_id']} order by ors_id desc limit 30");
+
+			while ($sheets = $Q_Sheets->fetchRow())
+			{
+				$unsent = 0;
+/*				echo "select * from shopsystem_order_sheets_items JOIN shopsystem_orders on or_id = orsi_or_id where orsi_ors_id = {$sheets['ors_id']}<br/>";	*/
+				//$Q_Items = query( "select * from shopsystem_order_sheets_items where orsi_ors_id = {$sheets['ors_id']}" );
+				$Q_Items = query( "select * from shopsystem_order_sheets_items JOIN shopsystem_orders on or_id = orsi_or_id where orsi_ors_id = {$sheets['ors_id']} and or_cancelled IS NULL and or_card_denied IS NULL and or_deleted = 0" );
+
+				while( $items = $Q_Items->fetchRow())
+				{
+					if( !strlen($items['orsi_date_shipped']) && !strlen( $items['orsi_no_stock'] ) )
+						$unsent++;
+/*
+					$OrderDetails = unserialize($items['or_basket']);
+
+					if( is_array( $OrderDetails )
+					 && array_key_exists( 'Basket', $OrderDetails )
+					 && array_key_exists( 'Products', $OrderDetails['Basket'] ) )
+					{
+						foreach( $OrderDetails['Basket']['Products'] as $index => $value )
+						{
+							if( is_array( $value )
+							 && array_key_exists('Product', $value)
+							 && !strcmp($value['Product']['pro_stock_code'], $items['orsi_stock_code'] )
+							 && array_key_exists('Qty', $value )
+							 && $value['Qty'] == $items['orsi_box_number'] )
+							{
+								$ind = $value['Qty'];
+								$ind--;
+
+
+								if( !isset( $OrderDetails['Basket']['Products'][$index]['Shipped'][$ind] ) )
+									$unsent++;
+							}
+						}
+					}
+					*/
+				}
+
+				if( $unsent > 0 )
+				{
+					echo "Order sheet <a href='index.php?act=shopsystem_order_sheets.ViewPacking&ors_id={$sheets['ors_id']}&BackURL={$_GET['BackURL']}'>{$sheets['ors_id']}</a> has $unsent items not yet shipped<br/>";
+				}
+			}
+
+?>
+<br />
+<br />
+</tmpl_if>
+<form action="index.php?act=shopsystem_order_sheets.MarkShipped" method="post" name="shipForm">
+	<input type="hidden" name="ors_id" value="{tmpl_var ors_id}">
+	<input type="hidden" name="Distributor" value="{tmpl_var Distributor}">
+	<input type="hidden" name="BackURL" value="{tmpl_var_js BackURL}">
+<table  border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="102" valign="top" bgcolor="#A6DED5"><img src="Images/acme_logo.gif" alt="Bjorck Bros. S.L." width="102" height="183"></td>
+		<td valign="top"><table  border="0" cellspacing="0" cellpadding="20">
+			<tr align="center" valign="top">
+				<td colspan="2"></td>
+			</tr>
+			<tr align="center" valign="top">
+				<td colspan="2"><table border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" class="Borderinvoice">
+					<tr valign="top">
+						<td  align="center" class="Borderordersheet">Order Number</td>
+						<td  align="center" class="Borderordersheet">Stock Code</td>
+						<td  align="center" class="Borderordersheet">Description</td>
+						<td  align="center" class="Borderordersheet">Qty.</td>
+						<td  align="center" class="Borderordersheet">Price.</td>
+						<td  align="center" class="Borderordersheet">Net/Gross.</td>
+						<td  align="center" class="Borderordersheet">Name.</td>
+						<td  align="center" class="Borderordersheet">Services Requested</td>
+						<td  align="center" class="Borderordersheet">Shipped?</td>
+						<td  align="center" class="Borderordersheet">Wont Ship</td>
+						<td  align="center" class="Borderordersheet">No Stock?</td>
+				 </tr>
+				 	<?php
+					$first = true;
+					$rowcount = 0;
+					$range = array();
+					$range['userlink'] = 0;
+					$range['orderlink'] = 0;
+					$range['stockcode'] = '';
+					$range['tracking'] = array();
+					$range['shipped'] = array();
+					$range['wontship'] = array();
+					$range['nostock'] = array();
+					?>
+				 	<tmpl_loop query="Q_OrderSheetItems">
+						<?php
+
+						// weed out that which we don't want.
+
+						if( $data['Distributor'] )
+						{
+							if($row['or_us_id'] == 19418)		// minibox is not sent via a distributor
+								continue;
+
+							if( !array_key_exists( $row['or_country'], $distCountries ) )		//missing
+								continue;
+
+							if( $distCountries[$row['or_country']] != $data['Distributor'] )		// this country is not sent this distributor
+								continue;
+
+							ss_log_message( "Userlink is {$row['or_us_id']}" );
+						}
+						else
+							// not minibox and IS in the list of countries etc etc
+							if( ($row['or_us_id'] != 19418) && array_key_exists( $row['or_country'], $distCountries ) )
+								continue;
+
+						// this look is at the individual box level...
+						//print_r( $row );
+						//print_r( $range );
+						if( ( $row['or_us_id'] != $range['userlink'] )
+						 || ( $row['orsi_or_id'] != $range['orderlink'] )
+						 || ( $row['orsi_stock_code'] != $range['stockcode'] ) )
+						{
+							// if this is another sort of box, or another user or another order....
+
+							if( $first != true )
+							{
+								if( array_key_exists( $last_row['orsi_or_id'], $order_rows )
+								 && is_array( $order_rows[$last_row['orsi_or_id']] ) )
+									$order_rows[$last_row['orsi_or_id']]["orsi_or_id = {$last_row['orsi_or_id']} and orsi_stock_code = '{$last_row['orsi_stock_code']}'"] = save_packing_row( $last_row, $row, $data, $rowcount, $range );
+								else
+									$order_rows[$last_row['orsi_or_id']] = array( "orsi_or_id = {$last_row['orsi_or_id']} and orsi_stock_code = '{$last_row['orsi_stock_code']}'" => save_packing_row( $last_row, $row, $data, $rowcount, $range ) );
+
+							}
+
+							$first = false;
+							$rowcount = 0;
+
+							$range['userlink'] = $row['or_us_id'];
+							$range['orderlink'] = $row['orsi_or_id'];
+							$range['stockcode'] = $row['orsi_stock_code'];
+							$range['tracking'] = array();
+							$range['shipped'] = array();
+							$range['wontship'] = array();
+							$range['nostock'] = array();
+
+							$range['shipped_min'] = '';
+							$range['shipped_max'] = '';
+							$range['stock_min'] = '';
+							$range['stock_max'] = '';
+						}
+
+						$id = $row['orsi_id'];
+
+						if( strlen( $row['orsi_tracking_number'] ) )
+							$range['tracking'][$id] = $row['orsi_tracking_number'];
+						else
+						{
+							if( strlen( $row['orsi_no_stock'] ) )
+								$range['tracking'][$id] = "";
+							else
+/*								if( strlen( $row['orsi_date_shipped'] ) )	*/
+									if( ($trackingOption != 'no') || strlen($row['or_tracked_and_traced']) )
+										$range['tracking'][$id] = "<input type=\"text\" id=\"tracking_".ss_HTMLEditFormat($row['orsi_id'])."\" name=\"tracking_".ss_HTMLEditFormat($row['orsi_id'])."\" />";
+									else
+										$range['tracking'][$id] = "";
+/*								else	*/
+/*									$range['tracking'][$id] = "";	*/
+						}
+
+						$range['shipped'][$id] = '<input type="checkbox" id="MarkShipped_'.ss_HTMLEditFormat($row['orsi_id']).'" name="MarkShipped_'.ss_HTMLEditFormat($row['orsi_id'])
+																.'" value="1" style="border:0px;" onclick="box = eval(\'document.shipForm.MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id'])
+																.'\'); box.checked = false; box = eval(\'document.shipForm.MarkWontShip_'.ss_HTMLEditFormat($row['orsi_id'])
+																.'\'); box.checked = false;" >';
+						$range['wontship'][$id] = '<input type="checkbox" id="MarkWontShip'.ss_HTMLEditFormat($row['orsi_id']).'" name="MarkWontShip_'.ss_HTMLEditFormat($row['orsi_id']).'" value="1" style="border:0px;" onclick="box = eval(\'document.shipForm.MarkShipped_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false;box = eval(\'document.shipForm.MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false;" >';
+						$range['nostock'][$id] = '<input type="checkbox" id="MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id']).'" name="MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id']).'" value="1" style="border:0px;" onclick="box = eval(\'document.shipForm.MarkShipped_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false;box = eval(\'document.shipForm.MarkWontShip_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false;" >';
+
+						if( strlen( $row['orsi_wont_ship'] ) )
+						{
+							$range['nostock'][$id] = '&nbsp;';
+							$range['wontship'][$id] = $row['orsi_wont_ship'];
+							$range['shipped'][$id] = '&nbsp;';
+						}
+						else
+						if( strlen( $row['orsi_no_stock'] ) )
+						{
+							$range['nostock'][$id] = $row['orsi_no_stock'];
+							$range['wontship'][$id] = '&nbsp;';
+							$range['shipped'][$id] = '&nbsp;';
+						}
+						else
+						{
+							global $checkboxes, $wontcheckboxes, $nocheckboxes, $trackcheckboxes;
+
+							if( !strlen($row['or_cancelled']) && !strlen($row['or_standby'])  )
+								$nocheckboxes[] = 'MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id']);
+
+							if( strlen( $row['orsi_date_shipped'] ) )
+							{
+								$range['shipped'][$id] = $row['orsi_date_shipped'];
+								$range['wontship'][$id] = '&nbsp;';
+								$range['nostock'][$id] = '&nbsp;';
+							}
+							else
+							{
+								global $checkboxes, $wontcheckboxes, $nocheckboxes, $trackcheckboxes;
+								if( !strlen($row['or_cancelled']) && !strlen($row['or_standby'])  )
+									if( ($trackingOption != 'no') || strlen($row['or_tracked_and_traced']) )
+									{
+										if( ($trackingOption == 'forced') || strlen($row['or_tracked_and_traced']) )
+											$range['shipped'][$id] = '<input type="checkbox" id="MarkShipped_'.ss_HTMLEditFormat($row['orsi_id'])
+																.'" name="MarkShipped_'.ss_HTMLEditFormat($row['orsi_id'])
+																.'" value="1" style="border:0px;" 
+																onclick="box = eval(\'document.shipForm.MarkNoStock_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false; box = eval(\'document.shipForm.MarkWontShip_'.ss_HTMLEditFormat($row['orsi_id']).'\'); box.checked = false; checkTracked( '.ss_HTMLEditFormat($row['orsi_id']).' );" >';
+
+
+										$trackcheckboxes['MarkShipped_'.ss_HTMLEditFormat($row['orsi_id'])] = 'tracking_'.ss_HTMLEditFormat($row['orsi_id']);
+									}
+									else
+									{
+										$checkboxes[] = 'MarkShipped_'.ss_HTMLEditFormat($row['orsi_id']);
+									}
+							}
+						}
+
+						$rowcount++;
+						$last_row = $row;
+						?>
+					</tmpl_loop>
+					<?php 
+						if( isset($last_row) )
+						{
+							if( array_key_exists( $last_row['orsi_or_id'], $order_rows )
+							 && is_array( $order_rows[$last_row['orsi_or_id']] ) )
+								$order_rows[$last_row['orsi_or_id']]["orsi_or_id = {$last_row['orsi_or_id']} and orsi_stock_code = '{$last_row['orsi_stock_code']}'"] = save_packing_row( $last_row, $row, $data, $rowcount, $range );
+							else
+								$order_rows[$last_row['orsi_or_id']] = array( "orsi_or_id = {$last_row['orsi_or_id']} and orsi_stock_code = '{$last_row['orsi_stock_code']}'" => save_packing_row( $last_row, $row, $data, $rowcount, $range ) );
+
+/*
+						if( array_key_exists( $last_row['orsi_or_id'], $order_rows )
+						 && is_array( $order_rows[$last_row['orsi_or_id']] ) )
+							$order_rows[$last_row['orsi_or_id']][] = save_packing_row( $last_row, $row, $data, $rowcount, $range );
+						else
+							$order_rows[$last_row['orsi_or_id']] = array( save_packing_row( $last_row, $row, $data, $rowcount, $range ) );	
+*/
+							output_order_rows( $order_rows, $order_servicess );
+						}
+					?>
+					<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+					<input type="submit" name="submit" value="Save!" >
+					</td>
+					</tr>
+				</table></td>
+			</tr>
+			<tr align="center" valign="top">
+				<td>
+				<table width="100%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+                	<tr valign="top">
+                		<td height="200" colspan="6" align="left"><strong>Anotaciones /Notes:</strong><p>
+                		<?=str_replace(chr(10),"<br />",ss_HTMLEditFormat($data['ors_notes']))?>
+                		</p></td>
+					</tr>
+					 <p><br>
+				</table>
+			</tr>
+</table>
+</form>
+<SCRIPT language="Javascript">
+
+	function checkTracked( item )
+	{
+		tracked = eval("document.shipForm.tracking_"+item);
+		if( tracked.value.length == 0 )
+		{
+			alert( "You need to enter a tracking number first" );
+			box = eval("document.shipForm.MarkShipped_"+item);
+			box.checked = false;
+			tracked.focus();
+		}
+	}
+
+	function checkAll()
+	{
+		<?php
+		global $checkboxes, $wontcheckboxes, $nocheckboxes, $trackcheckboxes;
+
+		foreach( $checkboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = true;\n";
+		foreach( $trackcheckboxes as $checkbox => $trackbox )
+			// echo "box = eval(\"document.shipForm.$checkbox\"); tracked = eval(\"document.shipForm.$trackbox\"); if(tracked.value.length > 0) box.checked = true; else box.checked = false;\n";
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = true;\n";
+		foreach( $wontcheckboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		foreach( $nocheckboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		?>
+	}
+
+	function uncheckAll()
+	{
+		<?php
+		global $checkboxes, $wontcheckboxes, $nocheckboxes, $trackcheckboxes;
+
+		foreach( $checkboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		foreach( $wontcheckboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		foreach( $nocheckboxes as $checkbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		foreach( $trackcheckboxes as $checkbox => $trackbox )
+			echo "box = eval(\"document.shipForm.$checkbox\"); box.checked = false;\n";
+		?>
+	}
+</SCRIPT>
+</body>
+</html>

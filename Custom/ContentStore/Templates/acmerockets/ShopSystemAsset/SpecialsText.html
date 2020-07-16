@@ -1,0 +1,98 @@
+<?php
+	requireClass('ShopSystem_ProductsAdministration');	
+	$temp = new Request("Security.Sudo",array('Action'=>'start'));			
+	$productAdmin =& new ShopSystem_ProductsAdministration($data['this']->asset->getID());		
+	$temp = new Request("Security.Sudo",array('Action'=>'stop'));	
+
+	$temp = new Request("Asset.Display",array(
+		'as_id'	=>	514,
+	));
+	
+	$_SESSION['Shop']['CurrencyCountry'] = getRow("
+		SELECT * FROM countries
+		WHERE cn_currency_code LIKE 'EUR'		
+	");
+	
+	$data['Q_QuickOrderCategories'] = query("
+		SELECT * FROM shopsystem_quick_categories
+	");
+?>
+<tmpl_loop query="Q_Products"><?php $row['pr_name'] = strtoupper($row['pr_name']); ?>
+
+{tmpl_row_var_raw pr_name}
+
+
+<?php
+
+	// Get a product administration object so we have a list of all attribute
+	// and option fields
+	$productAdmin->primaryKey = $row['pr_id'];
+	$temp = null;
+	$productAdmin->loadFieldValuesFromDB($temp);					
+	
+	// Get all the attribute field names
+	ss_paramKey($data['this']->asset->cereal,'AST_SHOPSYSTEM_ATTRIBUTES','');
+	if (strlen($data['this']->asset->cereal['AST_SHOPSYSTEM_ATTRIBUTES'])) {
+		$fieldsArray = unserialize($data['this']->asset->cereal['AST_SHOPSYSTEM_ATTRIBUTES']);
+	} else {
+		$fieldsArray = array();	
+	}
+
+	// Get the attribute field values
+	$attributes = array();
+	foreach($fieldsArray as $fieldDef) {
+		
+		// Param all the settings we might have
+		ss_paramKey($fieldDef,'uuid','');
+		ss_paramKey($fieldDef,'type','');		
+		ss_paramKey($fieldDef,'options',array());		
+		ss_paramKey($fieldDef,'name','unknown');
+								
+		// Check the field is existing in the Users database table
+		$dbFieldName = 'Pr'.$fieldDef['uuid'];		
+		
+		if (array_key_exists($dbFieldName,$productAdmin->fields)) {			
+			$attributes[$fieldDef['name']] = $productAdmin->fields[$dbFieldName]->displayValue($row[$dbFieldName]);			
+		}
+				
+	}	
+
+					$data['AttributesHTML'] = $data['this']->processTemplate('Attributes', $attributes);
+					if ($row['pr_combo']) {
+						$Combo = getRow("
+							SELECT SUM(cpr_qty) AS TheCount FROM shopsystem_combo_products
+							WHERE cpr_element_pr_id = {$row['pr_id']}
+						");
+						print('<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Boxes in combo:</strong> <span class="onlineShop_ProductSize">'.$Combo['TheCount'].'</span><br>');	//  (you will be charged shipping for '.$Combo['TheCount'].' boxes)
+						$data['AttributesHTML'] = '<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Llamas per box:</strong> <span class="onlineShop_ProductSize">Varies</span><br>';
+					}
+					
+					echo strip_tags(str_replace("\t","",str_replace('<br>',"\n",$data['AttributesHTML'])));
+					$data['Q_BackStampCode'] = query("
+						SELECT soit_date_changed, soit_bs_code
+						FROM shopsystem_supplier_order_sheets_items, shopsystem_products, shopsystem_product_extended_options
+						WHERE pr_id = pro_pr_id
+							AND pr_id = {$row['pr_id']}
+							AND pro_stock_code LIKE soit_stock_code
+							AND soit_bs_code IS NOT NULL 
+							AND soit_date_changed IS NOT NULL
+						UNION
+						SELECT orsi_date_changed, orsi_bs_code
+						FROM shopsystem_order_sheets_items, shopsystem_products, shopsystem_product_extended_options
+						WHERE pr_id = pro_pr_id
+							AND pr_id = {$row['pr_id']}
+							AND pro_stock_code LIKE orsi_stock_code
+							AND orsi_bs_code IS NOT NULL 
+							AND orsi_date_changed IS NOT NULL
+						ORDER BY 1 DESC
+						LIMIT 0,1					
+					");
+					$tempRow = $row;
+				?>
+<? $row = $tempRow; ?>
+<? echo strip_tags(str_replace('&nbsp;',' ',str_replace('&euro;','€',str_replace("\t","",str_replace('<br />',"\n",str_replace('<br>',"\n",$row['PricesHTML'])))))); ?>
+/Shop_System/Service/Detail/Product/{tmpl_row_var pr_id}
+
+
+-------------------------------------------------------------------
+</tmpl_loop>

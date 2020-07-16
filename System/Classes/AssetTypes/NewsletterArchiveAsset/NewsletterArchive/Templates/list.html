@@ -1,0 +1,61 @@
+<table width="100%">
+	<tr>
+		<th align="left">Subject</th>
+		<th align="left">Sent</th>
+		<th align="left">By</th>
+		<th align="left">Archive Status</th>
+		<th align="left">Sent To</th>
+		<th align="left">User Groups</th>
+		<th align="left">Opened By</th>
+	</tr>
+	<tmpl_loop query="Q_Newsletters">
+		<tr>
+			<td>{tmpl_row_var na_subject}</td>		
+			<td>{tmpl_row_var_date name="na_sent" format="H:i d/m/Y"}</td>
+			<td><a href="mailto:{tmpl_row_var na_user_email}">{tmpl_row_var na_user_firstname} {tmpl_row_var na_user_lastname}</a></td>
+			<form method="post" action="index.php?act=NewsletterArchive.UpdateArchiveStatus&as_id={tmpl_var as_id}&na_id={tmpl_row_var na_id}&BackURL={tmpl_var_url BackURL}">
+			<td>
+				<select name="ArchiveStatus" onchange="this.form.submit();">
+					<option {tmpl_if condition="$row['na_current']"}selected{tmpl_end} value="{tmpl_var as_id}Current">Current</option>			
+					<option {tmpl_if condition="$row['na_as_id'] and !$row['na_current']"}selected{tmpl_end} value="{tmpl_var as_id}">Archive</option>			
+					<option {tmpl_if condition="$row['na_as_id']===null"}selected{tmpl_end} value="null">Admin Only</option>			
+				</select>
+			</td>
+			</form>
+			<td align="center">
+				<?	
+					$count = getRow("SELECT COUNT(*) AS Total FROM NewsletterArchive_Recipients WHERE nar_nl_id = {$row['na_id']}");
+					$data['Recipients']=$count['Total']; 
+				?>
+				<a href="index.php?act=NewsletterArchive.ViewRecipients&na_id={tmpl_row_var na_id}&as_id={tmpl_var as_id}&BackURL={tmpl_var_url BackURL}">{tmpl_var Recipients}</a>
+			</td>
+			<?
+				$userGroupsArray = ListToArray($row['na_user_groups'],",");
+			?>
+			<td>
+			<? 	
+				$output = '';
+				foreach($userGroupsArray as $userGroup) {
+					$Q_UserGroup = query("
+						SELECT * FROM UserGroups
+						WHERE ug_id = $userGroup
+					");
+					if ($Q_UserGroup->numRows()) {
+						$ug = $Q_UserGroup->fetchRow();
+						$output = ss_comma($output).ss_HTMLEditFormat($ug['ug_name']);	
+					}
+				}
+				print $output;			
+			?>
+			</td>
+			<td align="center">
+				<?
+					$count = getRow("SELECT COUNT(*) AS Total FROM NewsletterArchive_Recipients WHERE nar_nl_id = {$row['na_id']} AND nar_read IS NOT NULL");
+					$data['Readers']=$count['Total'];
+				?>
+				{tmpl_var Readers}
+			</td>
+		</tr>
+	</tmpl_loop>
+</table>
+<div align="center">{tmpl_var_raw PageThru}</div>

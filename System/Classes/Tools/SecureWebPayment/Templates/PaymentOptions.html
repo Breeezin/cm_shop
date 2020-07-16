@@ -1,0 +1,19 @@
+<DIV ALIGN="CENTER">
+<input type="hidden" name="PaymentOption" value="">
+{tmpl_if $data['CreditCard']}
+
+<INPUT TYPE="button"  class="WebPayButton"  NAME="PaymentOptions" id="PayCredit" onclick="document.forms.{tmpl_var FormName}.PaymentOption.value='ByCreditCard';document.forms.{tmpl_var FormName}.submit();" value="Credit Card">
+{tmpl_end}		
+{tmpl_if $data['Cheque']}
+<INPUT TYPE="button" class="WebPayButton"  NAME="PaymentOptions" id="PayCheque" onclick="document.forms.{tmpl_var FormName}.PaymentOption.value='ByCheque';document.forms.{tmpl_var FormName}.submit();" value="Cheque">
+{tmpl_end}
+{tmpl_if $data['Direct']}
+<INPUT TYPE="button" class="WebPayButton"  NAME="PaymentOptions" id="PayDirect" onclick="document.forms.{tmpl_var FormName}.PaymentOption.value='ByDirectPayment';document.forms.{tmpl_var FormName}.submit();" value="Bank Payment">
+{tmpl_end}
+{tmpl_if $data['Invoice']}
+<INPUT TYPE="button"  class="WebPayButton"  NAME="PaymentOptions" ID="PayInvoice" onclick="document.forms.{tmpl_var FormName}.PaymentOption.value='ByInvoice';document.forms.{tmpl_var FormName}.submit();" value="Invoice">
+{tmpl_end}
+{tmpl_if $data['Collection']}
+<INPUT TYPE="button" class="WebPayButton" NAME="PaymentOptions" ID="PayCollection" onclick="document.forms.{tmpl_var FormName}.PaymentOption.value='ByCollection';document.forms.{tmpl_var FormName}.submit();" value="Pay on Collection">
+{tmpl_end}
+</DIV>

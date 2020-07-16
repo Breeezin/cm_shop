@@ -1,0 +1,34 @@
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="5">
+	<tmpl_eval expression="foreach ($data['fields'] as $data['field']) {">		
+	<?php if(!is_subclass_of($data['field'],'hiddenfield') and get_class($data['field']) != 'hiddenfield') {?>
+	<TR>
+		<TH VALIGN="TOP" align=left width="33%"><SPAN CLASS="AdminDisplayName">
+			
+				{tmpl_eval print($data['field']->displayName)}</SPAN>
+			
+			</TH>
+			<TD>		
+				<?php 
+                if ($data['field']->name == 'EvUsers'){
+                    if ( $data['field']->value == '' || $data['field']->value === NULL)
+                        print 'Everyone';
+                    else
+                        print( $data['field']->displayValue($data['field']->value)); 
+                } else if (get_class($data['field']) == 'datetimefield') {
+                    $time = strtotime( $data['field']->value );
+                    print ( date('g:ia, l, M \'y',$time)) ;
+                } else if (get_class($data['field']) == 'memofield') {
+                    
+                    print( nl2br($data['field']->displayValue($data['field']->value))); 
+                } else {
+                    print( $data['field']->displayValue($data['field']->value)); 
+                } 
+                    
+                ?>						
+			</TD>
+		</TR>
+		<?php }  ?>
+	</tmpl_eval>
+</TABLE>
+
+<p><a href="{tmpl_var_raw BackURL}">Back</a></p>

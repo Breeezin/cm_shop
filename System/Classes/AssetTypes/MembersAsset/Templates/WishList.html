@@ -1,0 +1,41 @@
+{tmpl_var_raw EditableContent}
+<br />
+
+                  <div class="acme-container">
+                    <div class="acme-inner">
+                      <div class="row row-level-1">
+                        <div class="row-inner clearfix">
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-inner">
+                              <div class="panel-special no-space-row box-products-list product-grid">
+                                <div class="panel-heading">
+                                  <h3 class="panel-title">Your Wishlist</h3>
+                                </div>
+                                <div class="list panel-body padding-0 owl-carousel-play" id="product_latest" data-ride="owlcarousel">
+                                  <div class="carousel-controls-list">
+                                    <a class="carousel-control left" href="#product_latest" data-slide="prev"><i class="zmdi zmdi-chevron-left" aria-hidden="true"></i></a>
+                                    <a class="carousel-control right" href="#product_latest" data-slide="next"><i class="zmdi zmdi-chevron-right" aria-hidden="true"></i></a>
+                                  </div>
+                                  <div class="owl-carousel" data-show="1" data-pagination="false" data-navigation="true">
+                                        <?php 
+                                          $wishlist = new Request('Asset.Display',array(
+                                              'as_id'    =>    '514',
+                                              'Service'    =>    'Engine',
+                                              'PricesType'    =>    'TableHTML',
+                                              'RowsPerPage'    =>    200,
+                                              'OrderBy'    =>    'Wishlist',
+                                              'NoOverrideRows'    =>    1,
+                                              ));
+                                          print $wishlist->display;
+                                        ?>
+                                  </div>
+                                </div>
+                                <div class="clearfix"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+

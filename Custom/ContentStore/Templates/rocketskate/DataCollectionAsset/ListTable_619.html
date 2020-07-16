@@ -1,0 +1,49 @@
+<TABLE width="100%" cellpadding="0" cellspacing="0">
+	<TR>
+	<?php foreach($data['Titles'] as $title) { ?>
+		<TH align="left"><?=$title?></TH>
+	<?php } 
+	requireClass('DataCollectionAdministration');
+	?>	
+	</TR>	
+	
+	{tmpl_loop Q_List}
+	<TR>
+<?php 
+		//$data['Fields']
+			// Start the row
+			/*
+			$rowClass = $evenRow ? 'AdminEvenRow' : 'AdminOddRow';
+			$evenRow = !$evenRow;
+			*/
+			
+			$recordAdmin = new DataCollectionAdministration($data['as_id']);
+									
+			foreach ($recordAdmin->tableDisplayFields as $displayField) {
+				// Find the value for the field
+				
+				
+				if ($recordAdmin->tableTimeStamp == $displayField) {
+					$value = formatDateTime($row[$displayField], "Y-m-d");
+				} else {
+					if (array_key_exists($displayField, $recordAdmin->fields) AND is_object($recordAdmin->fields[$displayField])) {
+						
+						
+						if (get_class($recordAdmin->fields[$displayField]) != "monthlyschedulefield") {
+							$value = $recordAdmin->fields[$displayField]->displayValue($row[$displayField]);
+						} else {
+							$value = $recordAdmin->fields[$displayField]->displayValue($row[$displayField], false, $data['MonthlyScheduleOptions'], 6);
+						}
+					} else {
+						$value = $row[$displayField];
+					}
+				}				
+				// Print the display fields
+				print("<TD ALIGN=\"LEFT\">$value</TD>");
+			}				
+	
+	?>	
+			<TD align="left"><a href="javascript:void(0);" onclick="res=window.open('{tmpl_var AssetPath}/Service/SubPage/DaCoID/<?=$row['DaCoID']?>', 'SubPage','width=640,height=480,scrollbars=yes,menubar=yes,resizable=yes');res.focus();">See Detail</a></TD>
+		</TR>		
+	{tmpl_end}
+</TABLE>

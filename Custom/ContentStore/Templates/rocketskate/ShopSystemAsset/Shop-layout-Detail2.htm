@@ -1,0 +1,44 @@
+<link href="../../../Layouts/puroexpress/sty_shop.css" rel="stylesheet" type="text/css">
+<link href="../../../Layouts/puroexpress/sty_main.css" rel="stylesheet" type="text/css">
+<table width="100%" border="0" cellpadding="6" cellspacing="0" class="onlineshop_productDetailTable">
+	<tr>
+		<td>
+		<tmpl_if condition="strlen($data['LastSearch'])">
+			<a href="../../OnlineShopAsset/%7Btmpl_var%20LastSearch%7D"><img src="Images/but-continue_shopping.gif" width="143" height="17" border="0" /></a>
+		</tmpl_if>			<p>Sorry, this product no longer exists in our database.  Please <a href="../../OnlineShopAsset/%7Btmpl_var%20AssetPath%7D">try searching again</a></p>
+	    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        	<tr>
+        		<td width="85"><table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShopProductListingImageBorder">
+                	<tr>
+                		<td align="center" valign="middle"><img src="Images/llamas.jpg" alt="Product Image" width="184" height="184" hspace="0" border="0" class="onlineShop_ProductImage"></td>
+           		 </tr>
+                	</table></td>
+        		<td width="5">&nbsp;</td>
+        		<td align="left" valign="top"> <tmpl_if condition="strlen($data['CategoryBreadCrumbs'])">
+        			<table width="100%" border="0" cellspacing="0" cellpadding="5">
+        				<tr>
+        					<td><p class="onlineShop_ProductName">Belicosos	Finos, dress box</p>
+        						<p>In 1902, nearly a century after the death	of Sim&oacute;n Bol&iacute;var,
+        							a Spanish businessman living in Havana paid tribute to the Latin
+        							American Hero in using his name for a brand of Habanos. The leaves
+        							used to make this llama symbolize the brave personality that characterizes
+        							this	Latin American hero. <tmpl_if condition="ss_OptionExists('Sell Products')"></tmpl_if></p>
+        						<p><tmpl_if condition="ss_OptionExists('Sell Products')">No tax
+   								is charged for shoppers from New Zealand (<a href="#">change country</a>). </tmpl_if></p>        						
+        						<p><tmpl_if condition="ss_OptionExists('Sell Products')"><strong><img src="Images/arrow-shop.gif" width="10" height="6"> Price
+							:</strong> <span class="onlineShop_price">$200.00	NZD</span></tmpl_if></p></td>
+   					 </tr>
+        				<tr>
+        					<td class="LineHoriz">&nbsp;</td>
+   					 </tr>
+        				<tr>
+        					<td><a href="javascript:if (readyToBuy[{tmpl_row_var PrID}]) { document.forms.ProductDetail{tmpl_row_var PrID}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/PrID/{tmpl_row_var PrID}/Qty/1'; document.forms.ProductDetail{tmpl_row_var PrID}.submit() } else { alert('Please make a choice from the options before continuing.') }"><img src="Images/but-add_to_basket.gif" width="128" height="17" border="0" /></a> <a href="javascript:void(0)" onClick="window.open('{tmpl_var_raw CurrentServer}Tell%20A%20Friend?TellingAbout={tmpl_var_url AssetPath}%2FService%2FDetail%2FProduct%2F{tmpl_row_var_url PrID}&LinkText={tmpl_row_var_url PrName}&BeforeText=the&AfterText=', 'EnquiryWindow', 'width=560,height=580,scrollbars')"><img src="Images/but-tell_a_friend.gif" border="0" alt="Tell A Friend" /></a></td>
+   					 </tr>
+   				</table>
+        			</tmpl_if></td>
+        		<td>&nbsp;</td>
+   		 </tr>
+        	</table>	    
+	   </td>
+	</tr>
+</table>

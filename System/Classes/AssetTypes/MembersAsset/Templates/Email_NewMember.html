@@ -1,0 +1,17 @@
+<HTML>
+<BODY>
+A new member has joined to "{tmpl_if $data['MemberType']=='TI'}Travel Industry Card".<BR>
+
+{tmpl_var_raw MemberDetails}
+
+<BR>
+{tmpl_if $data['MemberType']=='TI'}
+	<a href="{tmpl_var_raw SiteAddress}/index.php?act=LoyalMembersAdministration.Approve&fm_id={tmpl_var fm_id}" target="_blank">Click here</a>to approve the "Travel Industry Card" membership..<BR>
+{tmpl_else}		
+	<a href="{tmpl_var_raw SiteAddress}/index.php?act=LoyalMembershipOrderAdministration.List&as_id={tmpl_var as_id}" target="_blank">Click here</a>to approve the "Travel Industry Card" membership..<BR>
+{tmpl_end}	
+--------------------------------------------------------------------------------<BR>
+Automated Message<BR>
+--------------------------------------------------------------------------------<BR>
+</BODY>
+</HTML>

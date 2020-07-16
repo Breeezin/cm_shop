@@ -1,0 +1,37 @@
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+ 	<tr>
+ 		<td align="left" valign="top"><img src="Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+                    	<td><img src="Images/h-manage-testimonials.gif"></td>
+				 </tr>
+    				<tr>
+                    	<td align="left" valign="top">
+							{tmpl_admin_link label="Manage Testimonials" url="index.php?act=TestimonialsAdministration.List&as_id={$data['as_id']}" target="TestimonialsManager" description="Click here to manage your customer testimonials."}                    	
+               		 </td>
+				 </tr>
+                	<tr>
+                		<td><img src="Images/h-config.gif" width="172" height="26"></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+							{tmpl_admin_main_config_link id="DisplayOptions" description="Click here to edit display settings."}</td>                		
+           			 </td>
+           		 </tr>
+                	</table></td>
+	</tr>
+</table>
+
+<div id="DisplayOptions" style="display:none;">
+<fieldset title="Display Settings">
+	<legend>Display Settings</legend>
+<TABLE>
+	<TR>
+		<TD>
+			Pre-load a maximum of <INPUT TYPE="TEXT" SIZE="2" NAME="{tmpl_var Prefix}PANELITEMS" VALUE="{tmpl_var PanelItems}"> testimonials.
+		</TD>
+	</TR>
+	<TR><TD><BR>Leave blank to display all.</TD></TR>
+</TABLE>
+</fieldset>
+</div>

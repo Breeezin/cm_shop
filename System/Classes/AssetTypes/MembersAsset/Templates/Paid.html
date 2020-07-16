@@ -1,0 +1,251 @@
+{tmpl_var_raw EditableContent}
+<p>These are your orders that are confirmed as paid</p>
+<div class='container'>
+<tmpl_loop query="VisibleOrders">
+	<div class='messageBox'>
+
+	<div class='row'>
+		<div class='col-md-12'>
+			<h2> <?php
+				echo "Order {$row['or_tr_id']}";
+		 ?></h2>
+		 	<h3><?php
+				echo formatDateTime($row['or_recorded'], 'j-M-Y')
+		?>
+			</h3>
+		</div>
+	</div>
+
+<?php
+	if( !array_key_exists( 'or_details', $row ) ) break;
+	$priceShow = $row['or_details'];
+	$priceShowArray = unserialize( $priceShow );
+
+	$basketHTML = $priceShowArray['BasketHTML'];
+	
+	$basketRaw = $row['or_basket'];
+?>
+	<div class='row'>
+		<div class='col-md-12'>
+			<h3><a href='/Members/Service/Issue/Order/<?=$row['or_tr_id']?>'>Click here if you want to contact the service team about this order.</a></h3>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-md-12'>
+			<b>Basket as shown at checkout</b>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-md-12'>
+<?php
+	$bn = 0;
+
+	$newest = 999;
+
+	$all_received = true;
+
+	echo "<div style=\"pointer-events: none;\">";
+	echo $basketHTML;
+	echo "</div>";
+?>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-md-12'>
+			<b>Box/Order Status</b>
+		</div>
+	</div>
+	<form method="post" name="adminForm" action="/Members/Service/Paid">
+	<div class='row'>
+		<div class='col-md-12'>
+			<table border=1>
+<?php
+	$rowClass = $oddEven ? 'EvenRow' : 'OddRow'; $oddEven = !$oddEven;
+	$OrderDetails = unserialize( $basketRaw );
+
+	$showTracking = false;
+	$vendorTrackingURL = array();
+
+	// do we show basket or shipped products?
+	$SheetQ = query( "select * from shopsystem_order_sheets_items join shopsystem_order_sheets on ors_id = orsi_ors_id join vendor on ve_id = ors_ve_id where orsi_or_id = {$row['or_id']}" );
+	if( $SheetQ->numRows() > 0 )
+	{
+		while( $SheetItems = $SheetQ->fetchRow() )
+		{
+			if( strlen( $SheetItems['orsi_tracking_number'] ) )
+			{
+				$showTracking = true;
+				if( $SheetItems['ve_shipping_method'] == 'SpanishPost' )
+					if( !in_array( 'http://www.packlink.es/es/seguimiento-envios/', $vendorTrackingURL ) )
+						$vendorTrackingURL[] = 'http://www.packlink.es/es/seguimiento-envios/';
+			}
+		}
+
+		if( $showTracking )
+			echo "<tr class=\"".$rowClass."\"><th>&nbsp;Box&nbsp;</th><th>&nbsp;Shipped&nbsp;</th><th>Tracking</th><th>&nbsp;Days in Transit&nbsp;</th><th>&nbsp;Received&nbsp;</th></tr>";
+		else
+			echo "<tr class=\"".$rowClass."\"><th>&nbsp;Box&nbsp;</th><th>&nbsp;Shipped&nbsp;</th><th>&nbsp;Days in Transit&nbsp;</th><th>&nbsp;Received&nbsp;</th></tr>";
+
+		$SheetQ->reset();
+		$show_sub = false;
+		while( $SheetItems = $SheetQ->fetchRow() )
+		{
+			$rowClass = $oddEven ? 'EvenRow' : 'OddRow'; $oddEven = !$oddEven;
+			echo "<tr class=\"".$rowClass."\">";
+			echo "<td width='40%'>&nbsp;{$SheetItems['orsi_pr_name']}&nbsp;</td>";
+			if( strlen( $SheetItems['orsi_date_shipped'] ) )
+			{
+				$td = days_in_transit($SheetItems['orsi_date_shipped'], $row['or_country']);
+				if( (int)$td > 0 && (int)$td < $newest )
+					$newest = (int)$td;
+
+				echo "<td>&nbsp;".formatDateTime($SheetItems['orsi_date_shipped'], 'j-M-Y')."&nbsp;</td>";
+				if( $showTracking )
+					echo "<td>&nbsp;".$SheetItems['orsi_tracking_number']."&nbsp;</td>";
+				echo "<td>&nbsp;".days_in_transit($SheetItems['orsi_date_shipped'], $row['or_country'])."&nbsp;</td>";
+				echo "<td>&nbsp;";
+				if( strlen( $SheetItems['orsi_received'] ) )
+				{
+					echo formatDateTime($SheetItems['orsi_received'], 'j-M-Y');
+				}
+				else
+				{
+					$all_received = false;
+					if( count( $SheetItems ) > 0 )
+					{
+						echo "<input type=\"checkbox\" name=\"Received_{$row['or_id']}_".base64_encode($SheetItems['orsi_stock_code'])."_{$SheetItems['orsi_box_number']}\">";
+						$show_sub = true;
+					}
+					else
+						echo "&nbsp;";
+				}
+				echo "&nbsp;</td>";
+			}
+			else
+			{
+				echo "<td>&nbsp;</td>";
+				echo "<td>&nbsp;</td>";
+				echo "<td>&nbsp;</td>";
+				$all_received = false;
+			}
+			echo "</tr>";
+		}
+
+		if( $show_sub )
+			echo '<tr><td colspan=3></td><td><input type="Submit" name="Save" value="Mark as Received"></td></tr>';
+	}
+	else
+	{
+		$all_received = false;
+		foreach( $OrderDetails['Basket']['Products'] as $index => $value )
+		{
+			for( $i = 0; $i < $value['Qty']; $i++ )
+			{
+				$rowClass = $oddEven ? 'EvenRow' : 'OddRow'; $oddEven = !$oddEven;
+				echo "<tr class=\"".$rowClass."\">";
+				echo "<td>&nbsp;".$OrderDetails['Basket']['Products'][$index]['Product']['pr_name']."&nbsp;</td>";
+				echo "<td>&nbsp;Awaiting Packing&nbsp;</td>";
+				echo "</tr>";
+			}
+		}
+	}
+
+	echo '</table>';
+	if( $showTracking )
+	{
+		echo "<strong>Please wait at least 48 Hours after your shipping notification before tracking your parcel</strong>";
+		foreach( $vendorTrackingURL as $url )
+			echo "<br /><strong>Your items may be able to be tracked here</strong> <a href='$url'>$url</a>";
+	}
+
+	echo '</div></div></form>';
+
+	$shipping = unserialize($row['or_shipping_details']);
+	$sdetails = $shipping['ShippingDetails'];
+	$pdetails = $shipping['PurchaserDetails'];
+
+?>
+	<div class='row'>
+		<div class='col-md-12'>
+			<b>Shipping Details</b>
+		</div>
+	</div>
+	<br/>
+<?php
+	echo escape($sdetails['first_name'])." ".escape($sdetails['last_name'])."<br/>";
+	if( strlen( $sdetails['0_B4BF'] ) )
+		echo escape($sdetails['0_B4BF'])."<br/>";
+	echo escape($sdetails['0_50A1'])."<br/>";
+	echo escape($sdetails['0_50A2'])."<br/>";
+	echo escape($sdetails['0_50A4'])."<br/>";
+	echo escape($sdetails['0_B4C0'])."<br/>";	
+	echo escape($sdetails['0_B4C1'])."<br/>";	
+	echo "<br />";
+
+	$gw = getRow( "select * from payment_gateways where pg_id = ".(int) $row['tr_bank'] );
+
+	if( $rw = getRow( "select * from bank_transfer_information where bt_tr_id = {$row['or_tr_id']}" ) )
+	{
+	?>
+		<p>You have entered this information for our records, we will get back to you when we have confirmed payment</p>
+		<p>Bank Account Name:&nbsp;<strong><?=$rw['bt_account']?></strong></p>
+		<p>Transfer Amount:&nbsp;<strong><?=$rw['bt_received']?></strong>&nbsp;<?=$row['tr_currency_code']?></p>
+	<?php
+	}
+
+	echo "<br />This order's payment gateway is {$gw['pg_name']}<br />";
+	if( strlen( $gw['pg_charging_name'] ) )
+		echo $gw['pg_charging_name']." will appear on the statement from your bank<br />";
+
+	if( !$all_received )
+	{
+		if( strlen( $row['or_out_of_stock'] ) )
+			echo "<strong>All or part of this order has been marked as Out of Stock.</strong><br /><br />";
+
+		if( strlen( $row['or_standby'] ) )
+			echo "This order is on Standby and will be reviewed by our support staff shortly.<br/><br/>";
+		else
+		{
+			if( strlen( $row['or_card_denied'] ) )
+				echo "<strong>Your card cannot be charged for this order, please contact your bank to authorize payment to 'Geneva Shopping' and let us know to try again.</strong><br/><br/>";
+			else
+			{
+				if( strlen( $row['or_paid_not_shipped'] ) )
+				{
+					if( strlen( $row['or_reshipment'] ) )
+						echo "<b>Order Status</b>:  Processing.<br/><br/>This order is a reshipment; a replacement for a previous shipment. Currency values above are for your reference only and are not paid.<br/>";
+					else
+						echo "<b>Order Status</b>:  Processing.<br/><br/>The payment processor has charged your card and we have added your order to the next shipping cycle.  We will endeavour to do this as fast as possible.  If not all of your boxes have been marked as shipped be assured that we will get the rest off as soon as possible.<br/>";
+				}
+				else
+				{
+					if( strlen( $row['or_shipped'] ) )
+					{
+						echo "<b>Order Status</b>:  Shipped. <br/><br/>";
+						if( $newest <= 28 )
+							echo "<strong> Your order IS NOT OVERDUE yet. It's only been $newest working days.</strong><br />";
+						echo " 
+			Delivery time can be up to 28 <strong>business</strong> days (does not include weekends or holidays).<br/>
+			<br />As per our <a href='/Acme%20Express/Terms%20and%20Conditions'>terms and conditions</a>' that you accepted at checkout, we reship or refund
+			at 28 working days.<br />
+			<br/> Due to the random nature of the postal service, a package sent after an earlier one can arrive first.<br/><br/>
+			If you order near a public holiday, such as Christmas, shipping can be delayed further, up to 40 days.<br/>";
+					}
+					else
+						echo "<b>Order Status</b>:  Pending.  <br/><br/>
+			Thank you for your order. The above boxes are reserved for you. Processing of your order will ocurr during normal weekday office hours.<br/>
+							";
+				}
+			}
+		}
+	}
+	else
+	{
+		echo "You have received this order.<br/><br/>";
+	}
+
+
+	?>
+	</div>
+</tmpl_loop>
+</div>

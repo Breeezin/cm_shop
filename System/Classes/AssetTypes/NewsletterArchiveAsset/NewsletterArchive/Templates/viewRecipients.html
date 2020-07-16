@@ -1,0 +1,25 @@
+<p>
+	Below are the recipients of newsletter "{tmpl_var Subject}" sent {tmpl_var_date name="Sent" format="H:i d/m/Y"}.
+</p>
+<p>
+	<input type="submit" value="Back to Newsletter Archive" onclick="document.location='{tmpl_var_js BackURL}';return false;">
+</p>
+<table width="100%">
+	<tr>
+		<th align="left">First Name</th>
+		<th align="left">Last Name</th>
+		<th align="left">Email</th>
+		<th align="left">Opened Newsletter</th>
+	</tr>
+	<tmpl_loop query="Q_Recipients">
+	<tr>
+		<td>{tmpl_row_var nar_firstname}</td>
+		<td>{tmpl_row_var nar_lastname}</td>
+		<td>{tmpl_row_var nar_email}</td>
+		<td><? if ($row['nar_read'] == 1) print("Yes"); else print("No"); ?></td>
+	</tr>
+	</tmpl_loop>
+</table>
+<p>
+	<input type="submit" value="Back to Newsletter Archive" onclick="document.location='{tmpl_var_js BackURL}';return false;">
+</p>

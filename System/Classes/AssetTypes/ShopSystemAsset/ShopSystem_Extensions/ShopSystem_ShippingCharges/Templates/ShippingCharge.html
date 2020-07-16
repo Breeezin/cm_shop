@@ -1,0 +1,30 @@
+<?
+	$row = $data['Q_ShippingCharge']->fetchRow();
+	$data = array_merge($data,$row);
+?>
+
+<table cellpadding=5>
+<form action="index.php" method="post" name="theForm">
+	<tr>
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<tmpl_if condition="strlen($data['ssc_paid']) == 0">
+		<td><input type="submit" name="submit" value="Mark Paid" onclick="if (confirm('Are you should you would like to mark this as paid?')) { this.form.action='index.php?act=shopsystem_shipping_charges.MarkPaid&ssc_id={tmpl_var ssc_id}'; return true; } else { return false;}">
+	</tmpl_if>
+	<td><input type="button" name="cancel" value="Return to List" onclick="document.location='{tmpl_var_js BackURL}';">
+	</td>
+	<tmpl_if condition="strlen($data['ssc_paid']) == 0">
+		<td>This order has not been paid for.</td>
+	<tmpl_else>
+		<td>This order was marked paid on {tmpl_var_date name="ssc_paid" format="d M Y"}</td>
+	</tmpl_if>
+	</tr>
+</form>
+</table>
+<table>
+	<tr>
+		<td><strong>Amount:</strong></td><td>{tmpl_var ssc_amount}</td>
+	</tr>
+	<tr>
+		<td><strong>Reference:</strong></td><td>{tmpl_var ssc_reference}</td>
+	</tr>
+</table>

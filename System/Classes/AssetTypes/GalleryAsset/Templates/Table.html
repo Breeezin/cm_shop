@@ -1,0 +1,20 @@
+<TABLE>
+<?php 
+	
+	for($i =0; $i < $data['ROWS_PER_PAGE']; $i++){
+		if ($data['CurrentIndex'] > (count($data['ImagesHTML']) -1))
+			break;	
+?>
+	<TR>
+		<?php for($j =0; $j < $data['IMAGES_PER_ROW']; $j++){
+			if ($data['CurrentIndex'] > (count($data['ImagesHTML']) -1))
+				break;
+		?>
+			<TD>
+				<?php print $data['ImagesHTML'][$data['CurrentIndex']]; $data['CurrentIndex']++;?>
+			</TD>
+		<?php } ?>				
+	</TR>
+<?php } ?>
+</TABLE>
+{tmpl_var_raw PageThru}

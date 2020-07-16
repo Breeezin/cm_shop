@@ -1,0 +1,257 @@
+<tmpl_if condition="count($data['Basket']['Products'])">
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td colspan="2"align="left">{tmpl_var_raw CurrencyConverterHTML}</td>
+	</tr>
+	
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><table border="0" cellspacing="0" cellpadding="5">
+        	<tr>
+        		<td colspan="3"><span class="Calculateshiping">Calculate Shipping / Tax</span></td>
+   		 </tr>
+        	<tr>
+        		<td colspan="3">Please select your shipping country
+        			and freight type/zone. Tax will be calculated based on the
+        			shipping country selected. Shipping will be calculated 	based
+        			on the items in your basket and the frieght type/zone
+        			selected. Frieght and any tax charged will be added to your display below.</td>
+   		 </tr>
+        	<tr>
+        		<td width="150" align="left" valign="top"><strong>Shipping Country </strong></td>
+			<form action="{tmpl_var AssetPath}/Service/ChangeTaxCountry/DoAction/Yes" method="post">
+				<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	       		 <td align="left" valign="top">
+	       		 	<?php print(ListFirst($data['TaxCountryNoteHTML'],'~')); ?>
+      			</td>
+        	</form>
+   		        <td>&nbsp;</td>
+       	 </tr>
+        	</table></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>
+	 </tmpl_if>
+		<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable">
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        	<tr>
+        		<td colspan="5"><span class="Calculateshiping">Basket</span></td>
+   		 </tr>
+        	<tr>
+        		<td colspan="5">Your order is shown below, to change a quantity of
+        			a product, enter the number and press the tab key. To remove a product
+        			click the remove button beside the product name. Your basket will
+        			be updated immediately. When you have finished, click the checkout
+        			button below to proceed to enter purchaser	and shipping details.<br /><br /></td>
+   		 </tr>
+   		 </tmpl_if>
+        	<tr>
+        		<td class="onlineShop_BasketHeaderRow">Product</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td class="onlineShop_BasketHeaderRow">Remove</td>
+        	</tmpl_if>
+        		<td class="onlineShop_BasketHeaderRow">Qty</td>
+        		<td class="onlineShop_BasketHeaderRow"> Price</td>
+        		<td class="onlineShop_BasketHeaderRow">Sub Total</td>
+   		 </tr>
+   		 
+	<? 
+		$data['TotalPrice'] = 0;
+		$flipFlop = 0;
+		foreach($data['Basket']['Products'] as $item) { 
+			$data['Name'] = $item['Product']['pr_name'];
+			$data['Options'] = $item['Product']['Options'];
+			$data['Qty'] = $item['Qty'];
+			$data['Key'] = $item['Key'];
+			$data['StockCode'] = $item['Product']['pro_stock_code'];
+			$data['UnitPrice'] = $item['Product']['Price'];
+			$flipFlop = 1-$flipFlop;
+			$data['Class'] = '';
+			if ($flipFlop == 1) $data['Class'] = 'onlineShopBasketOddRow';
+	?>
+   		 
+        	<tr align="left" valign="middle">
+        		<td class="{tmpl_var Class}">
+					<strong>{tmpl_var Name}<tmpl_if condition="strlen($data['Options'])"> ({tmpl_var Options})</tmpl_if></strong><br />{tmpl_var StockCode}
+   			 </td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+				<form action="{tmpl_var AssetPath}/Service/UpdateBasket/Key/{tmpl_var_url Key}/Mode/Set">
+					<td class="{tmpl_var Class}"><input type="image" src="Images/but-remove.gif" name="Remove" style="border:0px;"></td>
+        			<td class="{tmpl_var Class}"><input name="Qty" value="{tmpl_var Qty}" size="3" onchange="this.form.submit();" class="onlineShop_basketQuantityField"></td>
+        		</form>
+        	<tmpl_else>
+        		<td class="{tmpl_var Class}">{tmpl_var Qty}</td>
+        	</tmpl_if>
+        		<td class="{tmpl_var Class}">{tmpl_eval print($data['This']->formatPrice('display',$data['UnitPrice']))}</td>
+        		<td class="{tmpl_var Class}">{tmpl_eval print($data['This']->formatPrice('display',$data['Qty']*$data['UnitPrice']))}</td>
+   		 </tr>
+	<? } ?>
+   		 
+		<? $data['Tax'] = $data['Basket']['Tax']['Code']; ?>
+		<tmpl_if condition="strlen($data['Tax'])">
+        <tr>
+				<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal"><?php print(ListLast($data['TaxCountryNoteHTML'],'~')); ?></td>
+			<td class="onlineShopBasketSubTotal">
+				{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Tax']['Amount']))}			
+			</td>
+		</tmpl_if>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">Sub-total: </td>
+        		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['SubTotal']))}</td>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketSubTotal">Shipping:</td>
+        		<td class="onlineShopBasketSubTotal">
+        			<tmpl_if condition="$data['Basket']['Freight']['Amount'] == 0">
+						FREE
+					<tmpl_else>
+						{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Freight']['Amount']))}			
+					</tmpl_if>
+				</td>
+   		 </tr>
+        	<tr>
+        		<td>&nbsp;</td>
+			<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        		<td>&nbsp;</td>
+        	</tmpl_if>
+        		<td>&nbsp;</td>
+        		<td class="onlineShopBasketTotal">Total: </td>
+        		<td class="onlineShopBasketTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Total']))}</td>
+   		 </tr>
+   		 	<tmpl_if condition="$data['DisplayCurrency']['CurrencyCode'] !== $_SESSION['Shop']['CurrencyCountry']['cn_currency_code']">
+	        	<tr>
+	        		<td>&nbsp;</td>
+				<tmpl_if condition="$data['Style'] == 'WithInputs'">
+	        		<td>&nbsp;</td>
+	        	</tmpl_if>
+	        		<td>&nbsp;</td>
+	        		<td class="onlineShopBasketTotalNZ">Approx Total: </td>
+	        		<td class="onlineShopBasketTotalNZ">{tmpl_eval print($data['This']->formatPrice('displayApprox',$data['Basket']['Total'], $data['DisplayCurrency']['CurrencyCode']))}</td>
+	   		 	</tr>
+   		 	</tmpl_if>
+   		 	<tmpl_if condition="$data['DisplayCurrency']['CurrencyCode'] !== getDefaultCurrencyCode()">
+	        	<tr>
+	        		<td>&nbsp;</td>
+				<tmpl_if condition="$data['Style'] == 'WithInputs'">
+	        		<td>&nbsp;</td>
+	        	</tmpl_if>
+	        		<td>&nbsp;</td>
+	        		<td class="onlineShopBasketTotalNZ">We can only process transactions in {tmpl_eval print(getDefaultCurrencyCode())}s, so we have converted the total amount of your order to the equivalent amount based on current exchange rates. The amount you will actually be charged is:</td>
+	        		<td class="onlineShopBasketTotalNZ">{tmpl_eval print($data['This']->formatPrice('charge',$data['Basket']['Total']))}</td>
+	   		 	</tr>
+   		 	</tmpl_if>
+   		 </table>
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        	</td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tmpl_if condition="ss_OptionExists('Shop Discount Codes')">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><table border="0" cellspacing="0" cellpadding="5">
+        	<tr>
+        		<td colspan="2"><span class="Calculateshiping">Discount Code</span></td>
+   		 </tr>
+        	<tr>
+        		<td colspan="2">If you have a discount code, please enter it below.  The products in
+        			your basket will be updated based on the discount code entered.</td>
+   		 </tr>
+			<form action="{tmpl_var AssetPath}/Service/ChangeDiscountCode/DoAction/Yes" method="post">
+        	<tr>
+        		<td width="150"><strong>Discount Code</strong></td>
+				<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	       		 <td>
+	       		 	<input type="text" name="DiscountCode" value="{tmpl_var DiscountCode}">
+					<input type="image" src="Images/but-update.gif" style="border:0px;">	       		 	
+      			</td>
+       	 </tr>
+       	</form>
+       	</table></td>
+	</tr>
+	</tmpl_if>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="5">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%">
+				<tr>
+					<td width="50%" align="left">
+						<tmpl_if condition="strlen($data['LastSearch'])">
+							<a href="{tmpl_var LastSearch}"><img border="0" src="Images/but-continue_shopping.gif" /></a>
+						</tmpl_if>
+					</td>
+					<td width="50%" align="right">
+						<a href="{tmpl_var AssetPath}/Service/Checkout"><img border="0" src="Images/but-checkout.gif" /></a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+	 <td align="right"><br>
+		 <table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+            	<tr align="center">
+            		<td class="onlineShopShopProgressBarON">1 - Basket</td>
+            		<td class="onlineShopShopProgressBarCell">2 - Checkout</td>
+            		<td class="onlineShopShopProgressBarCell">3 - Payment</td>
+            		<td class="onlineShopShopProgressBarCell">4 - Finished</td>
+   		  </tr>
+            	</table></td>
+            	
+	</tr>
+</table>
+	</tmpl_if>
+<tmpl_else>
+	<p>You currently have no items in your basket.</p>
+	<tmpl_if condition="strlen($data['LastSearch'])">
+		<p><a href="{tmpl_var LastSearch}"><img border="0" src="Images/but-continue_shopping.gif" /></a></p>
+	</tmpl_if>
+</tmpl_if>
+
+
+
+
+
+
+
+
+
+<? 
+//ss_DumpVarHide($data['Basket'],'Basket'); 
+	?>

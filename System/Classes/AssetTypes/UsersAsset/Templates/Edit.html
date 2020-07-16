@@ -1,0 +1,50 @@
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+ 	<tr>
+ 		<td align="left" valign="top"><img src="Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+                    	<td><img src="Images/h-users.gif" width="172" height="26"></td>
+				 </tr>
+    				<tr>
+                    	<td align="left" valign="top">
+							{tmpl_admin_link label="Manage Users" url="index.php?act=UsersAdministration.List" target="UsersManager" description="Click here to manage individual users"}                    	
+               		 </td>
+				 </tr>
+                	<tr>
+                		<td><img src="Images/h-usergroups.gif" width="172" height="26"></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+							{tmpl_admin_link label="Manage User Groups" url="index.php?act=UserGroupsAdministration.List" target="UserGroupsManager" description="Click here to edit the groups that your users can be sorted into."}
+           			 </td>
+           		 </tr>
+                	<tr>
+                		<td><img src="Images/h-import.gif" ></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+        			         {tmpl_admin_link label="Import Users" url="index.php?act=Import.UsersPrompt" target="ImportUsers" description="Import a list of Users"}</td>
+           			 </td>
+           		 </tr>
+				<tr>			
+                		<td><img src="Images/h-export.gif" ></td>
+           		 </tr>           		 
+                	<tr>
+                		<td align="left" valign="top">
+        			         <p><a href="index.php?act=Export.Users" class="bodytextBlue">Export a list of Users</a> <img src="System/Classes/AssetTypes/UsersAsset/Templates/Images/go-arrow.gif" width="9" height="9"></p><p>&nbsp;</p></td>
+           			 </td>
+           		 </tr>
+                	<tr>
+                		<td><img src="Images/h-config.gif" width="172" height="26"></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+        			         {tmpl_admin_main_config_link id="DefineUserFields" description="Define User Fields"}</td>
+           			 </td>
+           		 </tr>
+                	</table></td>
+	</tr>
+</table>
+<div id="DefineUserFields" style="display:none;">
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_USER_FIELDS"}
+</div>

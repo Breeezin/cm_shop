@@ -1,0 +1,35 @@
+<script language="Javascript">
+function togglecat( what )
+{
+	toggler=document.getElementById('cat'+what);
+	if( toggler.style.display == 'none' )
+		 toggler.style.display = '';
+	else
+		 toggler.style.display = 'none';
+}
+</script>
+<?php
+$top = NULL;
+
+
+
+
+foreach ( $data['categories'] as $ind => $row )
+{
+	if( $top != $row['cnv_name'] )
+		{
+		$top = $row['cnv_name'];
+		echo "<h2>$top</h2>";
+		}
+			
+	if( $row['ca_parent_ca_id'] > 0 )
+	{
+		NULL;
+	}
+	else
+	{
+		output_row( $data, $ind, 0 );
+		output_children( $data, $ind, 0 );
+	}
+}
+?>

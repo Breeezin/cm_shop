@@ -1,0 +1,166 @@
+ <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+ 	<tr>
+ 		<td align="left" valign="top"><img src="Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                	<tr>
+                		<td><img src="Images/h-records.gif" width="172" height="26"></td>
+           		    </tr>
+                    <tr>
+                		<td align="left" valign="top">
+							{tmpl_admin_link label="Manage {$data['as_name']}" url="index.php?act=DataCollectionAdministration.List&as_id={$data['as_id']}" target="DataCollectionManager{$data['as_id']}" description="Click here to edit individual records in your data collection."}                		
+           			 </td>
+           		 </tr>
+                	<tr>
+                		<td><img src="Images/h-config.gif" width="172" height="26"></td>
+           		 </tr>
+                	<tr>
+                		<td align="left" valign="top">
+                		<a class="bodytextBlue" href="javascript:var el=document.getElementById('ConfigureData');if (el.style.display == '') { el.style.display='none';document.getElementById('ClickHere').style.display=''; document.getElementById('PleaseSelect').style.display='none';} else { el.style.display='';document.getElementById('ClickHere').style.display='none'; document.getElementById('PleaseSelect').style.display=''; }void(0);">
+                		To configure your data collection, <span id="ClickHere">click here.</span><span id="PleaseSelect" style="display:none;">please select from the options below:</span></a> <img src="Images/go-arrow.gif">
+						<div id="ConfigureData" style="display:none;">
+        			            <table border="0" cellspacing="0" cellpadding="7">
+        				<tr>
+        					<td width="10">&nbsp;</td>
+        					<td width="11" class="bottomDot"><img src="Images/arrow-left.gif" width="11" height="5"></td>
+        					<td class="bottomDot">{tmpl_admin_config_link id="DefineFields" description="Define Fields"}</td>
+   					 </tr>
+        				<tr>
+        					<td>&nbsp;</td>
+        					<td class="bottomDot"><img src="Images/arrow-left.gif" width="11" height="5"></td>
+        					<td class="bottomDot">{tmpl_admin_config_link id="DataCollectionTemplates" description="Templates"}</td>
+   					 </tr>
+        				</table>
+        				</div>
+           			 </td>
+           		 </tr>
+       	 </table></td>
+  </tr>
+ 	</table>
+<br />
+<div id="DefineFields" style="display:none;">
+<br /><strong>Define Data Record Fields:</strong><br />
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_FIELDS"}
+</div>
+<div id="DataCollectionTemplates" style="display:none;">
+<br>
+<?php
+    if (ss_optionExists('Advanced Data Collection')) {
+?>
+<table>
+    <tr>
+		<td valign="top">Email Recipient : </td>
+		<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_EMAIL_RECIPIENT"} (Defaults to main website email address)</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>New Page Content:</strong>
+
+</td>
+	</tr>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_NEW_CONTENT"}
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>Thankyou Page Content:</strong>
+
+</td>
+	</tr>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_THANKYOU_CONTENT"}
+</p>
+<?php
+    }
+?>
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>Category Page Template:</strong></td>
+	</tr>
+	 <?php 
+	if (ss_optionExists('Data Collection Content Layout Picker')) {
+?>
+	<tr>
+		<td>Layout: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_MAINPAGE_LAYOUT"}&nbsp;&nbsp;Page
+			Title: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_MAINPAGE_CUSTOMTITLE"}
+            
+</td>
+  </tr>
+ <?php 
+	}
+?>
+	<tr>
+		<td>You can type [ShowCategories] in your content below if you wish to display
+		list	the categories.</td>
+  </tr>
+	<tr>
+		<td>Please leave this blank if you do not wish to display the catgory page.</td>
+	</tr>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_MAINPAGE_CONTENT"}	
+</p>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>List Page Template:</strong>
+
+</td>
+	</tr>
+	 <?php
+	if (ss_optionExists('Data Collection Content Layout Picker')) {
+?>
+	<tr>
+		<td>Layout: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_LISTPAGE_LAYOUT"}&nbsp;&nbsp;Page
+			Title: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_LISTPAGE_CUSTOMTITLE"}
+
+</td>
+	</tr>
+	<?php
+	}
+?>
+	<tr>
+		<td>You can type [List] or [ListDetail] in your content below if you wish to
+		display a list of all records in this data collection item. </td>
+	</tr>
+	<tr>
+		<td>You can type [Back To Main] in your content below if you wish to
+            display a back
+link to the main page content.</td>
+  </tr>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_LISTPAGE_CONTENT"}
+</p>
+<?    if (ss_OptionExists('Data Collection Custom List Template')){ ?>
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>Custom List Template:</strong>
+        </td>
+	</tr>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_LISTPAGE_TEMPLATE"}
+</p>
+<?
+    }
+?>
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td><strong>Detail Page Template:</strong>
+
+</td>
+	</tr>
+<?php
+    if (ss_optionExists('Data Collection Content Layout Picker')) {
+?>
+	<tr>
+		<td>Layout: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_SUBPAGE_LAYOUT"}&nbsp;&nbsp;Page
+			Title: {tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_SUBPAGE_CUSTOMTITLE"}
+
+</td>
+	</tr>
+<?php
+    }
+?>
+</table>
+<p>{tmpl_fieldset_field fieldset="FieldSet" field="AST_DATABASE_SUBPAGE_CONTENT"}
+</p>
+</div>

@@ -1,0 +1,153 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+	<tr>
+		<td><span class="Calculateshiping">Billing Details</span></td>
+	</tr>
+	<form name="CheckoutForm" action="{tmpl_var AssetPath}/Service/EditOrder/Do_Service/Yes" method="POST">
+		<input type='hidden' name='Address' value={tmpl_var Address}/>
+		<tr>
+			<td valign=top>
+				<table class=onlineShop_checkoutSectionTable 
+                              cellspacing=0 cellpadding=8 width="100%">
+				
+						<tr>
+							<td>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw PurchaserDetails}          
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+			 </table>
+			</td>
+		</tr>
+		
+		<tr>
+			<td><span 
+                                class=Calculateshiping>Shipping
+			Details</span>
+			</td>
+		</tr>
+		
+		<tr>
+			<td valign=top>			
+			<SCRIPT LANGUAGE="Javascript">
+					
+					function sameAsPurchaser() {	
+						var theForm = document.forms.CheckoutForm;
+						var dontReload = (theForm.Us0_50A4_Parent.options[theForm.Us0_50A4_Parent.selectedIndex].value == theForm.ShDe0_50A4_Parent.options[theForm.ShDe0_50A4_Parent.selectedIndex].value);
+						<?php 
+							foreach ($data['ShippingFields'] as $aField) {
+								print ("//".strtolower(get_class($aField))." class name\n");
+								$usFieldName = str_replace('ShDe','Us',$aField->name);
+								
+								if (strtolower(get_class($aField)) == 'checkboxfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.length; i++) {
+											if (theForm.$usFieldName[i].checked) {
+												theForm.{$aField->name}[i].checked;
+											}
+										}"
+									);
+								} else if (strtolower(get_class($aField)) == 'countryfield' or strtolower(get_class($aField)) == 'selectfromarrayfield' ) {
+									print "var temp1 = theForm.{$usFieldName}.options[theForm.$usFieldName.selectedIndex].value;";																		
+									print("										
+										for (var i = 0; i < theForm.{$aField->name}.options.length; i++) {\n
+											if (theForm.{$aField->name}.options[i].value == temp1) {\n												
+												theForm.{$aField->name}.options[i].selected = true;\n																								 
+												break;
+											}										
+										}										
+									");	
+								} else if (strtolower(get_class($aField)) == 'parentchildrenfield') {
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+									print("
+										var selectedValue = theForm.{$usFieldName}_Parent.options[theForm.{$usFieldName}_Parent.selectedIndex].value;										
+										for (var i = 0; i < theForm.{$aField->name}_Parent.options.length; i++) {\n
+											if (theForm.{$aField->name}_Parent.options[i].value == selectedValue) {\n
+												theForm.{$aField->name}_Parent.options[i].selected = true;\n
+												break;
+											}
+										}
+										{$aField->name}_updateChild();{$aField->name}_checkParent(true);\n
+										if (theForm.{$usFieldName}_ChildSelect.options.length) {
+										var selectedParentValue = theForm.{$usFieldName}_ChildSelect.options[theForm.{$usFieldName}_ChildSelect.selectedIndex].value;\n
+										
+										for (var i = 0; i < theForm.{$aField->name}_ChildSelect.options.length; i++) {\n
+											if (theForm.{$aField->name}_ChildSelect.options[i].value == selectedParentValue) {\n												
+												theForm.{$aField->name}_ChildSelect.options[i].selected = true;\n																								 
+												break;
+											}
+										}
+										}										
+									");										
+									print("theForm.{$aField->name}_ChildText.value = theForm.{$usFieldName}_ChildText.value;\n");																		
+									print("{$aField->name}_update(false);\n");																		
+				
+				
+									
+								} else if (strtolower(get_class($aField)) == 'multiselectfromarrayfield') {
+									print("
+										for (var i = 0; i < theForm.$usFieldName.options.length; i++) {
+											if (theForm.$usFieldName.options[i].selected) {
+												theForm.{$aField->name}.options[i].selected = true;
+											}
+										}
+									");	
+								} else if (strtolower(get_class($aField)) == 'namefield') {
+									print("
+										
+										theForm['{$aField->name}[first_name]'].value = theForm['{$usFieldName}[first_name]'].value;
+										theForm['{$aField->name}[last_name]'].value = theForm['{$usFieldName}[last_name]'].value;
+									");					
+								} else {									
+									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+								}
+							}
+						?>				
+
+					}
+					</SCRIPT>				<table class=onlineShop_checkoutSectionTable cellspacing=0 cellpadding=8 width="100%">
+					
+						<tr>
+							<td>
+								<p>Please enter your
+                                                							
+								 shipping details. If the shipping details
+                                                							
+								 are the same as the purchaser details, you
+                                                							
+									may	click the "same
+                                                									as purchaser" button
+                                                							
+                                                							
+                                                										to copy the details
+							into the fields	below: <br><br><br>
+							<input type="button" name="same" value="Same As Purchaser" onClick="sameAsPurchaser();">
+				
+							</p>
+								<table width=400 border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw ShippingDetails}         
+                                 </td>
+                                 </tr>
+								</table>
+							</td>
+						</tr>
+			 </table>
+			</td>
+		</tr>
+		<tr>
+		<td colspan="2">
+			<div align="center">
+				<input type="Submit" name="SaveAddress" value="SaveAddress">
+			</div>
+		</td>
+		</tr>
+		</form>
+	</table></td></tr>	
+</table>

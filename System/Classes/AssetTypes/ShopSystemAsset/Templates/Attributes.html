@@ -1,0 +1,11 @@
+<table border="0" cellspacing="5" cellpadding="0">
+	<?php 
+		foreach($data as $name => $value) {
+			if(strlen($value)) 	{
+	?>
+	<tr>
+			<th align="LEFT" class="onlineShop_RRPTableHeader"><?=$name?>&nbsp;:</th>
+			<td class="onlineShop_RRP"> <?=$value?></td>
+		</tr>
+	<?php } } ?>	
+</table>

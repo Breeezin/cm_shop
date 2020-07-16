@@ -1,0 +1,80 @@
+<p>
+This page allows you to import users into the system.  The file uploaded should be 
+in tab delimited format.  This option is available from Excel's 'Save As...' option 'Save as Type' - 'Text (Tab Delimited)'.
+</p>
+<p>
+The first row of your file should contain headers for each column. These headers are 
+important as this is how the system will identify which fields the data will be loaded into.
+The subsequent rows should contain the details of each user. An example is shown below:
+<p align="center">
+<table border="1">
+	<tr>
+		<th align="left">First Name</th>	
+		<th align="left">Last Name</th>	
+		<th align="left">Email</th>	
+	</tr>
+	<tr>
+		<td>John</td><td>Smith</td><td>john.smith@innovativemedia.co.nz<td>
+	</tr>	
+	<tr>
+		<td>Jane</td><td>Doe</td><td>jane.doe@innovativemedia.co.nz<td>
+	</tr>
+</table>
+</p>
+<p>If your spreadsheet contains a single name field instead of separating the persons names into
+a first and last name, please use the title "Full Name" so the system will recognise the field
+and separate them into a first and last name. For example:</p>
+<p align="center">
+<table border="1">
+	<tr>
+		<th align="left">Full Name</th>	
+		<th align="left">Email</th>	
+	</tr>
+	<tr>
+		<td>John Smith</td><td>john.smith@innovativemedia.co.nz<td>
+	</tr>	
+	<tr>
+		<td>Jane Doe</td><td>jane.doe@innovativemedia.co.nz<td>
+	</tr>
+</table>
+</p>
+<p>
+Please selct your file below by using the browse button and select the users groups/mailing lists that you would like to import the users into.
+</p>
+<table>
+<form method="post" action="index.php?act=Import.UsersPrompt&DoAction=1" enctype="MULTIPART/FORM-DATA">
+	<tr>
+		<th align="left">User Data File (Tab Delimited Format):</th>
+		<th><input type="file" name="Import"></th>
+	</tr>
+	<tr>
+		<th align="left">User Detail Insert Option:</th>
+		<th align="left"><input type="checkbox" name="ImportUpdate" value='1'>
+        Update the user detail if the user already exists in the users list.
+        WARNING: This will overwrite existing user details, including fields that
+        are not in the import. Use the options below to modify this behaviour. </th>
+	</tr>
+	<tr>
+		<th align="left">&nbsp;</th>
+		<th align="left"><input type="checkbox" name="ImportUpdateKeepExistingGroups" value='1'> 
+        Check if you do not want to delete existing group membership of updated users. 
+        (New groups will still be added)</th>
+	</tr>
+	<tr>
+		<th align="left">&nbsp;</th>
+		<th align="left"><input type="checkbox" name="ImportUpdateKeepExistingDetails" value='1'> 
+        Do not blank non-import fields of existing members.</th>
+	</tr>
+	<tr>
+		<th align="left" valign="top">User Groups:</th>
+		<td>
+			<tmpl_loop query="Q_UserGroups">
+				<input type="checkbox" name="UserGroups[]" value="{tmpl_row_var ug_id}" style="border:0px;"> {tmpl_row_var ug_name}<br />	
+			</tmpl_loop>		
+		</td>
+	</tr>
+	<tr>
+		<td></td><td><input type="submit" name="submit" value="Submit">
+	</tr>
+</table>
+</form>

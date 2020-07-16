@@ -1,0 +1,63 @@
+{tmpl_errors Errors}
+
+<tmpl_if condition="!array_key_exists('Q_Invoices',$data)">
+	<p>Please enter the start and end dates or leave dates blank for full report:</p>
+</tmpl_if>
+<table class="noPrint">
+	<form method="post" action="index.php?act=OnlineShop.AcmeSupplierOrdersReport">
+	<tr>
+		<td>Start Date:</td>
+		<td><input type="text" name="StartDate" value="{tmpl_var StartDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>End Date:</td>
+		<td><input type="text" name="EndDate" value="{tmpl_var EndDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>Filter:</td>
+		<td><select name="Filter">
+			<option <?php if ($data['Filter'] == 'All,1=1') print('selected'); ?> value="All,1=1">All</option>
+			<option <?php if ($data['Filter'] == 'Paid,sos_paid IS NOT NULL') print('selected'); ?> value="Paid,sos_paid IS NOT NULL">Paid</option>
+			<option <?php if ($data['Filter'] == 'Not Paid,sos_paid IS NULL') print('selected'); ?> value="Not Paid,sos_paid IS NULL">Not Paid</option>
+		</select></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="Submit" name="Submit" value="Submit"></td>
+	</tr>
+	</form>
+</table>
+<tmpl_if condition="array_key_exists('Q_Invoices',$data)">
+<p>
+	<?php print(ListFirst($data['Filter'])); ?> supplier orders for period <? if (strlen($data['StartDate'])) { print($data['StartDate']); } else { print('Any'); } ?> to <? if (strlen($data['EndDate'])) { print($data['EndDate']); } else { print('Any'); } ?> <input type="button" name="print" onclick="window.print();" class="noPrint" value="Print">
+</p>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Order Number</strong></td>
+		<td><strong>Supplier Invoice Number</strong></td>
+		<td><strong>Date</strong></td>
+		<td><strong>Amount</strong></td>
+		<td><strong>Fecga Factura</strong></td>
+		<td><strong>Importe</strong></td>
+	</tr>
+<?php $data['total'] = 0;$data['totalImporte'] = 0; ?>
+<tmpl_loop query="Q_Invoices">
+	<tr>
+		<td>{tmpl_row_var sos_id}</td>
+		<td>{tmpl_row_var sos_invoice_number}&nbsp;</td>
+		<td>{tmpl_row_var_date name="sos_date" format="d M y"}</td>
+		<td align="right"><?php print(ss_decimalFormat($row['sos_total']));?></td>
+		<td><? if ($row['sos_invoice_date'] !== null) { ?>{tmpl_row_var_date name="sos_invoice_date" format="d M y"}<? } else print("&nbsp;"); ?></td>
+		<td align="right"><?php if ($row['sos_import'] !== null) print(ss_decimalFormat($row['sos_import'])); else print('&nbsp;'); ?></td>
+	</tr>
+	
+	<?php $data['total'] += $row['sos_total']; ?>
+	<?php $data['totalImporte'] += $row['sos_import']; ?>
+</tmpl_loop>
+	<tr>
+		<td colspan="3">Total</td>
+		<td align="right"><?php print(ss_decimalFormat($data['total']));?></td>
+		<td colspan="2" align="right"><?php print(ss_decimalFormat($data['totalImporte']));?></td>
+	</tr>
+</table>
+</tmpl_if>

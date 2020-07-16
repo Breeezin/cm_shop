@@ -1,0 +1,14 @@
+
+	<tmpl_if condition="$data['OnSpecial']">
+		<span class="onlineShopPriceQuick">Was:</span>		
+		<span id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw NormalPrice}</span>
+		<span class="onlineShopPriceQuick">{tmpl_var SpecialDescription}&nbsp;Price:</span>
+		<span id="specialPrice{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw SpecialPrice}</span>
+		<span id="pricenote">{tmpl_var PriceMessage}</span>
+		&nbsp;<br />
+	<tmpl_else>
+		<span class="onlineShopPriceQuick">Price:</span>		
+		<span id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">{tmpl_var_raw NormalPrice}</span>
+		<span id="pricenote">{tmpl_var PriceMessage}</span>
+		&nbsp;<br />
+	</tmpl_if>

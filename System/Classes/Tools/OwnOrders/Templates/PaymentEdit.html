@@ -1,0 +1,68 @@
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td>This page is on a Secure SSL enabled server. 
+        All information that is passed between your computer 
+        and this server is encrypted for your protection. 
+      </td>
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+ function OpenCertDetails()
+ {
+thewindow =window.open('https://www.thawte.com/cgi/server/certdetails.exe?referer=https://www.securesitenz.co.nz/', 'anew',config='height=500,width=510,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,directories=no,status=yes');
+}
+// -->
+</SCRIPT>
+      <td nowrap>&nbsp;<a href="Javascript:void(0);" onclick="OpenCertDetails();"><img src="Images/60x60_static_small.gif" alt="Verify Certificate" border="0" /></a></td>
+    </tr>
+  </table>
+  <p>The Credit Card information you supply will be retained
+    by us until your order has been processed. After this 
+    time all credit card information will be deleted from
+    this server for your privacy and protection.
+  </p>
+  
+
+{tmpl_errors errors}
+<FORM NAME="PaymentForm" METHOD="POST" ACTION="{TMPL_VAR FormAction}">
+
+<TABLE BORDER="0" WIDTH="100%" cellpadding="5" cellspacing="0">
+   <TR>
+	<TH ALIGN="LEFT" WIDTH="33%">Reference :</TH><TD><?=ss_getTrasacationRef($data['Fields']['tr_id'])?></TD></TR>
+   <TR>
+	<TH ALIGN="LEFT">Total :</TH><TD><?=$data['Fields']['cn_currency_symbol']?><?=$data['Fields']['tr_total']?> <?=$data['Fields']['cn_currency_code']?>
+	<?php  if (strpos($data['ChargedIn'], $data['Fields']['cn_currency_code']) === false) { ?>
+	<small>(note: {tmpl_var_raw ChargedIn} will be charged)</small>
+	<?php } ?></TD></TR> <TR>
+	{tmpl_var_raw ProcessorForm}
+	<TR>
+		<TD width="33%" align="center">
+        &nbsp;
+		</TD>
+        <TD align="left">
+        <INPUT type="submit" name="Submit" value="Process">
+		</TD>
+            	</TR>
+	{tmpl_if $data['Type'] == 'Shop'}
+	<TR>
+		<TD colspan="2" align="right">
+		<table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+            	<tr align="center">
+            		<td class="onlineShopShopProgressBarCell">1 - Basket</td>
+            		<td class="onlineShopShopProgressBarCell">2 - Checkout</td>
+            		<td class="onlineShopShopProgressBarON">3 - Payment</td>
+            		<td class="onlineShopShopProgressBarCell">4 - Finished</td>
+            	
+       		 </tr>
+            	</table>
+            	</TD>
+            	</TR>
+    {tmpl_end}
+</TABLE>	
+
+
+<input type="hidden" name="tr_token" value="{tmpl_var_raw tr_token}">
+<input type="hidden" name="Edit" value="1">
+<input type="hidden" name="tr_id" value="{tmpl_var_raw tr_id}">
+<input type="hidden" name="BackURL" value="{tmpl_var_raw BackURL}">
+<input type="hidden" name="Type" value="{tmpl_var_raw Type}">
+</form>

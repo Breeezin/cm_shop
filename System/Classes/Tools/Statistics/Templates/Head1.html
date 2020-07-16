@@ -1,0 +1,62 @@
+<SCRIPT LANGUAGE="Javascript">	
+	
+	function showhide(name, setOpened) {	
+		var theForm = document.StatsForm;
+		var allDivs = new Array({tmpl_var_raw DivIDs});		
+		var el=document.getElementById(name);			
+		var el_display = null;
+		if (name == 'RandomImagesStats') {
+			el_display=document.getElementById('RandomImagesDisplayStats');	
+		}
+		var newOpened = '';
+		if (el.style.display == '') { 
+			el.style.display='none'; 		
+			if (el_display != null) el_display.style.display='none'; 
+		} else { 
+			el.style.display=''; 
+			if (el_display != null) el_display.style.display=''; 
+		}
+		
+		if (setOpened) {
+			for(var i=0; i < allDivs.length; i++) {
+				var el=document.getElementById(allDivs[i]);	
+				var el_display = null;				
+				if (el) {					
+					if (el.style.display == '') { 
+						if (newOpened.length) newOpened += ',';
+						newOpened += allDivs[i];
+					} 
+				}
+			}
+			theForm.Opened.value = newOpened;
+		}			
+	}	
+
+	function confirmReset(msgPart, type) {
+		
+		if (confirm('Are you sure you want to reset all '+msgPart+' for your website?')) {
+			document.location = 'index.php?act=Statistics.Reset&Type='+type;
+		}
+		
+	}
+	
+	function getStats(theForm, type) {
+		
+		url = 'index.php?act=Statistics.'+type + 'Search&DateFrom='+theForm[type+'DateFrom'].value + '&DateTo=' + theForm[type+'DateTo'].value;
+		openWindow(url, "StatsWindow", 650, 600);
+		
+	}
+	
+	function openWindow(url, name, width, height ) {		
+	     w = width
+	     h = height
+	     x = Math.round((screen.availWidth-w)/2); //center the top edge
+	     y = Math.round((screen.availHeight-h)/2); //center the left edge
+	     
+	     popupWin = window.open(url, "Preview", "width="+w+",height="+h+",toolbar=0,location=0,scrollbars=1,statusbar=1,menubar=0,resizable=1,top="+y+",left="+x+",screeenY="+y+",screenX="+x);
+	
+	     popupWin.creator=self;	    
+	     popupWin.focus();	     
+	     return popupWin;
+	}
+</SCRIPT>

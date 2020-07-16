@@ -1,0 +1,38 @@
+<tmpl_if condition="$data['ReloadTree']">
+	<script language="Javascript">
+		parent.assetReload();
+	</script>
+</tmpl_if>
+
+<tmpl_if condition="$data['Q_ReviewAssets']->numRows() == 0">
+<p>There are currently no items for you to review.</p>
+<p><input type="button" value="Refresh" name="refresh" onclick="document.location='index.php?act=Review.List';"></p>
+<tmpl_else>
+<table width="100%">
+	<tr>
+		<td><strong>Name</strong></td>
+		<td><strong>Type</strong></td>
+		<td><strong>Path</strong></td>
+		<td><strong>Author</strong></td>
+		<td><strong>Requested</strong></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tmpl_loop query="Q_ReviewAssets">
+		<tr>
+			<td>{tmpl_row_var as_name}</td>
+			<td>{tmpl_row_var as_type}</td>
+			<td><?	
+					$temp = new Request('Asset.PathFromID',array(
+						'as_id'	=>	$row['as_id'],
+					));
+					$row['AssetPath'] = $temp->value;
+				?>
+				<a href="{tmpl_row_var AssetPath}" target="_blank">{tmpl_row_var AssetPath}</a>
+			</td>
+			<td><a href="mailto:{tmpl_row_var us_email}">{tmpl_row_var us_first_name} {tmpl_row_var us_last_name}</a></td>
+			<td>{tmpl_row_var_date format="d-m-Y" name="as_last_modified"}</td>
+			<td><a href="index.php?act=Review.ReviewAsset&as_id={tmpl_row_var as_id}">Review</a></td>
+		</tr>
+	</tmpl_loop>		
+</table>
+</tmpl_if>

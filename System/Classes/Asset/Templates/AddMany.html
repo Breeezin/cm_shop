@@ -1,0 +1,41 @@
+{tmpl_if $data['AreDefined']}
+	<CFOUTPUT>
+	<SCRIPT language="Javascript">
+		window.opener.subAssetAddCallback();
+		window.close();		
+	</SCRIPT>
+	</CFOUTPUT>
+{tmpl_else}
+	
+	<FORM NAME="AddManyForm" METHOD="POST" ACTION="{tmpl_var Script_Name}?act={tmpl_var act}&DoAction=Yes">
+		{tmpl_if $data['HasError']}
+			<strong>Error:</strong><BR>
+			Unable to create one or more assets. This may have been due to asset limits or parent assets not being found. The following assets were not created:
+			{tmpl_errors2 EntryErrors}
+		{tmpl_end}
+		<P>
+		Please enter the assets you wish to add. One per line. The format is: 
+		<UL>
+		AssetPath:as_type:AppearsInMenus:AssetLayout:AssetStylesheet
+		</UL>
+		<LI>AssetPath - The full path of the new asset to create. eg. "Home/New Asset Name"</LI>
+		<LI>as_type - The type of asset to create. eg. {tmpl_var TypeDisplay}</LI>
+		<LI>Appears In Menus - Whether or not to display the asset in the menus. eg. "Yes" or "No"</LI>		
+		<LI>AssetLayout - The name of the layout to attribute to the asset. eg. {tmpl_var_raw ListLayouts}
+		</LI>
+		<LI>AssetStylesheet - The name of the style sheet to attribute to the asset. eg.{tmpl_var_raw StyleSheetsList}
+			
+		</LI>
+		<LI>&nbsp;</LI>
+		<LI>Example - /Home/New Page 1:Page:Yes:Default Layout:Main
+		</LI>
+		
+		</P>
+		<P>
+			<TEXTAREA NAME="AssetsToAdd" ROWS="10" COLS="85" WRAP="OFF">{tmpl_var AssetsToAdd}</TEXTAREA>
+		</P>
+		<P>
+			<INPUT TYPE="SUBMIT" VALUE="Create">
+		</P>	
+	</FORM>
+{tmpl_end}

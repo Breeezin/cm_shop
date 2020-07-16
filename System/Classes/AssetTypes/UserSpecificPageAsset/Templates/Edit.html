@@ -1,0 +1,24 @@
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="bodytext">
+	<tr>
+ 		<td align="left" valign="top"><img src="Images/holder.gif" width="25" height="15">
+    			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    				<tr>
+                    	<td><img src="Images/h-User-Specific-content.gif" width="260" height="26"></td>
+				 </tr>
+    				<tr>
+                    	<td align="left" valign="top">
+							{tmpl_admin_link label="Manage User Specific Content" url="index.php?act=UserSpecificPagesAdministration.List&as_id={$data['as_id']}" target="UserSpecificPagesManager" description="Define content for individual users"}                    	
+               		 </td>
+				 </tr>
+           	</table></td>
+	</tr>
+</table>
+ 
+<p>
+
+</p>
+<FIELDSET TITLE="Default Content" style="padding:5px;">
+	<LEGEND>Default Content</LEGEND>
+<p>Enter the default content users will see if they do not have any user specific content configured for them.</p>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_USP_DEFAULT_PAGE"}
+</FIELDSET>

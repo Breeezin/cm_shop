@@ -1,0 +1,17 @@
+<table width="100%">
+	<tr>
+		<td valign="middle" align="right">
+				Show appoximate prices in
+		<form method="post" action="{tmpl_var AssetPath}/Service/ChangeCurrencyCountry">
+			<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+				<select name="CurrencyThreeCode" onchange="this.form.submit();">
+					<tmpl_loop query="Q_Currencies">
+						<tmpl_if condition="stristr($row['cn_currency'],'CFA Fran')===false">
+						<option value="{tmpl_row_var cn_currency_code}" <tmpl_if condition="$data['CurrentTaxCurrency'] == $row['cn_currency_code']">selected="selected"</tmpl_if>>{tmpl_row_var cn_currency}</option>
+						</tmpl_if>
+					</tmpl_loop>
+				</select>		
+			</td>
+		</form>
+	</tr>
+</table>

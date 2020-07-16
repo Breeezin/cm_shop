@@ -1,0 +1,14 @@
+<p>
+An order has been received on your website, please visit the website 
+administration system and use the "<a href="<?=$GLOBALS['cfg']['secure_server']?>index.php?act=WebPayAdministration.List&as_id={tmpl_var as_id}" target="_blank">Orders</a>" area to view the latest orders.
+</p>
+<p>
+Order Reference : {tmpl_var tr_reference}<BR>
+Customer Name: {tmpl_var or_purchaser_firstname} {tmpl_var or_purchaser_lastname}<BR>
+Email Address: <a href="mailto:{tmpl_var or_purchaser_email}">{tmpl_var or_purchaser_email}</a><BR>
+</p>
+<pre>
+--------------------------------------------------------------------------------
+Automated Message
+--------------------------------------------------------------------------------
+</pre>

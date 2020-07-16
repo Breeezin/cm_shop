@@ -1,0 +1,186 @@
+{tmpl_var_raw EditableContent}
+<?php
+if( $data['AbandonedCount'] > 0 )
+{
+?>
+<h3><a name='Abandoned'>Incomplete (unpaid) Orders</a></h3>
+These will automatically disappear after 24 hours
+<br />
+<div class='container'>
+<tmpl_loop query="AbandonedOrders">
+	<div class='messageBox'>
+
+	<div class='row'>
+		<div class='col-md-12'>
+			<h2> <?php
+				echo "Order {$row['or_tr_id']}";
+		 ?></h2>
+		 	<h3><?php
+				echo formatDateTime($row['or_recorded'], 'j-M-Y')
+		?>
+			</h3>
+		</div>
+	</div>
+	<?php
+	$basketRaw = $row['or_basket'];
+	$OrderDetails = unserialize( $basketRaw );
+
+	$all_available = true;
+	$definitely_available = true;
+
+	foreach( $OrderDetails['Basket']['Products'] as $index => $value )
+	{
+		ss_paramKey($OrderDetails['Basket']['Products'][$index],'Availabilities',array());
+		ss_paramKey($OrderDetails['Basket']['Products'][$index],'Shipped',array());
+		for( $i = 0; $i < $value['Qty']; $i++ )
+		{
+	?>
+	<div class='row'>
+		<div class='col-md-12'>
+			<?=$OrderDetails['Basket']['Products'][$index]['Product']['pr_name']?>
+		</div>
+	</div>
+	<?php
+		}
+
+		$available = getField( "select pro_stock_available >= {$value['Qty']} from shopsystem_product_extended_options where pro_pr_id = ".$OrderDetails['Basket']['Products'][$index]['Product']['pr_id'] );
+
+		if( !$available )
+		{
+			$all_available = false;
+	?>
+	<div class='row'>
+		<div class='col-md-12'>
+			<strong>NOW OUT OF STOCK</strong>
+		</div>
+	</div>
+	<?php
+		}
+		else
+		{
+	?>
+	<div class='row'>
+		<div class='col-md-12'>
+			<strong>STILL IN STOCK</strong>
+		</div>
+	</div>
+	<?php
+		}
+	}
+
+	// show shipping dest.
+
+	$shipping = unserialize($row['or_shipping_details']);
+	$sdetails = $shipping['ShippingDetails'];
+	$pdetails = $shipping['PurchaserDetails'];
+
+	echo "<table><tr><td>";
+	echo "<b>Shipping Details</b><br/>";
+	echo escape($sdetails['first_name'])." ".escape($sdetails['last_name'])."<br/>";
+	if( strlen( $sdetails['0_B4BF'] ) )
+		echo escape($sdetails['0_B4BF'])."<br/>";
+	echo escape($sdetails['0_50A1'])."<br/>";
+	echo escape($sdetails['0_50A2'])."<br/>";
+	echo escape($sdetails['0_50A4'])."<br/>";
+	echo escape($sdetails['0_B4C0'])."<br/>";	
+	echo escape($sdetails['0_B4C1'])."<br/>";	
+	echo "</td></tr></table><br />";
+
+	if( $all_available )
+	{
+		$ttl = $OrderDetails['Basket']['Total'];
+		if( !($ttl > 0) )
+			$ttl = 0;
+
+		//$gw = getRow( "select * from payment_gateways join payment_gateway_options on pg_id = po_pg_id where po_active = true and pg_limit > pg_accumulation + $ttl and pg_id = ".(int) $row['tr_bank'] );
+		$gw = getRow( "select * from payment_gateways join payment_gateway_options on pg_id = po_pg_id left join configured_sites on po_site = si_id where po_active = true and ((pg_limit > pg_accumulation + $ttl ) OR (pg_limit IS NULL)) and pg_id = ".(int) $row['tr_bank'] );
+
+		if( $gw )
+		{
+
+			if( $gw['po_currency'] == 'BTC' )
+			{
+				// bitcoin
+
+				$paidRow = getRow( "select * from bitcoin_addresses where ba_tr_id = {$row['or_tr_id']}" );
+				echo "<p>We have confirmed receipt of BTC {$paidRow['ba_received']} out of {$OrderDetails['Basket']['Total']} for this address {$paidRow['ba_address']}";
+				echo '</p><br />';
+			}
+			else
+				if( $gw['po_currency'] == 'LTC' )
+				{
+					// litecoin
+
+					$paidRow = getRow( "select * from litecoin_addresses where la_tr_id = {$row['or_tr_id']}" );
+					echo "<p>We have confirmed receipt of LTC {$paidRow['la_received']} out of {$OrderDetails['Basket']['Total']} for this address {$paidRow['la_address']}";
+					echo '</p><br />';
+				}
+				else
+				{
+					if( $gw['po_card_type'] && strlen( $gw['si_base_url'] ) )
+					{
+						if( $gw['pg_can_recheckout' ] ) 
+						{
+							$recheckout = "http://{$gw['si_base_url']}/Shop_System/Service/ReCheckout/tr_id/".(int)$row['or_tr_id']."/tr_token/".$row['tr_token'];
+	?>
+						<p>You are seeing this as your payment failed for this order.  Contact your <strong>bank</strong> to authorize this, then try again below</p>
+						<p>If you believe this is wrong, please wait at least 1/2 hr before resubmitting a payment here.</p>
+						<p>We have seen payment confirmation delays.</p>
+						<br />
+						<p><?php echo $gw['pg_name']; ?></p>
+						<p><?php echo $row['tr_total']." ".$row['tr_currency_code']; ?></p>
+						<p><a href='<?=$recheckout?>' class="continue">Pay Now</a></p>
+	<?php
+						}
+						else
+							echo "<p> This order cannot be resubmitted, sorry.</p>";
+					}
+					else
+					{
+						// bank transfer
+						if( $rw = getRow( "select * from bank_transfer_information where bt_tr_id = {$row['or_tr_id']}" ) )
+						{
+						?>
+							<p>You have entered this information for our records, we will get back to you when we have confirmed payment</p>
+							<p>Bank Account Name:&nbsp;<strong><?=$rw['bt_account']?></strong></p>
+							<p>Transfer Amount:&nbsp;<?=$row['tr_currency_code']?><strong><?=$rw['bt_received']?></strong></p>
+						<?php
+						}
+						else
+						{
+							$value = ss_HTMLEditFormat($row['tr_currency_symbol'].number_format($row['tr_total'], 2)." ".$row['tr_currency_code']);
+						?>
+							<p>This order awaiting <strong>your</strong> payment, please enter the information relating to <strong>your</strong> transfer here</p>
+							<p><strong>You</strong> need to transfer at least <?=$value?> plus bank fees (often 20 USD or more), we cannot do this for you.</p>
+							<br />
+							<p>If you wished to place a credit card order, don't fill these fields in.  This order will expire automatically.</p>
+							<p>Do not fill these fields in until you have made your bank transfer.</p>
+							<p>Please check your order carefully before confirming it below.</p>
+							<br />
+							<form method="post" name="adminForm" action="/Members/Service/Unpaid">
+							<input type='hidden', name='tr_id', value='<?=(int)($row['or_tr_id'])?>' />
+							Bank Account Name [<strong>NOT</strong> Bank Name]: <input type='text' name='bt_account' size=40 />
+							<br />
+							Transfer Amount (US$): <input type='text' name='bt_received' size=6 />
+							<input type="Submit" name="SaveBankDetails" value="Save">
+							</form>
+						<?php
+						}
+
+					}
+				}
+		}
+?>
+	<br/>
+</p>
+<?php
+	}		// ALL stock still AVAILABLE
+	else
+	{
+		echo "<strong>We have run out of stock of some of this order, we can no longer ship this.</strong>";
+	}
+?>
+	</div>
+</tmpl_loop>
+</div>
+<?php } ?>

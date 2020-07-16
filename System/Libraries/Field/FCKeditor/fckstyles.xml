@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Styles>
+    <Style name="blue text" element="span">
+        <Attribute name="class" value="blueText" />
+    </Style>    
+    <Style name="news" element="span">
+        <Attribute name="class" value="news" />
+    </Style>
+
+</Styles>

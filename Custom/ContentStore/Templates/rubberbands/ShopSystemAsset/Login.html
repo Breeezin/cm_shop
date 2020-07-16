@@ -1,0 +1,221 @@
+<?
+	ss_paramKey($data,'ConfirmOrder',false);
+?>
+
+	 <!--basket-->
+<div class="basket-wrap">
+	 <!--END Shipping options-->
+	 <!--Returning Customers-->
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Returning_Customers" >
+	<tr>
+		<td><span class="textSubHeaders">Returning Customers</span></td>
+	</tr>
+<?php if( ss_getUserID() <= 0 ) { ?>
+	<tr>
+		<td valign="top">							
+			<table class="onlineShop_checkoutSectionTable" cellspacing="0" cellpadding="8" width="100%">
+				<tr>
+					<td>
+						<p>If you are a new customer, skip this and confirm your shipping country below.</p>
+						<p>If you are a returning customer, please log in here first, it might enable more options.</p>
+						<div id="Returning">
+							{tmpl_var_raw LoginHTML}
+						</div>
+					</td>
+				</tr>
+		 </table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		{tmpl_if count($data['Errors'])}
+		<table class="onlineShop_checkoutSectionTable" cellspacing="0" cellpadding="8" width="100%">
+		<tr>
+			<td>		
+			<p>
+			{tmpl_errors Errors}
+			</p>
+			</td>
+		 </tr>
+		 </table>
+				{tmpl_end}	
+	</td>
+	</tr>
+<?php } else {  ?>
+	<tr>
+		<td valign="top">							
+			Thanks for logging in <?php echo ss_getFirstName(); ?>
+		</td>
+	</tr>
+<?php } ?>
+</table>
+
+<!--END Returning Customers-->
+
+<script language="javascript" type="text/javascript">
+function newLoginCountry(chosen)
+{
+	if( chosen )
+		if( chosen != '<?=$_SESSION['ForceCountry']['cn_two_code']?>' )
+			window.location = "index.php?act=Security.SetCountry&CC="+chosen+"&BackURL=<?=$_SERVER['REQUEST_URI']?>/Chosen/1";
+}
+</script>
+
+<?php // <form name="LoginForm" method="post" action="/Shop_System/Service/Checkout/GetDetail/Yes">
+$buttonName = 'Continue with checkout';
+?>
+<form name="LoginForm" method="post" action="/Shop_System/Service/Login">
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Returning_Customers" >
+	<tr>
+		<td><span class="textSubHeaders" style='font-size:x-large'>Shipping to</span></td>
+	</tr>
+	<tr>
+		<td valign="top">
+<select name="ShippingCountry" style='font-size:x-large' onchange="newLoginCountry(this.value);">
+	<option value="">Please confirm which country you are shipping to here</option>
+	<option value="">--------</option>
+<?php
+	$Q_Countries = query("
+		SELECT cn_id, cn_name, cn_two_code FROM countries
+		WHERE (cn_disabled IS NULL OR cn_disabled = 0)
+		 AND (cn_restrict_shipping IS NULL OR cn_restrict_shipping = 0 OR cn_redirect_url IS NOT NULL)
+		ORDER BY cn_name
+	");	
+
+	$Countries = array();
+	while( $row = $Q_Countries->fetchRow())
+		$Countries[$row['cn_id']] = $row;
+
+	$fc = $_SESSION['ForceCountry']['cn_id'];
+	echo "<option value=\"".$Countries[$fc]['cn_two_code']."\"";
+	if( $data['Chosen'] )
+		echo " selected='selected'";
+	echo ">".$Countries[$fc]['cn_name']."</option>";
+?>
+	<option value="">--------</option>
+<?php
+	foreach ( $Countries as $id=>$row )
+		echo "<option value=\"".$row['cn_two_code']."\" >".$row['cn_name']."</option>";
+?>
+</select>
+		</td>
+	</tr>
+</table>
+
+<!--Shipping warning -->
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+	<tr>
+		<td colspan="100%"><span class="textSubHeaders">Currency/Payment Options, <strong>please choose one of these...</strong></span></td>
+	</tr>
+	<tr>
+<?php
+	if( $data['NeedsPayment']  )
+	{
+		if( $data['PaymentOptions'] !== NULL )
+		{
+			if( $data['LastGatewayName'] )
+			    echo "<tr><td valign='top'>You last used {$data['LastGatewayName']}</td></tr>";
+?>
+	<tr>
+		<?php
+		$last_name = ''; $last_currency = '';
+		$selected = false;
+		$col = 0;
+		?>
+		<tmpl_loop query="PaymentOptions">
+		<?php
+			if( $_SESSION['GatewayOption'] == $row['po_id'] )
+				$selected = true;
+
+			if( $last_name == $row['cct_name'] && $last_currency == $row['po_currency'] )
+				continue;
+			else
+			{
+				if( ++$col > 4 )
+				{
+					echo '</tr><tr>';
+					$col = 0;
+				}
+		?>
+		<td valign="top">
+			<div style='border: 1px solid rgb(213, 213, 213) ; border-radius: 10px; padding: 10px;'>
+			<strong>
+			<?php echo str_replace( ' ', '&nbsp;', $row['po_currency'].' - '.$row['cct_name'] ); ?>
+			</strong>
+			<br /><div style="height:60px;"><img src="/images/{tmpl_row_var cct_image}" /></div>
+			<br /><div style="height:100px;">{tmpl_row_var_raw description}</div>
+			<br />
+			<br /><div style="height:80px;"><?php echo getCurrencySummary( abs($row['po_id']), $_SESSION['Shop']['Basket']['SubTotal'] ); ?></div>
+			<br /><input type="radio" name="GatewayOption" value="{tmpl_row_var po_id}" <?php if( $selected ) echo "checked";?>>
+			</div>
+		</td>
+		<?php
+		
+				$last_name = $row['cct_name'];
+				$last_currency = $row['po_currency'];
+				$selected = false;
+			} ?>
+		</tmpl_loop>
+	</tr>
+<?php
+		}
+
+		if( $data['PaymentOptionsOtherSite'] !== NULL )
+		{
+?>
+	</table>
+	<input name="imageField" type="submit" value="<?=$buttonName?>" class="red-button curvybox" />
+	<?php $buttonName = 'Swap to '.$data['OtherSiteName']; ?>
+	</form>
+	<form action="<?=$data['OtherSiteName'].$_SERVER['REQUEST_URI']?>" method="post">
+		<input type='hidden' name='Session' value='<?php echo session_id(); ?>' />
+	&nbsp;
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+	<tr>
+		<td colspan="100%"><span class="textSubHeaders"><strong>... or go to our sister site </strong> <?=$data['OtherSiteName']?></span></td>
+	</tr>
+	<tr>
+		<tmpl_loop query="PaymentOptionsOtherSite">
+		<?php
+			if( $last_name == $row['cct_name'] && $last_currency == $row['po_currency'] )
+				continue;
+			else
+			{
+		?>
+		<td valign="top">
+			<strong>
+			<?php echo str_replace( ' ', '&nbsp;', $row['po_currency'].' - '.$row['cct_name'] ); ?>
+			</strong>
+			<br /><div style="height:60px;"><img src="/images/{tmpl_row_var cct_image}" /></div>
+			<br /><div style="height:100px;">{tmpl_row_var_raw description}</div>
+			<br />
+			<br /><div style="height:80px;"><?php echo getCurrencySummary( abs($row['po_id']), $_SESSION['Shop']['Basket']['SubTotal'] ); ?></div>
+		</td>
+		<?php
+		
+				$last_name = $row['cct_name'];
+				$last_currency = $row['po_currency'];
+			} ?>
+		</tmpl_loop>
+	</tr>
+<?php
+		}
+	}
+	else
+	{
+?>
+		<tr>
+			<td valign="top">
+			Continue using account credit of <?=-($_SESSION['Shop']['Basket']['Discounts']['Account Credit'])?> <?= $data['CurrencyCode']?>
+			<input type="hidden" name="GatewayOption" value="<?=$_SESSION['User']['us_credit_from_gateway_option']?>" />
+			</td>
+		</tr>
+<?php } ?>
+	</tr>
+
+</table>
+</div>
+<input name="imageField" type="submit" value="<?=$buttonName?>" class="red-button curvybox" />
+</div>
+</div>
+</form>

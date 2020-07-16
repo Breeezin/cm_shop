@@ -1,0 +1,54 @@
+<SCRIPT language="javascript">
+	function setRadioValue(theRadio, selected){
+
+		for (var i = 0; i < theRadio.length; i++) {
+			if (theRadio[i].value == selected) {
+				theRadio[i].checked = true;
+				break;
+			}
+		}
+
+	}
+</SCRIPT>
+{tmpl_errors errors}
+<FORM NAME="ConfigForm" METHOD="POST" ACTION="{TMPL_VAR FormAction}">
+<TABLE CELLPADDING="2">
+	<TR>			
+		<TH ALIGN="LEFT" valign="top">Default Currency :</TH>
+		<TD colspan="2">{tmpl_var_raw DefaultCurrencySettings}
+       </TD>		
+	</TR>
+	<TR>			
+		<TH ALIGN="LEFT">Cheque :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="wpc_use_cheque"}</TD>
+		<TD><input type="image" SRC="images/view-edit.gif" OnClick="window.open('index.php?act=WebPayChequeConfiguration.Edit', 'ChequeSetting','height=430,width=590,scrollbars,resizable');return false;" ></TD>
+	</TR>
+	<?php if (ss_optionExists('Invoice Payment Option')) { ?>
+	<TR>			
+		<TH ALIGN="LEFT">Invoice :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="wpc_can_invoice"}</TD>
+		<TD><input type="image" SRC="images/view-edit.gif" OnClick="window.open('index.php?act=WebPayInvoiceConfiguration.Edit', 'InvoiceSetting','height=430,width=590,scrollbars,resizable');return false;" ></TD>
+	</TR>
+	<?php } ?>
+	<?php if (ss_optionExists('Pay On Collection Payment Option')) { ?>
+	<TR>			
+		<TH ALIGN="LEFT">Pay on Collection :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="wpc_use_collection"}</TD>
+		<TD><input type="image" SRC="images/view-edit.gif" OnClick="window.open('index.php?act=WebPayCollectionConfiguration.Edit', 'CollectionSetting','height=430,width=590,scrollbars,resizable');return false;" ></TD>
+	</TR>
+	<?php } ?>
+	<TR>			
+		<TH ALIGN="LEFT">Direct Payment :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="wpc_direct_payment"}</TD>
+		<TD><input type="image" SRC="images/view-edit.gif" OnClick="window.open('index.php?act=WebPayDirectPaymentConfiguration.Edit', 'DirectSetting','height=430,width=590,scrollbars,resizable');return false;" ></TD>
+	</TR>
+	<TR>		
+		<TH ALIGN="LEFT">Credit Card :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="wpc_use_credit_card"}</TD>
+		<TD><input type="image" SRC="images/view-edit.gif" OnClick="window.open('index.php?act=WebPayCreditCardConfiguration.Edit', 'CreditSetting','height=430,width=590,scrollbars,resizable');return false;" ></TD>
+	</TR>				
+</TABLE>
+<INPUT type="hidden" name="BackURL" value="{tmpl_var_url BackURL}">
+<INPUT type="hidden" name="BreadCrumbs" value="{tmpl_var_url BreadCrumbs}">
+<input type="submit" name="Submit" value="Save">&nbsp;&nbsp;&nbsp;<input type="button" onclick="document.location='{tmpl_var BackURL}'" name="Close" value="Cancel">
+</FORM>

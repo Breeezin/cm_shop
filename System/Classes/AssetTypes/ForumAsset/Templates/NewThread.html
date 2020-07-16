@@ -1,0 +1,51 @@
+{tmpl_errors Errors}
+<table class=forumMainBorder cellspacing=0 cellpadding=5 width="100%" border=0>
+<tbody>
+	<tr>
+		<td class=forumThreadTitle width=200>New
+			Thread</td>
+		<td class=forumThreadTitle>
+			<div align=right><?php print(date('d.m.Y g:ia'));?></div>
+		</td>
+	</tr>
+	<tr>
+		<td class=forumThread colspan=2>
+			<div align=left></div>
+			<form action="{tmpl_var AssetPath}?Service=NewThread&DoAction=Yes" method=post>
+				<table cellspacing=0 cellpadding=5 width="100%" border=0>
+					<tbody>
+						<tmpl_if condition="$data['Preview']">
+							<tr valign=top align=left>
+								<td width=100>Preview</td>
+								<td>{tmpl_var_raw FormattedContent}</td>
+							</tr>
+						</tmpl_if>
+						<tr valign=top align=left>
+							<td width=100>Subject</td>
+							<td><input class="forumMenu" maxlength="255" size="50" name="Subject" value="{tmpl_var Subject}"><br /></td>
+						 </tr>
+						<tr valign=top align=left>
+							<td>Message</td>
+							<td><textarea class="forumMenu" name="Content" rows="8" cols="60">{tmpl_var Content}</textarea>
+								<p>You can use the following tags in your message to create various effects:</p>
+								<ul>
+									<li>[B]bold text[/B] e.g. <b>bold text</b>
+									<li>[I]italic text[/I] e.g. <i>italic text</i> </li>
+								</ul>
+								<p></p>
+							</td>
+						</tr>
+						<tr valign=top align=left>
+							<td>&nbsp;</td>
+							<td><input class=forumButton type=submit value="Create Thread" name="Submit">
+									<input class=forumButton type=submit value=Preview name="Submit">
+									<input class=forumButton type=submit value=Cancel name="Submit">
+							 </td>
+						 </tr>
+					 </tbody>
+				 </table>
+			 </form>
+		 </td>
+	 </tr>
+ </tbody>
+</table>

@@ -1,0 +1,45 @@
+<script>
+  if( typeof( window.outerWidth ) == 'number' ) {
+    //Non-IE
+	if( window.outerWidth < 1024 )
+		window.outerWidth = 1024;
+	if( window.outerHeight < 768 )
+		window.outerHeight = 768;
+		
+  } else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+    //IE 6+ in 'standards compliant mode'
+    if( document.documentElement.clientWidth < 1024 || document.documentElement.clientHeight < 768 )
+		self.resizeTo(1024,768);
+  } else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+    //IE 4 compatible
+    if( document.body.clientWidth < 1024 || document.body.clientHeight < 768 )
+		self.resizeTo(1024,768);
+  }
+</script>
+<form action="Online%20Shop/Service/AcmeWantPadding" method="post">
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<input type="hidden" name="Name" value="{tmpl_var Name}">
+	<p>You have chosen a box, <strong>{tmpl_var Name}</strong>, which needs to be opened to add extra padding to the llamas so they do not get damaged in transit. Please choose “open my box and add extra padding”.</p>
+	<p>If you do not then you have to choose “I will assume the risk of my llamas being damaged in transit and understand that AcmeRockets Will not be responsible for any damage to the llamas”.</p>
+			<table cellspacing="0" cellpadding="0" width="450" align="center" border="0"><tbody><tr><td class="boxleftfill" valign="top" align="left" width="9" height="9"><img alt="EMB: 584" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=584" border="0" /></td><td class="boxtopfill" height="7"><img alt="EMB: 524" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=524" border="0" /></td><td valign="top" width="7"><img alt="EMB: 583" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=583" border="0" /></td></tr><tr><td class="boxleftfill"> </td><td valign="middle" align="center"><table cellspacing="0" cellpadding="15" width="100%" border="0"><tbody><tr><td valign="middle" align="center" bgcolor="#efece4">
+				
+
+	<table>
+		<tr>
+			<td valign="top"><input type="radio" name="Type" value="Open" id="open"></td>
+			<td valign="top"><label for="open">Open my box and add extra padding.</label></td>
+		</tr>
+		<tr>
+			<td valign="top"><input type="radio" name="Type" value="Assume" id="assume"></td>
+			<td valign="top"><label for="assume">I will assume the risk of my llamas being damaged in transit and understand that AcmeRockets will not be responsible for any damage to the llamas.</label></td>
+		</tr>
+		<tr><td></td></tr>
+		<tr><td colspan="2">
+			<input type="submit" name="submit" value="Submit">
+
+		</td></tr>
+	</table>
+
+			</td></tr></tbody></table></td><td class="boxrightfill"> </td></tr><tr><td class="boxleftfill" valign="bottom" align="left"><img alt="EMB: 582" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=582" border="0" /></td><td class="boxbott" height="7"><img alt="EMB: 524" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=524" border="0" /></td><td valign="bottom" align="right"><img alt="EMB: 581" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=581" border="0" /></td></tr></tbody></table>								
+	
+</form>

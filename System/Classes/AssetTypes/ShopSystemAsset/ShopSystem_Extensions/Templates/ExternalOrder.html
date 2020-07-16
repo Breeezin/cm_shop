@@ -1,0 +1,70 @@
+
+<SCRIPT language="Javascript">
+<!--
+	function jumper(selectList) {		
+		urlAppend = selectList.options[selectList.selectedIndex].value;
+		var winOpenReg = new RegExp('windowOpen:');
+		if(urlAppend.search(winOpenReg) != -1) {	
+			urlAppend = urlAppend.replace(winOpenReg, '');
+			 w = 550;
+		     h = 700;
+		     x = Math.round((screen.availWidth-w)/2); //center the top edge
+		     y = Math.round((screen.availHeight-h)/2); //center the left edge
+		     popupWin = window.open(urlAppend, 'Win', "width="+w+",height="+h+",toolbar=0,location=0,scrollbars=1,statusbar=1,menubar=0,resizable=1,top="+y+",left="+x+",screeenY="+y+",screenX="+x);
+		
+		     popupWin.creator=self;		
+			 popupWin.focus();
+		} else {
+			selectList.form.reset();
+			document.location = urlAppend;
+		}
+	}
+//-->
+</SCRIPT>
+<p>
+<form>
+Outstanding External Products from Vendor 
+<select name="jumperSelect" onChange="jumper(this)">
+
+			<?php while(($vrow = $data['vendors']->fetchRow()) ) { ?>
+			<option value="index.php?act=OnlineShop.ExternalOrderList&Vendor=<?php echo $vrow['ve_id'];?>"
+			<?php if( $data['Vendor'] == $vrow['ve_id'] )
+				echo " selected"; ?>
+			><?php echo $vrow['ve_name'];?></option>
+			<?php } ?>
+
+</select>
+as of <?=date('Y-m-d'); ?>:
+</form>
+</p>
+<tmpl_if condition="$data['Q_Stock']->numRows() > 0">
+	<table width="100%" cellpadding="4" cellspacing="0">
+		<tr>
+			<td><strong>Stock Code</strong></td>
+			<td><strong>Product</strong></td>
+			<td><strong>Name</strong></td>
+			<td><strong>Box Number</strong></td>
+			<td><strong>Order ID</strong></td>
+		</tr>
+		<?php 
+			$oddEven = 1;
+		?>
+	<tmpl_loop query="Q_Stock">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap>{tmpl_row_var oi_stock_code}</td>
+			<td>{tmpl_row_var oi_name}</td>
+			<td nowrap >{tmpl_row_var or_purchaser_firstname} {tmpl_row_var or_purchaser_lastname}</td>
+			<td width="15%"><?php echo $row['oi_box_number']+1; ?></td>
+			<td width="15%">{tmpl_row_var or_tr_id}</td>
+		</tr>
+	</tmpl_loop>
+	</table>
+	<input type="button" value="Generate Swiss External Order Sheet" onclick="document.location='index.php?act=OnlineShop.AcmeGenerateExternalOrderSheet';">
+	<input type="button" value="Generate Marbella External Order Sheet" onclick="document.location='index.php?act=OnlineShop.AcmeGenerateExternalOrderSheet&Vendor=4';">
+<tmpl_else>
+	<p>There are currently no products to order.</p>
+</tmpl_if>
+<input type="button" value="Manage External Order Sheets" onclick="document.location='index.php?act=shopsystem_order_sheets.List';">

@@ -1,0 +1,77 @@
+<br><br>
+<strong>Order Number:</strong> <?echo $data['Transaction']['tr_id']; ?><br/>
+<?php flush(); ?>
+<strong>IP Address:</strong> <?echo $data['Transaction']['tr_ip_address'].'/'.$data['Hostname']; ?><br/>
+<?php flush(); ?>
+<strong>CIDR:</strong> <?echo $data['cidr']."({$data['first']}-{$data['last']})"; ?><br/>
+<?php flush(); ?>
+<strong>Browser:</strong> <?echo $data['Transaction']['tr_browser_ident']; ?><br/>
+<?php flush(); ?>
+<strong>OS Fingerprint:</strong> <?echo $data['Transaction']['tr_fingerprint']; ?><br/>
+<?php flush(); ?>
+<strong>Whois:</strong> <? 
+foreach( $data['Whois'] as $line )
+	if( strlen( $line ) and $line[0] != '#' )
+		echo $line."<br/>";
+?><br/>
+<?php flush(); $oddEven = 0; ?>
+<strong>Orders from this IP address</strong>
+<table>
+	<tmpl_loop query="Q_IPlike">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap><a target='_blank' href='/index.php?act=UsersAdministration.Edit&us_id={tmpl_row_var us_id}'>{tmpl_row_var tr_client_name}</a></td>
+			<td width="5%" nowrap><?php echo number_format( $row['tr_fraud_score'], 0); ?></td>
+			<td width="5%" nowrap><?php echo number_format( $row['us_bl_id'], 0); ?></td>
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>
+<strong>Similar Orders</strong>
+<table>
+	<tmpl_loop query="Q_BrowserLike">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap><a target='_blank' href='/index.php?act=UsersAdministration.Edit&us_id={tmpl_row_var us_id}'>{tmpl_row_var tr_client_name}</a></td>
+			<td width="5%" nowrap><?php echo number_format( $row['tr_fraud_score'], 0); ?></td>
+			<td width="5%" nowrap><?php echo number_format( $row['us_bl_id'], 0); ?></td>
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>
+<strong>Same Card Holder Orders</strong>
+<table>
+	<tmpl_loop query="Q_SameCardHolder">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap><a target='_blank' href='/index.php?act=UsersAdministration.Edit&us_id={tmpl_row_var us_id}'>{tmpl_row_var tr_client_name}</a></td>
+			<td width="5%" nowrap><?php echo number_format( $row['tr_fraud_score'], 0); ?></td>
+			<td width="5%" nowrap><?php echo number_format( $row['us_bl_id'], 0); ?></td>
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush();   ?>
+<strong>Blacklist Orders</strong>
+<table>
+	<tmpl_loop query="Q_BlackList">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap><a target='_blank' href='/index.php?act=UsersAdministration.Edit&us_id={tmpl_row_var us_id}'>{tmpl_row_var tr_client_name}</a></td>
+			<td width="5%" nowrap><?php echo number_format( $row['tr_fraud_score'], 0); ?></td>
+			<td width="5%" nowrap><?php echo number_format( $row['bl_id'], 0); ?></td>
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php ?>

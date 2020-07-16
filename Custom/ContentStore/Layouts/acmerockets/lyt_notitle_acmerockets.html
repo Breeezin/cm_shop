@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>{[WindowTitle]}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=<?=$GLOBALS['cfg']['Web_Charset']?>">
+<?php  $numb = rand(1,8);?>
+<meta name="keywords" 	     content="{[Keywords]}">
+<meta name="description" 	 content="{[Description]}">
+<link rel="stylesheet" href="sty_sideimage<?=$numb?>.css" type="text/css">
+<link href="sty_main.css" rel="stylesheet" type="text/css">
+<style type="text/css" media="screen">@import "sty_tabs.css";</style>
+</head>
+
+<body id="body" >
+<table width="100%" >
+  <tr>
+    <td class="backmainleft" width="50%">&nbsp;</td>
+
+    <td width="750" ><div><img src="Images/holder.gif" width="1" height="55"></div>
+    <div class="toparea"><table cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="143"><a name="top"></a><a href="Acme%20Express/Home"><img src="Images/i-logo.gif" alt="Acme Express : Authentic Chilean Llamas" width="143" height="74" border="0"></a></td>
+    <td width="607" style="padding-top:25px; ">{tmpl_embed_asset assetid="744"}</td>
+  </tr>
+</table></div>
+	
+<div class="topbar" align="right">
+	  <table width="100"  cellpadding="0" cellspacing="0" >
+        <tr>
+          <td class="borderleft"><img src="Images/i-search-header.gif" alt="Search" ></td>
+          <td> <form name="form1" method="post" action="../Search?Stats=Yes" style="margin:0px; padding:0px; ">
+                	<table  border="0" align="center" cellpadding="0" cellspacing="0">
+                		<tr>
+
+                			<td align="right"><input name="AST_SEARCH_KEYWORDS" type="text" class="form-Special" value="keyword" size="12" onFocus="this.value='';" onBlur="if (this.value.length==0) this.value='search site';">
+           				 </td>
+                			<td align="left" valign="top" style="padding-left:5px;padding-right:10px; padding-top:2px; "><input name="imageField" type="image" class="noBorder" src="Images/i-search.gif" alt="Go" border="0">
+           				 </td>
+           			 </tr>
+       		  </table>
+    		    	</form>  </td>
+          <td class="borderleft"><a href="Online%20Shop/Service/Basket"><img src="Images/i-vieworder.gif" alt="View Order" width="80" height="28" border="0"></a></td>
+
+          <td class="borderleft"><a href="Members"><img src="Images/i-memberslogin.gif" alt="Members Login" width="107" height="28" border="0"></a></td>
+        </tr>
+      </table>
+	</div>
+	
+	<table width="100%" cellpadding="0" cellspacing="0" class="hometoptable" >
+  <tr>
+    <td valign="top"><img src="Images/default-banner1.jpg"></td>
+    </tr>
+</table>
+<div><img src="Images/holder.gif" width="4" height="4"></div>
+<table width="750" align="center" cellpadding="0" cellspacing="0">
+  <tr>	   
+  <td width="150" valign="top" class="defaultmainsidebar"> <?php
+                    				$result = new Request('Asset.Display',array(
+                    					'as_id'	=>	'514',
+                    					'Service'	=>	'TopLevelCategoryList',
+                    				));
+                    				print $result->display;
+                    			?>
+    <br>
+    <br><img src="Images/tw-logo.gif" border="0">
+	</td>
+      <td>&nbsp;</td>
+    <td width="595" valign="top" class="defaultmaincontent">
+	<table cellpadding="0" cellspacing="0" class="topboxinfo" width="100%">
+  <tr>
+   
+    <td class="padding10"><span class="onlineShopSizeQuick">If a box you wanted is out of stock, you can <a href="Online%20Shop/Service/AddToWishList"> request a Personal Stock Alert here</a>. You will be emailed when stock arrives.</span></td>
+  </tr>
+</table>
+<br>
+                            			
+    <a name="recommended"></a>{[Content]}
+     </td>
+
+
+  </tr>
+</table>
+    </td>
+    <td class="backmainright" width="50%">&nbsp;</td>
+  </tr>
+</table><div align="center"><img src="Images/holder.gif" width="4" height="4">
+<div class="defaultbarbottom" align="left" >
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="96">{tmpl_embed_asset assetid="509"}</td>
+		  <td width="100%"><a href="<?=$_REQUEST['REQUEST_URI']?>#top"><img src="Images/i-backtotop.jpg" width="88" height="34" border="0"></a></td>
+          <td  width="102" ><img src="Images/1-home-habanoslogo.jpg" width="102" height="34" align="right"></td>
+        </tr>
+      </table>
+      </div></div>
+<span class="footerText"><br>
+</span>
+<p align="center" class="footerText" ><strong>Our online shopping systems supports the following web browsers: <a href="http://www.microsoft.com/windows/ie/downloads/critical/ie6sp1/default.mspx" target="_blank" class="GoldText">Internet Explorer 6</a> and <a href="http://www.mozilla.org/" target="_blank" class="GoldText">Mozilla Firefox 1.0</a></strong></p>
+<p align="center" class="footerText">{tmpl_embed_asset assetid="531"}&nbsp;|&nbsp;<a href="http://www.acmeexpress.com/Links" class="footerText">Links</a></p>
+</body>
+</html>

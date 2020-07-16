@@ -1,0 +1,39 @@
+<tmpl_if condition="strlen($data['Tax'])">
+	<tmpl_if condition="$data['Type'] == 'standard'">
+	<span class="onlineShop_taxNote">
+        <tmpl_if condition="ss_optionExists('Shop Tax Excluded')">
+            Price excludes {tmpl_var Tax} for shoppers from {tmpl_var TaxCountry}
+        <tmpl_else>
+            Price includes {tmpl_var Tax} for shoppers from {tmpl_var TaxCountry}
+		    (<a class="onlineShop_taxNoteLink" href="{tmpl_var AssetPath}/Service/ChangeTaxCountry?BackURL={tmpl_var_url BackURL}">change country</a>).
+        </tmpl_if>
+	</span>
+	</tmpl_if>
+	<tmpl_if condition="$data['Type'] == 'basketWithInputs'">
+		<select name="CountryThreeCode" onchange="this.form.submit();">
+		<tmpl_loop query="Q_Countries">
+			<option value="{tmpl_row_var cn_three_code}" <tmpl_if condition="$data['CurrentTaxCountry'] == $row['cn_three_code']">selected="selected"</tmpl_if>>{tmpl_row_var_raw cn_name}</option>
+		</tmpl_loop>
+	</select>~<strong>{tmpl_var Tax}{tmpl_var TaxIncluded}</strong>
+	</tmpl_if>
+	<tmpl_if condition="$data['Type'] == 'basketNoInputs'">
+		N/A~<strong>{tmpl_var Tax}{tmpl_var TaxIncluded}</strong>
+	</tmpl_if>
+<tmpl_else>
+	<tmpl_if condition="$data['Type'] == 'standard'">
+	<span class="onlineShop_taxNote">
+		No tax is charged for shoppers from {tmpl_var TaxCountry} 
+		(<a class="onlineShop_taxNoteLink" href="{tmpl_var AssetPath}/Service/ChangeTaxCountry?BackURL={tmpl_var_url BackURL}">change country</a>).
+	</span>
+	</tmpl_if>
+	<tmpl_if condition="$data['Type'] == 'basketWithInputs'">
+		<select name="CountryThreeCode" onchange="this.form.submit();">
+		<tmpl_loop query="Q_Countries">
+			<option value="{tmpl_row_var cn_three_code}" <tmpl_if condition="$data['CurrentTaxCountry'] == $row['cn_three_code']">selected="selected"</tmpl_if>>{tmpl_row_var_raw cn_name}</option>
+		</tmpl_loop>
+	</select>~N/A
+	</tmpl_if>
+	<tmpl_if condition="$data['Type'] == 'basketNoInputs'">
+		N/A~N/A
+	</tmpl_if>
+</tmpl_if>

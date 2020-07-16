@@ -1,0 +1,82 @@
+<tmpl_if condition="array_key_exists('Done',$data)">
+<p class="textQuotes">
+	The product has been added to your wish list.
+</p>
+<p>
+	<tmpl_if condition="strlen($data['LastSearch'])">
+		<a href="{tmpl_var LastSearch}"><img border="0" src="Images/but-continue_shopping.gif" /></a>
+	</tmpl_if>
+</p>
+<tmpl_else>
+			<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable">
+				<tr>
+					<td colspan="3">
+						{tmpl_var_raw Error}
+						<p class="textQuotes">This system works only if you are a confirmed client. If you are a client but have not bought through our new upgraded site, the system will not recognize your e-mail. We could not technically solve this.</p>
+						<p class="textQuotes">Select a product to add, enter your email address and then click the add to wish list button.</p>
+					</td>
+				</tr>
+				<tr><td>
+				
+				
+			<table cellspacing="0" cellpadding="0" width="450" align="center" border="0"><tbody><tr><td class="boxleftfill" valign="top" align="left" width="9" height="9"><img alt="EMB: 584" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=584" border="0" /></td><td class="boxtopfill" height="7"><img alt="EMB: 524" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=524" border="0" /></td><td valign="top" width="7"><img alt="EMB: 583" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=583" border="0" /></td></tr><tr><td class="boxleftfill"> </td><td valign="middle" align="center"><table cellspacing="0" cellpadding="15" width="100%" border="0"><tbody><tr><td valign="middle" align="center" bgcolor="#efece4">
+				
+				
+				
+				<table width="100%" cellspacing="0" cellpadding="5">
+				<form name="adder" action="{tmpl_var AssetPath}/Service/AddToWishList" method="post">
+					<input type="hidden" name="DoAction" value="Yes">
+				<tr>
+					<td width="100"><span class="textQuotes"><strong>Category:</strong></span></td>
+					<td>
+						 <select name="pr_ca_id" class="onlineShop_productBand_categorySelect" onchange="frames['loader'].location.href = '{tmpl_var_js AssetPath}/Service/CategoryProductsJS/OutOfStockOnly/1/ca_id/'+this.options[selectedIndex].value;">
+							<option selected value="">Please Select</option>								
+							<tmpl_loop query="Q_Categories">
+								<option value="{tmpl_row_var ca_id}">{tmpl_row_var ca_name}</option>
+							</tmpl_loop>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="textQuotes"><strong>Product:</strong></span></td>
+					<td>
+						 <select name="Key">
+							<option value="">Select Category First</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="textQuotes"><strong>Email Address:</strong></span></td>
+					<td valign="middle">
+						<table cellpadding="0" cellspacing="0">
+						<tr>
+						<td valign="middle">
+						<input type="text" maxlength="255" name="Email" size="30">&nbsp;
+						</td>
+						<td valign="middle">
+						 <input type="image" name="Add" src="Images/but-wishlist.gif" onclick="if (this.form.Key.selectedIndex == 0) {alert('Please select a product'); return false; }; if (this.form.Email.value.length == 0) {alert('Please enter your email address'); return false; }; return true;" style="border:0px;">
+						 </td>
+						 </tr>
+						 </table>
+					</td>
+				</tr>
+					<script language="Javascript">
+						function updateProducts(p) {
+							keys = document.forms.adder.Key;
+							for(var j= keys.options.length-1; j >= 0; j--) keys.options[j] = null;
+							keys[0] = new Option('Please Select','');
+							for(var i=0;i<p.length;i++) keys[i+1] = new Option(p[i].n,p[i].k);
+						}
+					</script>
+					<iframe src="" id="loader" name="loader" style="display:none;"></iframe>
+				</form>
+
+				
+				</table>
+			</td></tr></tbody></table></td><td class="boxrightfill"> </td></tr><tr><td class="boxleftfill" valign="bottom" align="left"><img alt="EMB: 582" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=582" border="0" /></td><td class="boxbott" height="7"><img alt="EMB: 524" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=524" border="0" /></td><td valign="bottom" align="right"><img alt="EMB: 581" src="http://www.acmeexpress.com/index.php?act=Asset.Display&as_id=581" border="0" /></td></tr></tbody></table>								
+				
+		</td>
+	</tr>
+	
+</table>
+</tmpl_if>

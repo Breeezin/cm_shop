@@ -1,0 +1,284 @@
+<HTML>
+<HEAD>
+	<STYLE>
+		P,BODY,TABLE { font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+		TH { border: 1px solid; vertical-align: top; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+		TD { vertical-align: top; font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+	</STYLE>
+</HEAD>
+	
+<BODY>
+	<H1><U>How to Create a Layout</U></H1>
+
+	<A NAME="addinglayout">
+	<H2><U>Adding a new layout</U></H2>
+	<P>When a layout is first created, it should be named lyt_layoutname.cfm and the stylesheet for it should be named sty_stylesheetname.cfm.</P>
+	<P>The layout then needs to be included in the layouts.txt file so that it can be selected from the content manager. To do this just enter a new line in the file like so:
+<PRE>
+	layoutname:stylesheetname:displayname
+</PRE>
+	Displayname is what the layout will appear as in the content manager selector.
+	</P>
+	<P>Using the default layout as an example, the layout file is called lyt_default.cfm, the style sheet file is called sty_main.cfm and the layout is displayed as "Default Layout" in the content manager, so the line in Layouts.txt would be:
+<PRE>
+	default:main:Default Layout
+</PRE>	
+	</P>
+	
+	<A NAME="insertingelements">
+	<H2><U>Inserting layout elements</U></H2>
+	<P>
+		The various elements of the layout can be inserted simply by typing <CODE>[ElementName]</CODE> into the layout file at the position you wish it to appear. The following layout elements are defined:
+	</P>
+	<TABLE WIDTH="100%">
+		<TR><TH WIDTH="20%">Name</TH><TH WIDTH="60%">Description</TH></TR>
+		<TR>
+			<TD>Content</TD>
+			<TD>The full content for this page.</TD>
+		</TR>
+		<TR>
+			<TD>Description</TD>
+			<TD>The description for this page, either the website default or the description specified for this page. This should be inserted in the "description" meta information.</TD>
+		</TR>
+		<TR>
+			<TD>Menu</TD>		
+			<TD>See the section below for information on inserting a menu element.</TD>
+		</TR>
+		<TR>
+			<TD>Keywords</TD>
+			<TD>The keywords for this page, either the website default or the keywords specified for this page. This should be inserted in the "keywords" meta information.</TD>
+		</TR>
+		<TR>
+			<TD>SiteName</TD>
+			<TD>The name of the site. e.g. "Carnivores"</TD>
+		</TR>
+		<TR>
+			<TD>Title</TD>
+			<TD>The text name of the currently viewed page. e.g. "Contact Us"</TD>
+		</TR>
+		<TR>
+			<TD>TitleImage</TD>
+			<TD>The title image of the currently viewed page, or the text name of the page if no title image exists.</TD>
+		</TR>
+	</TABLE>
+	
+	<A NAME="menus">
+	<H2><U>Menus</U></H2>
+	<H3>Defining a menu</H3>
+	<P>
+	A menu may be defined by enclosing it's attributes in [MENU]...[/MENU] or alternatively by inserting the menu definition in an image tag's ALT field. For example:
+	<UL>
+		<LI>&lt;IMG SRC="foo" ALT="MENU:Attribute:Value:Attribute:Value"&gt;</LI>
+		<LI>[MENU]Attribute:Value:Attribute:Value[/MENU]</LI>
+	</UL>	
+	</P>
+		
+	<H3>Attributes</H3>
+	
+	<P>
+	There are two types of menus; <I>Standard</I> and <I>Footer</I>. <I>Standard</I> is a vertical or horizontal menu which may use images, mouseovers and drop down menus. <I>Footer</I> is a text-based horizontal menu with separators that can be defined to separate the menu items.
+	</P>
+	
+	<H4>Shared Attributes</H4>
+	
+	<P>
+	The following attributes can be applied to both types of menus.
+	</P>
+	
+	<TABLE WIDTH="100%">
+		<TR><TH WIDTH="20%">Name</TH><TH WIDTH="20%">Default</TH><TH WIDTH="60%">Description</TH></TR>
+		<TR>
+			<TD>Type</TD>
+			<TD></TD>
+			<TD>Type of menu. <I>Standard</I> or <I>Footer</I>.</TD>
+		</TR>
+		<TR>
+			<TD>Root</TD>
+			<TD>/index.cfm</TD>
+			<TD>The menu will display the sub-assets of this asset.</TD>
+		</TR>
+		<TR>
+			<TD>LinkClass</TD>
+			<TD>See description</TD>
+			<TD>The class to apply to text-links in the menu. The default value for <I>Footer</I> menus is "FooterLink". The default value for <I>Standard</I> menus is "MenuLink".</TD>
+		</TR>
+		<TR>
+			<TD>LowerCase</TD>
+			<TD>No</TD>
+			<TD>If set to <I>Yes</I>, menu items will appear in lowercase.</TD>
+		</TR>
+		<TR>
+			<TD>UpperCase</TD>
+			<TD>No</TD>
+			<TD>If set to <I>Yes</I>, menu items will appear in uppercase.</TD>
+		</TR>
+	</TABLE>
+	
+	<H4><I>Standard</I> Menu Attributes</H4>
+	
+	<P>
+	The following attributes can only be applied to menus with type set to <I>Standard</I>.
+	</P>
+	
+	<TABLE WIDTH="100%">
+		<TR><TH WIDTH="20%">Name</TH><TH WIDTH="20%">Default</TH><TH WIDTH="60%">Description</TH></TR>
+		<TR>
+			<TD>Orientation</TD>
+			<TD>Vertical</TD>
+			<TD>The orientation of the menu, either <I>Vertical</I> or <I>Horizontal</I>.</TD>
+		</TR>
+		<TR>
+			<TD>Separator</TD>
+			<TD></TD>
+			<TD>Any HTML code to insert between menu items. Will be automatically enclosed in appropriate table cell tags.</TD>
+		</TR>
+		<TR>
+			<TD>TableClass</TD>
+			<TD>MenuTable</TD>
+			<TD>The name of the class to apply to the &lt;TABLE&gt;...&lt;/TABLE&gt; surrounding the menu.</TD>
+		</TR>
+		<TR>
+			<TD>FirstCellClass</TD>
+			<TD>MenuFirstCell</TD>
+			<TD>The name of the class to apply to the &lt;TD&gt;...&lt;/TD&gt; surrounding the first item in the menu.</TD>
+		</TR>
+		<TR>
+			<TD>OtherCellClass</TD>
+			<TD>MenuOtherCell</TD>
+			<TD>The name of the class to apply to the &lt;TD&gt;...&lt;/TD&gt; surrounding the all items except the first item in the menu.</TD>
+		</TR>
+		<TR>
+			<TD>SeparatorOtherClass</TD>
+			<TD>MenuSeparatorCell</TD>
+			<TD>The name of the class to apply to the &lt;TD&gt;...&lt;/TD&gt; surrounding the menu separator cells.</TD>
+		</TR>
+		<TR>
+			<TD>CellPadding</TD>
+			<TD>0</TD>
+			<TD>CellPadding value for the menu TABLE. (Mozilla seems to ignore cell padding if it is set in a stylesheet).</TD>
+		</TR>
+		<TR>
+			<TD>CellSpacing</TD>
+			<TD>0</TD>
+			<TD>CellSpacing value for the menu TABLE. (Mozilla seems to ignore cell spacing if it is set in a stylesheet).</TD>
+		</TR>
+		<TR>
+			<TD>DDWidth</TD>
+			<TD>120</TD>
+			<TD>The width of the drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDRowHeight</TD>
+			<TD>10</TD>
+			<TD>The height of each row in the drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDOffsetX</TD>
+			<TD>100 (Vertical menu)<BR>0 (Horizontal menu)</TD>
+			<TD>How far to position the drop down menus from the upper left corner of the parent menu item.</TD>
+		</TR>
+		<TR>
+			<TD>DDOffsetY</TD>
+			<TD>0 (Vertical menu)<BR>20 (Horizontal menu)</TD>
+			<TD>How far to position the drop down menus from the upper left corner of the parent menu item.</TD>
+		</TR>
+		<TR>
+			<TD>DDFontColor</TD>
+			<TD>#000000</TD>
+			<TD>The font color for items in drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDFontHighlightColor</TD>
+			<TD>#000000</TD>
+			<TD>The font color for items in drop down menus when they are highlighted.</TD>
+		</TR>
+		<TR>
+			<TD>DDFontSize</TD>
+			<TD>9</TD>
+			<TD>The size of the font in pixels for items in drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDFontFamily</TD>
+			<TD>Arial, Helvetica,<BR>sans-serif</TD>
+			<TD>The font family for items in drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDBgColor</TD>
+			<TD>#FFFFFF</TD>
+			<TD>The background color for items in drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDBgHighlightColor</TD>
+			<TD>#EFEFEF</TD>
+			<TD>The background color for highlighted items in drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDBorderColor</TD>
+			<TD>#000000</TD>
+			<TD>The color of the border of the drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDLightBorderColor</TD>
+			<TD>#FFFFFF</TD>
+			<TD>The color of the inner upper-left border of the drop down menus.</TD>
+		</TR>
+		<TR>
+			<TD>DDArrow</TD>
+			<TD>#RelativeHere#<BR>Images/arrows.gif</TD>
+			<TD>Relative path to an arrow image to indicate a drop down menu has a child drop down menu.</TD>
+		</TR>
+		<TR>
+			<TD>DDBulletPoint</TD>
+			<TD></TD>
+			<TD>Insert this text before any items in the drop down menus</TD>
+		</TR>
+	</TABLE>
+
+	<H4><I>Footer</I> Menu Attributes</H4>
+	
+	<P>
+	The following attributes can only be applied to menus with type set to <I>Footer</I>.
+	</P>
+	
+	<TABLE WIDTH="100%">
+		<TR><TH WIDTH="20%">Name</TH><TH WIDTH="20%">Default</TH><TH WIDTH="60%">Description</TH></TR>
+		<TR>
+			<TD>Separator</TD>
+			<TD>|</TD>
+			<TD>The text to insert between menu items. May include HTML code. </TD>
+		</TR>
+		<TR>
+			<TD>LinksPerRow</TD>
+			<TD>1024</TD>
+			<TD>Maxmium number of items per row. Inserts a &lt;BR&gt; tag instead of a separator after the last item in each row.</TD>
+		</TR>
+		<TR>
+			<TD>ShowAllAssets</TD>
+			<TD>No</TD>
+			<TD>If set to <I>Yes</I>, the footer menu will display all assets even if they are not set to <I>appears in menus</I>.</TD>
+		</TR>
+	</TABLE>
+
+	<A NAME="example">
+	<H2><U>An Example Layout</U></H2>
+	
+<PRE>
+&lt;HTML&gt;
+&lt;HEAD&gt;
+  &lt;TITLE&gt;[SiteName] - [Title]&lt;/TITLE&gt;
+  &lt;META NAME="keywords"    CONTENT="[Keywords]"&gt;
+  &lt;META NAME="description" CONTENT="[Description]"&gt;
+  &lt;LINK REL="STYLESHEET" TYPE="text/css" HREF="sty_main.css" MEDIA="screen"&gt;
+&lt;/HEAD&gt;
+&lt;BODY&gt;
+  &lt;P&gt;&lt;IMG SRC="foo" ALT="MENU:Type:Standard:Orientation:Horizontal:UpperCase:Yes"&gt;&lt;/P&gt;
+  &lt;P&gt;&lt;H3&gt;[TitleImage]&lt;/H3&gt;
+    [Content]
+  &lt;/P&gt;
+  &lt;P ALIGN="CENTER"&gt;[MENU]Type:Footer:Uppercase:Yes[/MENU]&lt;/P&gt;
+&lt;/BODY&gt;
+&lt;/HTML&gt;
+</PRE>
+		
+</BODY>
+</HTML>

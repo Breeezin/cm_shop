@@ -1,0 +1,17 @@
+{tmpl_eval expression="$columns = 3; $catTotal = $data['Q_Categories']->numRows(); $printed = 0; $catsPerCol = ceil($catTotal/$columns)"}
+<table>
+    <tr>
+        <td valign="top" nowrap >
+        <tmpl_loop query="Q_Categories">
+            {tmpl_if condition="$printed==$catsPerCol"}
+                </td>
+                <td valign="top" nowrap style="padding-left:5px; ">
+				test
+                {tmpl_eval expression="$printed=0"}
+            {/tmpl_if}
+            {tmpl_eval expression="$printed++"}
+            <a class="textsideLinks" href="{tmpl_var AssetPath}/Service/Engine/pr_ca_id/{tmpl_row_var ca_id}">{tmpl_row_var ca_name}<tmpl_if condition="$row['ca_id'] != 39 and $row['ca_id'] != 33"></tmpl_if></a><br />
+        </tmpl_loop>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,26 @@
+<?php $row = $data['row']; ?>
+<table class=forumMainBorder cellspacing=0 cellpadding=5
+                  width="100%" border=0>
+    <tbody>
+	    <tr>
+    		<td><a class=forumTitle href="{tmpl_var AssetPath}?Service=ViewThread&thr_id={tmpl_row_var thr_id}">{tmpl_row_var thr_subject}</a>
+            by {tmpl_row_var FirstFirstName} {tmpl_row_var FirstLastName}, {tmpl_row_var Replies} Replies, {tmpl_row_var thr_views} Views</td>
+        </tr>
+        <tr>
+            <td>
+            <?php
+                // this trims the first message post to 300 chars
+                if (strlen($row['FirstMessageContent'])>300)
+                    $row['FirstMessageContent'] = substr($row['FirstMessageContent'],0,296) . ' ...';
+            ?>
+            {tmpl_row_var FirstMessageContent}
+            </td>
+        </tr>
+<tmpl_if condition="$row['Replies']>0">
+        <tr>            
+    		<td><p align=right>Last posting for this thread was on {tmpl_row_var_date format="d.m.Y" name="LastDateTime"} <span class=forumTime>{tmpl_row_var_date format="g:ia" name="LastDateTime"} 
+    		</span>by {tmpl_row_var LastFirstName} {tmpl_row_var LastLastName} <a href="{tmpl_var AssetPath}?Service=ViewThread&thr_id={tmpl_row_var thr_id}&CurrentPage={tmpl_row_var LastMessagePage}#Message{tmpl_row_var LastMessageID}">View</a></p></td>
+		</tr>
+</tmpl_end>
+	 </tbody>
+</table>

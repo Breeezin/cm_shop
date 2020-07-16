@@ -1,0 +1,809 @@
+<?
+	if( $data['PaymentOptions'] == NULL )
+	{
+		echo "<strong>{$data['NoChargeBlurb']}</strong>";
+		return;
+	}
+
+	ss_paramKey($data,'ConfirmOrder',false);
+?>
+
+<!--basket-->
+<div class="basket-wrap">
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable basket">
+		<tr>
+			<td colspan="5"><span class="textSubHeaders">Cart</span></td>
+		</tr>
+		<tr>
+			<td colspan="5">Your order is shown below, to change a quantity of
+				a product, enter the number and then press enter. To remove a product
+				enter 0 as the quantity.<br /><br /></td>
+	 </tr>
+		<tr>
+			<td class="onlineShop_BasketHeaderRow">Product</td>
+			<td class="onlineShop_BasketHeaderRow">Qty</td>
+			<td class="onlineShop_BasketHeaderRow">Services</td>
+			<td class="onlineShop_BasketHeaderRow">Price</td>
+			<td class="onlineShop_BasketHeaderRow">Sub Total</td>
+	 </tr>
+	 <script language="Javascript">
+		var qtyChanged = 0;
+	 </script>
+<? 
+	$data['TotalPrice'] = 0;
+	$data['Basket']['TotalServices'] = 0;
+	$flipFlop = 0;
+	foreach($data['Basket']['Products'] as $item)
+	{ 
+		$data['Name'] = $item['Product']['pr_name'];
+		$data['Options'] = $item['Product']['Options'];
+		$data['Qty'] = $item['Qty'];
+		$data['Key'] = $item['Key'];
+		$data['StockCode'] = $item['Product']['pro_stock_code'];
+		$data['UnitPrice'] = $item['Product']['Price'];
+		$flipFlop = 1-$flipFlop;
+		$data['Class'] = '';
+		if ($flipFlop == 1)
+			$data['Class'] = 'onlineShopBasketOddRow';	
+
+	?>
+		 
+		<tr align="left" valign="middle">
+			<td class="{tmpl_var Class}">
+				<strong>{tmpl_var Name}<tmpl_if condition="strlen($data['Options'])"> ({tmpl_var Options})</tmpl_if></strong><br />{tmpl_var StockCode}
+			</td>
+<?php
+		if( $item['Product']['pr_is_service'] == 'false' )
+		{
+?>
+				<form action="{tmpl_var AssetPath}/Service/UpdateBasket/Key/{tmpl_var_url Key}/Mode/Set">
+					<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+					<td class="{tmpl_var Class}"><input name="Qty" value="{tmpl_var Qty}" size="3" onChange="this.form.submit();" class="onlineShop_basketQuantityField"></td>
+				</form>
+				<td class="{tmpl_var Class}">
+<?php
+				// available services for this product
+				$selectedServices = query( 'select * from product_service_options join shopsystem_products on sv_pr_id_service = pr_id join shopsystem_product_extended_options on pro_pr_id = pr_id where sv_pr_id = '.$item['Product']['pr_id'].' and pr_offline IS NULL' );
+
+				while( $service = $selectedServices->fetchRow() )
+				{
+					?>
+					<form action="{tmpl_var AssetPath}/Service/UpdateBasket/AddService/<?=$service['sv_id']?>/Mode/Set">
+					<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+					<input type='hidden' name="Qty" value="{tmpl_var Qty}" />
+					<?php
+//					echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+					if( array_key_exists('AddService', $item) && is_array($item['AddService']) && in_array( $service['sv_id'], $item['AddService'] ) )
+					{
+						if( stristr( $service['pr_name'], "padding" ) )
+							echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="alert( \'In removing this you assume responsibility for any damage.\' ); this.form.submit();"';
+						else
+							echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+						echo ' checked>';
+					}
+					else
+					{
+						echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+						echo '>';
+					}
+
+					echo $service['pr_name'];
+					echo '<br /></form>';
+				}
+		}
+		else
+		{
+//				$data['Basket']['TotalServices'] += $item['Qty']*$item['Product']['Price'];
+		?>
+			<td class="{tmpl_var Class}">{tmpl_var Qty}</td>
+			<td class="{tmpl_var Class}"></td>
+		<?php
+		}
+
+?>
+
+			
+			
+			</td>
+			<td class="{tmpl_var Class}"><tmpl_if condition="$data['UnitPrice'] == 0">FREE<tmpl_else>{tmpl_eval print($data['This']->formatPrice('display',$data['UnitPrice']))}</tmpl_if></td>
+			<td class="{tmpl_var Class}"><tmpl_if condition="$data['UnitPrice'] == 0">FREE<tmpl_else>{tmpl_eval print($data['This']->formatPrice('display',$data['Qty']*$data['UnitPrice']))}</tmpl_if></td>
+	 </tr>
+<? 		
+	} ?>
+	 
+	<? $data['Tax'] = $data['Basket']['Tax']['Code']; ?>
+	<tmpl_if condition="strlen($data['Tax'])">
+	<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketSubTotal"><?php print(ListLast($data['TaxCountryNoteHTML'],'~')); ?></td>
+		<td class="onlineShopBasketSubTotal">
+			{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Tax']['Amount']))}			
+		</td>
+	</tmpl_if>
+	 </tr>
+	 <tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="onlineShopBasketSubTotal">Sub-total: </td>
+		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['SubTotal']))}</td>
+	</tr>
+	<?php /*
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="onlineShopBasketSubTotal">Services: </td>
+		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['TotalServices']))}</td>
+	</tr>
+	*/ ?>
+	<tmpl_if condition="$data['Basket']['Freight']['Amount'] != 0">
+	 <tr>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td colspan="3">&nbsp;</td>
+		</tmpl_if>
+		<td class="onlineShopBasketSubTotal">Tracking:</td>
+		<td class="onlineShopBasketSubTotal">
+			{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Freight']['Amount']))}			
+		</td>
+	 </tr>
+	</tmpl_if>
+ </tr>
+	 <? 
+		if (array_key_exists('Discounts',$data['Basket'])) { 
+			foreach($data['Basket']['Discounts'] as $data['DiscountName'] => $data['DiscountAmount']) {
+	 ?>
+		<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketSubTotal">{tmpl_var DiscountName}: </td>
+			<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['DiscountAmount']))}</td>
+	 </tr>
+	 <? 
+			}
+		}
+	 ?>
+		<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketTotal">Total: </td>
+			<td class="onlineShopBasketTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Total']))}</td>
+	 </tr>
+	 </table>
+	 
+	 <!--end of basket-->
+
+
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Options" >
+	<tmpl_if condition="ss_OptionExists('Shop Discount Codes') and ($data['ActiveDiscounts']>0)">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><table border="0" cellspacing="0" cellpadding="5">
+        	<tr>
+        		<td colspan="2"><span class="Calculateshiping">Discount Code</span></td>
+   		 </tr>
+        	<tr>
+        		<td colspan="2">If you have a discount code, please enter it below.  The products in
+        			your cart will be updated based on the discount code entered.</td>
+   		 </tr>
+			<form action="{tmpl_var AssetPath}/Service/ChangeDiscountCode/DoAction/Yes" method="post">
+        	<tr>
+        		<td width="150"><strong>Discount Code</strong></td>
+				<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+	       		 <td>
+	       		 	<input type="text" name="DiscountCode" value="{tmpl_var DiscountCode}">
+					<input type="image" src="Images/but-update.gif" style="border:0px;">	       		 	
+      			</td>
+       	 </tr>
+       	</form>
+       	</table></td>
+	</tr>
+	</tmpl_if>
+	</table>
+
+	 <!--Shipping options-->
+   		 
+	<tmpl_if condition="($data['TrackingOptions'] == 'Optional')">
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Options" >
+	
+	<tr>
+		<td valign="top">							
+			<table class="onlineShop_checkoutSectionTable" cellspacing="0" cellpadding="8" width="100%">
+			<tr>
+				<td><span class="textSubHeaders">Shipping Options</span></td>
+			</tr>
+		 </table>
+		</td>
+	</tr>
+	</table>
+	</tmpl_if>
+	 <!--END Shipping options-->
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Options" >
+	<tr>
+		<td>
+		{tmpl_if count($data['Errors'])}
+		<table class="onlineShop_checkoutSectionTable" cellspacing="0" cellpadding="8" width="100%">
+		<tr>
+			<td>		
+			<p>
+			{tmpl_errors Errors}
+			</p>
+			</td>
+		 </tr>
+		 </table>
+				{tmpl_end}	
+	</td>
+	</tr>
+	</table>
+<!--END Returning Customers-->
+<!-- Customer Details -->
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable BillingCustomer_Detailsheader" >
+			
+	<tr>
+<?php
+	// count up their shipped orders older than say... 21 *7/5 days.
+	$usID = ss_getUserID();
+	$showShipping = false;
+	//$QC = query( "select count(*) as previous from shopsystem_orders where or_shipped < NOW() - interval 30 day and or_us_id = $usID" );
+	$QC = query( "select count(*) as previous from shopsystem_orders where or_shipped IS NOT NULL and or_us_id = $usID" );
+	if( $r = $QC->fetchRow() )
+	{
+		if( $r['previous'] > 0 )
+			$showShipping = true;
+	}
+
+if( $showShipping )
+	{
+?>
+		<td><span class="textSubHeaders">Billing Details</span></td>
+		</tr><tr><td>For CREDIT CARD Orders: This MUST be the name and address of the credit card holder, as registered at your bank. Not entering the correct details will result in processing delays and perhaps cancellation.</td>
+
+
+<?php
+	} else {
+?>
+		<td><span class="textSubHeaders">Billing and Shipping Details</span></td>
+		</tr><tr><td>For CREDIT CARD Orders: First orders we will ONLY be shipped to the billing address that your bank holds on record. Please ensure that you enter the name, address, email and telephone number of the card holder.  Failure to do so will result in processing delays and perhaps cancellation.</td>
+<?php
+	}
+?>
+	</tr>
+	
+	</table>
+	
+<form name="CheckoutForm" action="{tmpl_var AssetPath}/Service/{tmpl_var Service}/Do_Service/Yes" method="POST">
+	<input type="hidden" name="tr_id" value="{tmpl_var tr_id}">
+	<input type="hidden" name="tr_token" value="{tmpl_var tr_token}">
+	
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable purchaserdetails" >
+	
+
+		<tr>
+			<td valign="top">
+				<table width="500px" border="0" cellpadding="5" cellspacing="0">
+								<tr>
+								<td>
+                                 {tmpl_var_raw PurchaserDetails}          
+<p>You will need to enter a password above to protect your account information and communicate with our support team. You can use this password above to retrieve your details when you return to shop with us again. If you have forgotten your password we can <a href="index.php?act=Security.ForgotPassword&BackURL=<?php echo $_SERVER['REQUEST_URI'];?>">email you your password</a></p>
+                                 </td>
+                                 </tr>
+								</table>
+               					
+						
+						<?php /* if (ss_optionExists("Shop Customer Join Newsletter")) { ?>
+							<TR><TD><input type="checkbox" {tmpl_var JoinNewsletter} value="checked" name="JoinNewsletter">Yes, I would like to subscribe to the newsletter.</TD></TR>
+						<?php } */ ?>
+		
+			</td>
+		</tr>
+<script language="Javascript">
+	
+	function sameAsPurchaser()
+	{	
+		var theForm = document.forms.CheckoutForm;
+		var dontReload = (theForm.Us0_50A4_Parent.options[theForm.Us0_50A4_Parent.selectedIndex].value == theForm.ShDe0_50A4_Parent.options[theForm.ShDe0_50A4_Parent.selectedIndex].value);
+		<?php 
+			foreach ($data['ShippingFields'] as $aField) {
+/*								print ("//".get_class($aField)." class name\n");	*/
+				$usFieldName = str_replace('ShDe','Us',$aField->name);
+				
+				if (strtolower( get_class($aField) ) == 'checkboxfield') {
+					print("
+						for (var i = 0; i < theForm.$usFieldName.length; i++) {
+							if (theForm.$usFieldName[i].checked) {
+								theForm.{$aField->name}[i].checked;
+							}
+						}"
+					);
+				} else if (strtolower( get_class($aField) ) == 'countryfield' or get_class($aField) == 'selectfromarrayfield' ) {
+					print "var temp1 = theForm.{$usFieldName}.options[theForm.$usFieldName.selectedIndex].value;";																		
+					print("										
+						for (var i = 0; i < theForm.{$aField->name}.options.length; i++) {\n
+							if (theForm.{$aField->name}.options[i].value == temp1) {\n												
+								theForm.{$aField->name}.options[i].selected = true;\n																								 
+								break;
+							}										
+						}
+					");	
+				} else if (strtolower(get_class($aField)) == 'parentchildrenfield') {
+/*									print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");	*/
+					print "var done = false;";
+					print("
+						var selectedValue = theForm.{$usFieldName}_Parent.options[theForm.{$usFieldName}_Parent.selectedIndex].value;										
+						for (var i = 0; i < theForm.{$aField->name}_Parent.options.length; i++) {\n
+							if (theForm.{$aField->name}_Parent.options[i].value == selectedValue) {\n
+								theForm.{$aField->name}_Parent.options[i].selected = true;\n
+								done = true;
+								break;
+							}
+						}
+						{$aField->name}_updateChild();{$aField->name}_checkParent(true);\n
+						if (theForm.{$usFieldName}_ChildSelect.options.length) {
+							var selectedParentValue = theForm.{$usFieldName}_ChildSelect.options[theForm.{$usFieldName}_ChildSelect.selectedIndex].value;\n
+							
+							for (var i = 0; i < theForm.{$aField->name}_ChildSelect.options.length; i++) {\n
+								if (theForm.{$aField->name}_ChildSelect.options[i].value == selectedParentValue) {\n												
+									theForm.{$aField->name}_ChildSelect.options[i].selected = true;\n																								 
+									break;
+								}
+							}
+						}										
+						if( !done ) alert ('Unable to set shipping properly' );
+					");										
+					print("theForm.{$aField->name}_ChildText.value = theForm.{$usFieldName}_ChildText.value;\n");																		
+					print("{$aField->name}_update();\n");
+					print("{$usFieldName}_update();\n");																		
+
+
+					
+				} else if (strtolower( get_class($aField) ) == 'multiselectfromarrayfield') {
+					print("
+						for (var i = 0; i < theForm.$usFieldName.options.length; i++) {
+							if (theForm.$usFieldName.options[i].selected) {
+								theForm.{$aField->name}.options[i].selected = true;
+							}
+						}
+					");	
+				} else if (strtolower( get_class($aField) ) == 'namefield') {
+					print("
+						
+						theForm['{$aField->name}[first_name]'].value = theForm['{$usFieldName}[first_name]'].value;
+						theForm['{$aField->name}[last_name]'].value = theForm['{$usFieldName}[last_name]'].value;
+					");					
+				} else {									
+					print("theForm.{$aField->name}.value = theForm.$usFieldName.value;");
+				}
+			}
+		?>				
+
+	if( !dontReload )
+		{
+		document.forms.CheckoutForm.action='Shop_System/Service/Checkout/Do_Service/Reload';
+		document.forms.CheckoutForm.submit();
+		}
+	}
+
+	function chooseState( state )
+	{
+		var theForm = document.forms.CheckoutForm;
+
+		for (var i = 0; i < theForm.ShDe0_50A4_ChildSelect.options.length; i++) {
+	//		alert( "compare "+theForm.ShDe0_50A4_ChildSelect.options[i].value+" == "+state );
+			if (theForm.ShDe0_50A4_ChildSelect.options[i].value == state) {
+				theForm.ShDe0_50A4_ChildSelect.options[i].selected = true;
+				break;
+			}
+		}
+	}
+
+	function sameAsSavedAddress( id )
+	{
+		var theForm = document.forms.CheckoutForm;
+		<tmpl_loop query="OtherShippingDetails">
+		<?php
+			$addr = unserialize( $row['ua_shipping_details'] );
+			echo "if ( {$row['ua_id']} == id ) { \n";
+			foreach( $addr as $name=>$val )
+			{
+				ss_log_message( "$name => $val" );
+				$vale = str_replace( "'", "\\'", $val );
+				switch( $name ) {
+				case 'first_name':
+					echo "theForm['ShDeName[first_name]'].value = '$vale';\n";
+					break;
+				case 'last_name':
+					echo "theForm['ShDeName[last_name]'].value = '$vale';\n";
+					break;
+				case '0_50A4':
+					$state_country = $vale;
+					$pos = strpos( $state_country, "<BR>" );
+					if( $pos )
+					{
+						$state = substr( $state_country, 0, $pos );
+						$country = substr( $state_country, $pos + 4 );
+					}
+					else
+					{
+						$state = $state_country;
+						$country = $state_country;
+					}
+
+					if( $state_id = getField( "select sts_id from country_states, countries where StCountryLink = cn_id and cn_name = '$country' and StCode = '$state'" ) )
+						echo "chooseState( '$state_id' );ShDe0_50A4_update();\n";
+					else
+						echo "theForm['ShDe0_50A4_ChildText'].value = '$state';ShDe0_50A4_update();";
+					break;
+				case 'Email':
+					$stripped = preg_replace( '/<.*>/U', '', $val );
+					echo "theForm['ShDe$name'].value = '$stripped';\n";
+					break;
+				case 'Name':
+					break;
+				default :
+					echo "theForm['ShDe$name'].value = '$vale';\n";
+				}
+			}
+			echo "}\n";
+		?>
+		</tmpl_loop>	
+	}
+</script>
+</table>
+<!--END Customer Details-->
+<?php
+
+	if( $showShipping )
+	{
+?>
+	<div id='catSavedShippingDetails' style='display:none;'>
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Details" >
+		<tr>
+			<td>
+			<span class="textSubHeaders">Saved Shipping Details</span><A style="display:" href="Javascript:togglecat('SavedShippingDetails');togglecat('NewShippingDetails');void(0);" class="morelink"> Enter new shipping details</A>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tmpl_if condition="$data['OtherShippingDetails']->numRows()">
+			<tmpl_loop query="OtherShippingDetails">
+				<tr>
+					<td>
+					<div style='border: 1px solid rgb(213, 213, 213) ; border-radius: 10px; padding: 10px;'>
+					<input type="radio" name="OldShippingDetails" value="{tmpl_row_var ua_id}" onClick="sameAsSavedAddress({tmpl_row_var ua_id});">
+					<?php 
+					$addr = unserialize( $row['ua_shipping_details'] );
+					echo "<strong>{$addr['Name']}</strong><br />{$addr['0_50A1']} {$addr['0_50A2']} {$addr['0_50A4']} {$addr['0_B4C0']}<br /><strong>Ph:</strong>{$addr['0_B4C1']}";
+					?>
+					</div>
+					</td>
+				</tr>
+			</tmpl_loop>			
+		<tmpl_else>
+			<tr>
+				<td>
+					No saved shipping details to <?=$_SESSION['ForceCountry']['cn_name']?>
+				<td>
+			</tr>
+		</tmpl_if>
+	</table>
+	</div>
+
+<!--Shipping Details -->
+	<div id='catNewShippingDetails' style='display:;'>
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Details" >
+		<tr>
+			<td>
+			<span class="textSubHeaders">New Shipping Details</span> <A style="display:" href="Javascript:togglecat('SavedShippingDetails');togglecat('NewShippingDetails');void(0);" class="morelink"> See saved shipping details from previous orders</A>
+			</td>
+		</tr>
+		<tr>
+
+		</tr>
+		<tr>
+			<td valign="top">			
+			<br />
+			<p>Please enter your shipping details. If the shipping details are the same as the purchaser details, you may click the "same as purchaser" button to copy the details into the fields below.  <strong>We do not ship to APO boxes.</strong><br />
+			<input type="button" name="same" value="Same As Purchaser" onClick="sameAsPurchaser();">
+			</p>
+			<table width="400px" border="0" cellpadding="5" cellspacing="0">
+				<tr>
+				<td>
+				 {tmpl_var_raw ShippingDetails}         
+				 </td>
+				 </tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+
+</div>		
+<?php
+	} else {	// don't show shipping, just hide the table
+?>
+	<table id='shippingDetails' style='display:none;'>
+	<tr>
+	<td>
+		 {tmpl_var_raw ShippingDetails} 
+	</td>        
+	</tr>
+	</table>
+
+<?php
+	}
+?>
+<!--Shipping Label -->
+<tmpl_if condition="strlen($data['CountryShippingLabelText'])">
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+
+	<tr>
+		<td><span class="textSubHeaders">{tmpl_var_raw CountryShippingLabelText}</span></td>
+	</tr>
+	<tr>
+		<td valign="top">							
+				<textarea id=shippingLabel name=shippingLabel wrap=SOFT tabindex=0 dir="ltr" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" >
+				{tmpl_var_raw ShippingLabel}
+				</textarea>
+		</td>
+	</tr>
+	</table>
+</tmpl_if>
+<!--END Shipping warning -->
+<!--END Shipping Details -->
+
+<!--Gift Message Details 
+	
+
+<tmpl_if condition="ss_OptionExists('Gift Message')">
+<table border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Gift_Message" width="100%" >
+
+		<tr>
+			<td><span class="textSubHeaders">Special Instructions</span></td>
+		</tr>
+		<tr>
+			<td>
+						 If you have any special instructions regarding your order, please enter them below, but note this<br />
+						 1) Note that for new customers, we do not allow shipping to an alternate location.<br />
+						 2) We do not open boxes for inspection.<br />
+						 3) The packing team cannot write notes on the outside of the package.<br />
+						 4) Leaving a note here will cause your shipment to be delayed by at least 24 hours.
+						 5) DO NOT PUT ANY address details here.  They will potentially be ignored.
+						 
+						<TEXTAREA NAME="GiftMessage" STYLE="width:100%" ROWS="6" COLS="40">{tmpl_var GiftMessage}</TEXTAREA>
+			</td>
+		</tr>
+		</table>
+</tmpl_if>	
+-END Gift Message Details -->
+
+<?php
+	if( ss_isGuest() )
+	{
+		?>
+		<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+			<tr>
+				<td><span class="textSubHeaders">Over 18 years of age.</span></td>
+			</tr>
+			<tr>
+				<td valign="top">							
+				<p>I confirm that I am 18 years of age or over. <input type='checkbox' name='over_18' value='1' /></p>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+?>
+<!--Shipping warning -->
+<tmpl_if condition="strlen($data['CountryWarning'])">
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+
+	<tr>
+		<td><span class="textSubHeaders">Shipping to your country</span></td>
+	</tr>
+	<tr>
+		<td valign="top">							
+		
+						<p>{tmpl_var_raw CountryWarning}</p>
+						<p>I have read this and understand <input type='checkbox' name='have_read' value='1' /></p>
+			</td>
+	</tr>
+	</table>
+</tmpl_if>
+<tmpl_if condition="strlen(strip_tags($data['VendorCustomerNotes']))">
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+
+	<tr>
+		<td><span class="textSubHeaders">Notes about the products in your basket</span></td>
+	</tr>
+	<tr>
+		<td valign="top">							
+		
+						<p>{tmpl_var_raw VendorCustomerNotes}</p>
+						<p>I have read this and understand <input type='checkbox' name='have_read2' value='1' /></p>
+			</td>
+	</tr>
+	</table>
+</tmpl_if>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Shipping_Warning" >
+	<tr>
+		<td><span class="textSubHeaders">Terms and Conditions</span></td>
+	</tr>
+	<tr>
+		<td valign="top">							
+			<p>I have read and accept the <a href='/Acme%20Express/Terms%20and%20Conditions' target='_blank'><strong><font color='black'>Terms and Conditions<font></strong></a> and acknowledge that I have entered a secure delivery address. <input type='checkbox' name='tandc' value='1' /></p>
+		</td>
+	</tr>
+</table>
+<!--END Shipping warning -->
+</div>
+<script language="Javascript">
+	function check_warning( )
+	{
+		var theForm = document.forms.CheckoutForm;
+<?php if( !$showShipping ) { ?>
+<?php if( $data['Basket']['Freight']['Amount'] > 0 ) { ?>
+		if( theForm.Us0_50A4_Parent.options[theForm.Us0_50A4_Parent.selectedIndex].value != theForm.ShDe0_50A4_Parent.options[theForm.ShDe0_50A4_Parent.selectedIndex].value )
+			{
+			alert( "Please recheck the shipping amount before proceeding" );
+			sameAsPurchaser();
+			theForm.action='Shop_System/Service/Checkout/Do_Service/Reload';
+			theForm.submit();
+			}
+		else
+			sameAsPurchaser();
+<?php } else { ?>
+			sameAsPurchaser();
+<?php } ?>
+<?php } 
+
+	if( array_key_exists( 'User', $_SESSION )
+	 && array_key_exists( 'us_first_name', $_SESSION['User'] )
+	 && ($_SESSION['User']['us_first_name'] == 'Guest' ) )
+	{
+	?>
+
+		if( !theForm.over_18.checked )
+		{
+			alert( "Please indicate you are over 18 before proceeding" );
+			return;
+		}
+	<?php
+	}
+	?>
+
+	if( !theForm.tandc.checked )
+	{
+		alert( "Please accept our Terms and Conditions before proceeding" );
+		return;
+	}
+
+	<?php
+?>
+<tmpl_if condition="strlen($data['CountryWarning'])">
+	<tmpl_if condition="strlen(strip_tags($data['VendorCustomerNotes']))">
+		if( theForm.have_read.checked && theForm.have_read2.checked )
+			theForm.submit();
+		else
+			alert( "Please indicate you have read the notes for your country and products" );
+	<tmpl_else>
+		if( theForm.have_read.checked )
+			theForm.submit();
+		else
+			alert( "Please indicate you have read the notes for your country" );
+	</tmpl_if>
+<tmpl_else>
+	<tmpl_if condition="strlen(strip_tags($data['VendorCustomerNotes']))">
+		if( theForm.have_read2.checked )
+			theForm.submit();
+		else
+			alert( "Please indicate you have read the notes for your products" );
+	<tmpl_else>
+		theForm.submit();
+	</tmpl_if>
+</tmpl_if>
+	}
+	</script>
+
+<!-- Payment options -->
+<div id="PaymentOption">
+<table width="100%" border="1" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable Payment_Options" >
+<?php 
+	if( array_key_exists( 'User', $_SESSION )
+	 && array_key_exists( 'us_first_name', $_SESSION['User'] )
+	 && ($_SESSION['User']['us_first_name'] == 'Guest' ) )
+	{
+
+//  GUEST checkout options
+
+		if( $data['PaymentOptions'] == NULL )
+			echo "<tr><td>{$data['NoChargeBlurb']}</td></tr>";
+		else
+		{
+?>
+	<tr>
+		<td valign="top" colspan=4><span class="textSubHeaders">Payment</span></td>
+		<td valign="top"><a href='#' onclick='check_warning(0); return false;' class="gold-button continue">Pay</a></td>
+	</tr>
+
+<?php   }
+	}
+	else
+	{
+// REGISTERED payment option
+
+		if( $data['NeedsPayment'] )
+		{
+			if( $data['PaymentOptions'] == NULL )
+				echo "<tr><td>{$data['NoChargeBlurb']}</td></tr>";
+			else
+			{
+?>
+		<tr>
+			<td valign="top">
+			<?= $data['PaymentOptions']['pg_description'] ?>
+			</td>
+			<td valign="top">
+			<?php if( $data['Basket']['Total'] < $data['PaymentOptions']['pg_minimum_total'] ) { ?>
+				{tmpl_eval print($data['This']->formatPrice('display',($data['Basket']['Total']+$data['PaymentOptions']['pg_minimum_penalty'])))}
+			<?php } else { ?>
+				{tmpl_eval print($data['This']->formatPrice('display',($data['Basket']['Total'])))}
+			<?php } ?>
+			</td>
+			<td valign="top">
+			<a href='#' onclick='check_warning(); return false;' class="gold-button continue">Pay with <?= $data['PaymentOptions']['pg_name']?></a>
+			</td>
+		</tr>
+<?php
+			}
+		}
+		else
+		{
+?>
+		<tr>
+			<td valign="top">
+			Checkout using account credit of <?=-($_SESSION['Shop']['Basket']['Discounts']['Account Credit'])?>
+			</td>
+			<td valign="top">
+			</td>
+			<td valign="top">
+			<a href='#' onclick='check_warning(); return false;' class="gold-button continue">Pay</a>
+			</td>
+		</tr>
+<?php 	}
+	}?>
+</table>
+</div>
+<table border="0" cellpadding="5" cellspacing="0" class="onlineShopShopProgressBarTable">
+		<tr align="center">
+			<td class="onlineShopShopProgressBarON">1 - Checkout</td>
+			<td class="onlineShopShopProgressBarCell">2 - Payment</td>
+			<td class="onlineShopShopProgressBarCell">3 - Finished</td>
+	 </tr>
+</table>
+</form>
+
+<script language="javascript" type="text/javascript">
+	var hawaiiIndex = null;
+	for(var temp = 0; temp < parents_ShDe0_50A4[840].length; temp++) {
+		if (parents_ShDe0_50A4[840][temp].id == 17) {
+			parents_ShDe0_50A4[840][temp].id = '';
+			parents_ShDe0_50A4[840][temp].name = '';
+			break;
+		}
+	}
+	//delete(parents_ShDe0_50A4[840][hawaiiIndex]);
+</script>
+

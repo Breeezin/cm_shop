@@ -1,0 +1,40 @@
+
+.cigarapplication {
+
+	width:350px;
+	
+}
+.featured-products {
+	float: left;
+	width: 398px;
+	clear: none;
+	display: inline;
+	vertical-align: top;
+}
+
+.verticalalign, .sidecol {
+	vertical-align: top;
+	background-color: #3f3830;
+}
+
+img {
+	display: inline;
+}
+
+.welcometext {
+	display: inline;
+	float: left;
+}
+
+.welcome p.feature {
+
+	width:99% ;
+}
+
+.bannerincase {
+	background: url(Images/banner-home.jpg) #3d362f no-repeat center ;
+}
+
+.menu {
+	margin: 5px 0px;
+}

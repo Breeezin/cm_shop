@@ -1,0 +1,249 @@
+<table border="0" cellspacing="5" cellpadding="0">
+	<script language="Javascript">
+		<?
+		print("currencyCode = '".ss_JSStringFormat($data['Currency']['CurrencyCode'])."';");
+		print("beforeSymbol = '".ss_JSStringFormat($data['Currency']['Appears']=='before'?$data['Currency']['Symbol']:'')."';");
+		print("afterSymbol = '".ss_JSStringFormat($data['Currency']['Appears']=='after'?$data['Currency']['Symbol']:'')."';");
+		?>
+	
+		prodOps = new Array();
+	<?	foreach ($data['ProductOptions'] as $row) {	?>
+		prodOps[prodOps.length] = {P: '{tmpl_row_var_js rawPrice}', R: '{tmpl_row_var_js rawRRP}', S: '{tmpl_row_var_js rawSpecialPrice}', O:new Array( <? $comma = ''; foreach($row['Options'] as $opVals) { print("$comma{p:'{$opVals['parent']}', u:'{$opVals['uuid']}'}"); $comma = ',';} ?>) };
+	<?	}	?>
+
+		opValNames = new Array();
+	<?	foreach ($data['OptionFieldDefs'] as $row) { 
+			foreach ($row['options'] as $op) { 
+				if (array_key_exists($op['uuid'],$data['OptionValuesUsed'][$row['uuid']])) {
+					$data['uuid'] = $op['uuid'];
+					$data['name'] = $op['name']; ?>
+		opValNames[opValNames.length] = {u:'{tmpl_var_js uuid}', n:'{tmpl_var_js name}'};
+	<?			} 
+			} 
+		}	
+	?>
+
+		opNames = new Array();
+	<?	foreach ($data['OptionFieldDefs'] as $row) {  ?>
+		opNames[opNames.length] = {u:'{tmpl_row_var_js uuid}', n:'{tmpl_row_var_js name}'};
+	<?	}	?>
+	
+		function emptySelectOptions(sel) {
+			while (sel.options.length) {
+				sel.options[sel.options.length-1] = null;
+			}
+		}
+	
+		function decimalFormat(num) {
+			var cents = parseFloat(num) - Math.floor(parseFloat(num));
+			cents = cents * 100;
+			cents = Math.floor(cents);
+			if (cents < 10) {
+				cents = ".0" + cents;
+			} else {
+				cents = "." + cents;
+			}	
+			var dollars = Math.floor(parseFloat(num));
+			return dollars + cents;
+		}		
+
+		function formatPrice(amt,withCurrency) {
+			var result = beforeSymbol+decimalFormat(amt)+afterSymbol;
+			if (withCurrency) result += ' '+currencyCode
+			return result;
+		}
+		
+		function trySetInnerHTML(el,html) {
+			var o = document.getElementById(el);
+			if (o) o.innerHTML = html;
+		}
+		
+		function updatePrices(index) {
+			op = prodOps[index];
+			if (op.R) trySetInnerHTML('RRP',formatPrice(op.R,true));
+			if (op.S) {	
+				trySetInnerHTML('specialPrice',formatPrice(op.S,true));
+				if (op.P) trySetInnerHTML('normalPrice','<span class="onlineShop_oldPrice">'+formatPrice(op.P,true)+'</span>');	
+			} else {
+				if (op.P) trySetInnerHTML('normalPrice',formatPrice(op.P,true));	
+			}
+		}
+
+		function updatePriceRanges(allowed) {
+			// Display price ranges from all the selected options
+			minRRP = -1;
+			maxRRP = -1;
+			minPrice = -1;
+			maxPrice = -1;
+			minSpecialPrice = -1;
+			maxSpecialPrice = -1;
+			for (var i=0;i<allowed.length;i++) {
+				prodOp = prodOps[allowed[i]];
+				Ra = prodOp.R;	Pa = prodOp.P;	Sa = prodOp.S;
+				if (Ra && (Ra < parseFloat(minRRP) || minRRP == -1)) minRRP = Ra;
+				if (Ra && (Ra > parseFloat(maxRRP) || maxRRP == -1)) maxRRP = Ra;
+				if (Pa && (Pa < parseFloat(minPrice) || minPrice == -1)) minPrice = Pa;
+				if (Pa && (Pa > parseFloat(maxPrice) || maxPrice == -1)) maxPrice = Pa;
+				if (Sa && (Sa < parseFloat(minSpecialPrice) || minSpecialPrice == -1)) minSpecialPrice = Sa;
+				if (Sa && (Sa > parseFloat(maxSpecialPrice) || maxSpecialPrice == -1)) maxSpecialPrice = Sa;
+			}	
+			
+			if (minRRP != -1) {
+				if (minRRP != maxRRP) minRRP = 'From '+formatPrice(minRRP,false)+' to '+formatPrice(maxRRP,true); else minRRP = formatPrice(minRRP,true);
+				trySetInnerHTML('RRP',minRRP);
+			} else {
+				trySetInnerHTML('RRP','');
+			}
+			if (minPrice != -1) {
+				if (minPrice != maxPrice) minPrice = 'From '+formatPrice(minPrice,false)+' to '+formatPrice(maxPrice,true); else minPrice = formatPrice(minPrice,true);
+				if (minSpecialPrice != -1) {
+					trySetInnerHTML('normalPrice','<span class="onlineShop_oldPrice">'+minPrice+'</span>');
+				} else {
+					trySetInnerHTML('normalPrice',minPrice);
+				}
+			} else {
+				trySetInnerHTML('normalPrice','');
+			}
+			if (minSpecialPrice != -1) {
+				if (minSpecialPrice != maxSpecialPrice) minSpecialPrice = 'From '+formatPrice(minSpecialPrice,false)+' to '+formatPrice(maxSpecialPrice,true); else minSpecialPrice = formatPrice(minSpecialPrice,true);
+				trySetInnerHTML('specialPrice',minSpecialPrice);
+			} else {
+				trySetInnerHTML('specialPrice','');
+			}
+		}
+		
+		function dump(o)  {
+			var s = '';
+			for (var prop in o) {
+				s += prop + ' = ' + o[prop] + '\n';
+			}		
+			alert(s);
+		}
+		
+		function updateOptions(op) {
+			form = document.forms.ProductDetail;
+			currentSelected = new Array();
+
+			// If selected blank, then blank all options.
+			if (op.selectedIndex == 0) {
+				for (var i=0;i<opNames.length;i++) {
+					form['Option'+opNames[i].u].selectedIndex = 0;
+				}
+			}
+			
+			// Find currently selected options
+			for (var i=0; i<opNames.length;i++) {
+				sel = form['Option'+opNames[i].u];
+				selected = sel.options[sel.selectedIndex].value;
+				if ('Option'+opNames[i].u == op.name) {
+				if (selected != 0) {
+					currentSelected[currentSelected.length] = {p:opNames[i].u,u:selected};
+				}
+				}
+			}
+						
+			// Find product option combinations that match with currently selected options
+			allowedOptions = new Array();
+			found = false;
+			for (var i=0;i<prodOps.length;i++) {
+				// Loop through all the options in those product options
+				matches = 0;
+				for (var j=0;j<prodOps[i].O.length;j++) {
+					// Now loop through all the currently selected options
+					// to see if they are all selected in this product option
+					for (var k=0;k<currentSelected.length;k++) {
+						if (currentSelected[k].p == prodOps[i].O[j].p && currentSelected[k].u == prodOps[i].O[j].u)  {
+							matches++;
+							continue;
+						}
+					}
+				}
+				// Partial match.. add to allowed list
+				if (matches == currentSelected.length) {
+				 	allowedOptions[allowedOptions.length] = i;
+				}
+				// Exact match
+				if (matches == prodOps[i].O.length) {
+					updatePrices(i);	
+					found = true;
+				}
+			}
+/*			for (var i=0;i<prodOps.length;i++) {
+				// Loop through all the options in those product options
+				matches = 0;
+				for (var j=0;j<prodOps[i].O.length;j++) {
+					// Now loop through all the currently selected options
+					// to see if they are all selected in this product option
+					for (var k=0;k<currentSelected.length;k++) {
+						if (currentSelected[k].p == prodOps[i].O[j].p && currentSelected[k].u == prodOps[i].O[j].u)  {
+							matches++;
+							continue;
+						}
+					}
+				}
+				// Partial match.. add to allowed list
+				if (matches == currentSelected.length) {
+				 	allowedOptions[allowedOptions.length] = i;
+				}
+				// Exact match
+				if (matches == prodOps[i].O.length) {
+					updatePrices(i);	
+					found = true;
+				}
+			}
+*/
+			if (!found) updatePriceRanges(allowedOptions);
+		
+			for (var i=0;i<opNames.length;i++) {
+				sel = form['Option'+opNames[i].u];
+				selected = sel.options[sel.selectedIndex].value;
+				if ('Option'+opNames[i].u != op.name || ('Option'+opNames[i].u == op.name && op.selectedIndex == 0)) {
+					emptySelectOptions(sel);	
+					sel.options[sel.options.length] = new Option('Please Select',0);
+					newSelectedIndex = 0;
+					// Loop through all option value names
+					for (var j=0;j<opValNames.length;j++) {
+						found = false;
+						// Loop through the allowed product options
+						for (var k=0;k<allowedOptions.length;k++) {
+							prodOp = prodOps[allowedOptions[k]];
+							// Loop through those
+							for (var m=0;m<prodOp.O.length;m++) {
+								if (prodOp.O[m].p == opNames[i].u && opValNames[j].u == prodOp.O[m].u) {
+									//dump(opNames[i]);
+									//dump(prodOps[prodOpID].O[k]);
+									if (selected == prodOp.O[m].u) {
+										newSelectedIndex = sel.options.length;
+									}
+									sel.options[sel.options.length] = new Option(opValNames[j].n,prodOp.O[m].u);
+									found = true;
+									break;
+								}
+							}
+							if (found) break;
+						}	
+					}
+					sel.selectedIndex = newSelectedIndex;
+				}
+			}
+		}
+	</script>
+	<?	foreach ($data['OptionFieldDefs'] as $row) { ?>
+	<tr>
+		<th align="LEFT" class="onlineShop_OptionsTableHeader">{tmpl_row_var name}&nbsp;:</th>
+		<td class="onlineShop_Options"> 
+			<select class="onlineShop_Options" name="Option{tmpl_row_var uuid}" onchange="updateOptions(this);">
+				<option value="">Please Select</option>
+				<?	foreach ($row['options'] as $op) { 
+						if (array_key_exists($op['uuid'],$data['OptionValuesUsed'][$row['uuid']])) {
+							$data['uuid'] = $op['uuid'];
+							$data['name'] = $op['name']; ?>
+							<option value="{tmpl_var uuid}">{tmpl_var name}</option>
+				<?		} 
+					} 
+				?>
+			</select>
+		</td>
+	</tr>
+	<? }  ?>	
+</table>

@@ -1,0 +1,3 @@
+<?php
+system("./newsletter.sh");
+?>

@@ -1,0 +1,9 @@
+{tmpl_if count($data['Image'])}
+	{tmpl_if strlen($data['Image']['link'])}
+		<a href="{tmpl_var AssetPath}?UUID=<?=$data['Image']['uuid']?>" target="<?=$data['Image']['target']?>">
+	{tmpl_end}
+		<IMG border="0" src="{tmpl_var Directory}<?=$data['Image']['url']?>" alt="<?=$data['Image']['title']?>:<?=$data['Image']['description']?>">
+	{tmpl_if strlen($data['Image']['link'])}
+		</a>
+	{tmpl_end}
+{tmpl_end}

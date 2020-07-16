@@ -1,0 +1,105 @@
+
+<div align="center">
+<form method="post" action="{tmpl_var AssetPath}?DoAction=Yes" name="adminForm">
+{tmpl_errors name="Errors"}
+<table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF">
+
+	{tmpl_var_raw FieldsHTML}
+
+</table><BR>
+<script language="JavaScript">
+	function updateAll() {
+		var numProducts = <?=count($data['Products'])?>;
+		var total = 0;
+		var error = false;
+		for(var i =0; i < numProducts; i++) {
+            $check = checkNumFormat (document.adminForm['Quantity_' + i]) != 0;
+            if ($check != numPPL){
+                /* uncomment if using a checkbox
+                if (document.adminForm['Quantity_' + i].checked){
+                    document.adminForm['Quantity_' + i].value = 1;
+                }else {
+                    document.adminForm['Quantity_' + i].value = 0;
+                }*/
+    			var price =  document.adminForm['Product_' + i].value;
+    			var quan =  document.adminForm['Quantity_' + i].value;
+                var price_total = quan * price;
+    			total += price_total;
+    			document.adminForm['Total_'+i].value = decimalFormat(price_total);
+            }
+		}
+		document.adminForm['Total'].value = decimalFormat(total);
+	}
+
+	function checkNumFormat(theField) {
+        errMsg = 'Please enter a valid quantity.';
+        numPPL = parseInt(theField.value);
+		if (!isNaN(numPPL)) {
+			return numPPL;
+		} else {
+			if (theField.value.length) {
+				alert(errMsg);
+			}
+			theField.value = 0;
+			return 0;
+		}
+	}
+
+	function decimalFormat(num) {
+		var cents = parseFloat(num) - Math.floor(parseFloat(num));
+		cents = Math.round(cents * 100);
+		cents = Math.floor(cents);
+		if (cents < 10) {
+			cents = ".0" + cents;
+		} else {
+			cents = "." + cents;
+		}
+
+		var dollars = Math.floor(parseFloat(num));
+		return dollars + cents;
+	}
+</script>
+  <table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF" style="border:1px solid #d3cfc7;">
+    <tr>
+      <td  bgcolor="#eaeadf" class="BorderBottom"><strong class="QuotesWhite">Product</strong></td>
+      <td bgcolor="#eaeadf" class="BorderBottomSide"><div align="right" class="QuotesWhite"><strong>Price
+          </strong></div></td>
+      <td bgcolor="#eaeadf"class="BorderBottomSide"><div align="right" class="QuotesWhite"><strong>Quantity</strong></div></td>
+      <td bgcolor="#eaeadf"class="BorderBottomSide"><div align="right" class="QuotesWhite"><strong>Total
+          </strong></div></td>
+    </tr>
+    <?php foreach($data['Products'] as $id => $detail) {
+        $checked = $data['Atts']["Quantity_$id"] == 1 ? 'CHECKED' : 'CHECKED';
+    ?>
+    <input name="Product_<?=$id?>" type="hidden" value="<?=$detail['price']?>">
+	<tr>
+      <td class="BorderBottom"><?=ss_HTMLEditFormat($detail['name'])?></td>
+    <td class="BorderBottomSide">
+        <div align="right">NZ $ <?=$detail['price']?></div>
+    </td>
+    <!--
+    Use this if they want a checkbox instead of entering a quantity
+    <td class="BorderBottomSide">
+        <div align="right"><input name="Quantity_<?=$id?>" value="0" type="checkbox" STYLE="text-align:right" <?=$checked?> onClick="updateAll();" onChange="updateAll();"></div>
+    </td>-->
+    <td class="BorderBottomSide">
+        <div align="right"><input name="Quantity_<?=$id?>" value="0" type="text" size="8" STYLE="text-align:right" <?=$checked?> onClick="updateAll();" onChange="updateAll(); checkNumFormat(this);"></div>
+    </td>
+    <td class="BorderBottomSide">
+        <div align="right"><input name="Total_<?=$id?>" value="0" type="text" size="8" STYLE="text-align:right" onFocus="this.blur();"></div>
+    </td>
+  </tr>
+  <?php } ?>
+  <tr>
+    <td colspan="3"  bgcolor="#eaeadf" class="BorderBottomSide"><div align="right" class="QuotesWhite"><strong>Total</strong></div></td>
+    <td bgcolor="#eaeadf" class="BorderBottomSide">
+        <div align="right" class="QuotesWhite">
+        <input type="text" name="Total" STYLE="text-align:right" onFocus="this.blur();"  size="8" value="0">
+        </div>
+    </td>
+  </tr>
+  </table>
+  <BR>
+<div align="center">{tmpl_var_raw PaymentButtons}</DIV>
+</form>
+<SCRIPT>updateAll();</SCRIPT>

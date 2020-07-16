@@ -1,0 +1,11 @@
+<p>Please select your country (for tax purposes):</p>
+<form method="post" action="{tmpl_var_url AssetPath}/Service/ChangeTaxCountry/DoAction/Yes">
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<select name="CountryThreeCode">
+		<tmpl_loop query="Q_Countries">
+			<option value="{tmpl_row_var cn_three_code}" <tmpl_if condition="$data['CurrentTaxCountry'] == $row['cn_three_code']">selected="selected"</tmpl_if>>{tmpl_row_var_raw cn_name}</option>
+		</tmpl_loop>
+	</select>
+	<input type="submit" name="Go" value="Go">
+</form>
+<a href="{tmpl_var BackURL}"><img src="Images/but-continue_shopping.gif" border="0"></a>

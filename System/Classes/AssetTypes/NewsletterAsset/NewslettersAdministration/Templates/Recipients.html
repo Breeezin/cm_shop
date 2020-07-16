@@ -1,0 +1,23 @@
+<p>
+	Below are the selected recipients of newsletter "{tmpl_var Subject}":
+</p>
+<p>
+	<input type="submit" value="Click here to close window" onclick="window.close();">
+</p>
+<table width="100%">
+	<tr>
+		<th align="left">First Name</th>
+		<th align="left">Last Name</th>
+		<th align="left">Email</th>
+	</tr>
+	<tmpl_loop query="Q_Recipients">
+	<tr>
+		<td>{tmpl_row_var us_first_name}</td>
+		<td>{tmpl_row_var us_last_name}</td>
+		<td>{tmpl_row_var us_email}</td>
+	</tr>
+	</tmpl_loop>
+</table>
+<p>
+	<input type="submit" value="Click here to close window" onclick="window.close();">
+</p>

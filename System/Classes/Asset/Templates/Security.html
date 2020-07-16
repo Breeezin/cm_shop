@@ -1,0 +1,147 @@
+	{tmpl_eval $result = new Request("Asset.TwoState", array('JavaScriptOnly' => true, 'FormName' =>	'AssetForm'));	print($result->display);}
+	<P>
+  <TABLE CELLPADDING="5">
+    <TR> 
+      <TD colspan="2"> 
+	<P>
+	This asset is owned by {tmpl_var us_first_name} {tmpl_var us_last_name}.
+	<!--- Allow admin@innovativemedia.co.nz to give the asset to - super user account --->
+	{tmpl_if $data['as_owner_au_id'] != 0 && $data['IsDeployer']}
+		<P>
+			You may lock this asset so it may not be moved, renamed or deleted by 
+			anyone
+			<INPUT TYPE="SUBMIT" NAME="Save" VALUE="Lock This Asset" CLASS="adminButtons" OnClick="this.form.as_owner_au_id.value = 0;document.getElementById('SaveCompleted').innerHTML = 'Saving... please wait';">
+		</P>
+	{tmpl_elseif $data['as_owner_au_id'] == 0 && $data['IsDeployer']}
+		It has been locked.
+		<P>
+			You may unlock this asset, but moving, renaming or deleting it may break the 
+			website. If in doubt, please check with a programmer first.
+			<INPUT TYPE="SUBMIT" NAME="Save" VALUE="Unlock This Asset" CLASS="adminButtons" OnClick="this.form.as_owner_au_id.value = 1;document.getElementById('SaveCompleted').innerHTML = 'Saving... please wait';">
+		</P>
+	{tmpl_elseif $data['as_owner_au_id'] != 0 && $data['as_owner_au_id'] != $data['User']}
+		<INPUT NAME="Save" TYPE="SUBMIT" VALUE="Take Ownership" CLASS="adminButtons" OnClick="this.form.as_owner_au_id.value = {tmpl_var User};document.getElementById('SaveCompleted').innerHTML = 'Saving... please wait';">
+	{tmpl_end}
+	 
+	</P>
+	<P>
+		The following permissions are assigned to users who are 
+        members of these security groups and mailing lists (click a checkbox to 
+        change it's state).
+		</P>
+		<P>
+		<strong>Note: </strong>"Allow" type permissions have a higher priority than
+		"Disallow" permissions when a user is a member of more than one applicable
+		group/mailing list.
+		</P>
+		</TD>
+    </TR>
+    <TR> 
+      <TD>
+	  <TABLE BORDER="0" WIDTH="400">
+          <TR> 
+            <TD>Group/Mailing List</TD>
+            <TD ALIGN="CENTER">Access</TD>
+            <TD ALIGN="CENTER">Admin</TD>
+            <TD ALIGN="CENTER">Child<br />Access</TD>
+            <TD ALIGN="CENTER">Child<br />Admin</TD>
+          </TR>
+          
+   	        {tmpl_eval $id = 'Default'; }
+	        {tmpl_eval $Permissions['aug_can_use'] = $data['Asset']['as_can_use_default'];}
+	        {tmpl_eval $Permissions['aug_can_administer'] = $data['Asset']['as_can_admin_default'];}
+	        {tmpl_eval $Permissions['aug_child_can_use'] = $data['Asset']['as_child_can_use_default'];}
+	        {tmpl_eval $Permissions['aug_child_can_administer'] = $data['Asset']['as_child_can_admin_default'];}
+
+            <TR> 
+              <TD><strong>Default</strong><br />(new user groups will have these permissions assigned by default)</TD>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+            </TR>
+                      
+          {tmpl_loop Q_UserGroups}    
+          	{tmpl_eval $Permissions = array();}
+          	{tmpl_eval $Q_PermSet = query("SELECT aug_can_use, aug_can_administer, aug_child_can_use, aug_child_can_administer FROM asset_user_groups WHERE aug_as_id =".$data['as_id']." AND aug_ug_id = ".$row['ug_id']);}
+
+			{tmpl_eval if ($Q_PermSet->numRows()) {}
+    	    	{tmpl_eval $aPermset = $Q_PermSet->fetchRow();}
+	        	{tmpl_eval $Permissions['aug_can_use'] = $aPermset['aug_can_use'];}
+	        	{tmpl_eval $Permissions['aug_can_administer'] = $aPermset['aug_can_administer'];}
+	        	{tmpl_eval $Permissions['aug_child_can_use'] = $aPermset['aug_child_can_use'];}
+	        	{tmpl_eval $Permissions['aug_child_can_administer'] = $aPermset['aug_child_can_administer'];}
+           	{tmpl_else}             
+                {tmpl_eval $Permissions['aug_can_use'] = '';}
+	            {tmpl_eval $Permissions['aug_can_administer'] = '';}
+                {tmpl_eval $Permissions['aug_child_can_use'] = '';}
+	            {tmpl_eval $Permissions['aug_child_can_administer'] = '';}
+	        {tmpl_end}
+	        {tmpl_eval $id =$row['ug_id']; }
+          
+            <TR> 
+              <TH ALIGN="LEFT">{tmpl_row_var_html ug_name}</TH>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+            </TR>
+         {tmpl_end}
+         
+         {tmpl_loop Q_MailGroups}    
+          	{tmpl_eval $Permissions = array();}
+          	{tmpl_eval $Q_PermSet = query("SELECT aug_can_use, aug_can_administer, aug_child_can_use, aug_child_can_administer FROM asset_user_groups WHERE aug_as_id = ".$data['as_id']." AND aug_ug_id = ".$row['ug_id']);}
+
+          	{tmpl_eval if ($Q_PermSet->numRows()) {}
+    	    	{tmpl_eval $aPermset = $Q_PermSet->fetchRow();}
+	        	{tmpl_eval $Permissions['aug_can_use'] = $aPermset['aug_can_use'];}
+	        	{tmpl_eval $Permissions['aug_can_administer'] = $aPermset['aug_can_administer'];}
+	        	{tmpl_eval $Permissions['aug_child_can_use'] = $aPermset['aug_child_can_use'];}
+	        	{tmpl_eval $Permissions['aug_child_can_administer'] = $aPermset['aug_child_can_administer'];}
+           	{tmpl_else}             
+                {tmpl_eval $Permissions['aug_can_use'] = '';}
+	            {tmpl_eval $Permissions['aug_can_administer'] = '';}
+                {tmpl_eval $Permissions['aug_child_can_use'] = '';}
+	            {tmpl_eval $Permissions['aug_child_can_administer'] = '';}
+	        {tmpl_end}
+	        {tmpl_eval $id =$row['ug_id']; }
+            <TR> 
+              <TH ALIGN="LEFT">{tmpl_row_var_html ug_name} Subscribers</TH>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_CanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+                <TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanUse_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_use'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+		     	<TD ALIGN="CENTER">{tmpl_eval $result = new Request("Asset.TwoState", array('FieldName' =>	'Perm_ChildCanAdminister_'.$id, 'FormName' =>	'AssetForm', 'Value' => $Permissions['aug_child_can_administer'], 'AllowChange' => 'Yes', 'AllowChangeUse' => 'Yes', ));	print($result->display);}</TD>
+            </TR>
+         {tmpl_end}
+        </TABLE></TD>
+      <INPUT TYPE="HIDDEN" NAME="as_owner_au_id" VALUE="{tmpl_var as_owner_au_id}">  
+      <TD VALIGN="TOP" NOWRAP STYLE="border:1px black solid"><strong>Key :</strong><br>
+        <table border="0">
+          <!--<tr> 
+            <td><img src="Images/threeState_.gif" width="24" height="24"></td>
+            <td valign="middle">Inherit</td>
+          </tr>-->
+          <tr> 
+            <td><img src="Images/threeState_0.gif" width="24" height="24"></td>
+            <td valign="middle"> Disallow</td>
+          </tr>
+          <tr> 
+            <td><img src="Images/threeState_1.gif" width="24" height="24"></td>
+            <td valign="middle">Allow</td>
+          </tr>
+        </table>
+        <BR>
+        <BR>
+      </TD>
+    </TR>
+    <tr>
+    	<td>
+    		<p>If you would like to propagate all the child permissions to sub assets, click the "propagate permissions" button:</p>
+			<INPUT TYPE="SUBMIT" NAME="Save" VALUE="Propagate" CLASS="adminButtons" OnClick="if (parent.openWindowCount() > 2) { alert('Please close all other open assets before propagating.'); return false;}  if (!confirm('Are you sure you wish to propagate permissions to all sub assets? If you wish to proceed, click OK.')) return false;">
+    	</td>
+    
+    </tr>
+  </TABLE>
+
+	</P>
+  </TD> </TR> </TABLE>

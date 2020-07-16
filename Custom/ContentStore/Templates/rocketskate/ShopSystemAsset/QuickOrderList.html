@@ -1,0 +1,72 @@
+<?php
+	echo "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&";
+	$data['Q_QuickOrderCategories'] = query("
+		SELECT * FROM shopsystem_quick_categories
+	");
+?>
+<table border="0" cellspacing="4" cellpadding="2">
+			<tmpl_loop query="Q_Products">
+	<!-- Product detail start -->			
+	<tr align="left" valign="top">
+				<form name="ProductDetail{tmpl_row_var pr_id}">
+	
+		<td><a href="{tmpl_row_var ProductDetailLink}" class="onlineShopNameQuick"><?php $row['pr_name'] = strtoupper($row['pr_name']); ?>{tmpl_row_var pr_name}</a><br></td>
+		<td valign="bottom" nowrap>
+			<!-- Display options -->
+		<tmpl_eval expression="print($data['this']->getOptions($row,$data['OptionFieldsArray']))">
+<!-- Display prices  -->
+		{tmpl_row_var_raw PricesHTML}
+
+	<? // display ratings ?>
+	<tmpl_if condition="$row['pr_customer_rating'] !== null and $row['pr_customer_rating_count'] !== null">
+				<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 产品评级:</strong>
+				<?php 
+					$data['Star1'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+					$data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					if ($row['pr_customer_rating'] >= 70) $data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 80) $data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 90) $data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 95) $data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+				?>{tmpl_var_raw Star1}{tmpl_var_raw Star2}{tmpl_var_raw Star3}{tmpl_var_raw Star4}{tmpl_var_raw Star5}<br />
+				<img src="Images/holder.gif" width="10" height="7"> {tmpl_row_var pr_customer_rating_count} 基于客户评级 
+				<a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">这个速度雪茄</a>			
+			<tmpl_else>
+				<img src="Images/holder.gif" width="10" height="7"> <a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">这个速度雪茄</a>			
+			</tmpl_if></p>		
+		</td>
+ </tr>
+	<tr align="left" valign="top">
+		<td class="onlineShopSizeQuick">
+			<tmpl_if condition="strlen($row['pr_short'])">
+			{tmpl_row_var_parse pr_short}
+			</tmpl_if>	</td>
+		<td valign="middle">
+		
+			<tmpl_if condition="ss_OptionExists('Sell Products')">
+				<!-- Add to basket -->	
+								<?php
+									$data['AddVis'] = true;
+									$data['OutVis'] = false;
+									if (array_key_exists('ProductStockLevels',$_REQUEST) and array_key_exists($row['pr_id'],$_REQUEST['ProductStockLevels'])) {
+										if ($_REQUEST['ProductStockLevels'][$row['pr_id']] == 'false') {
+											$data['AddVis'] = false;
+											$data['OutVis'] = true;	
+										}	
+									}
+								?>
+			   <tmpl_if condition="$data['AddVis']"><span id="AddToBasket_{tmpl_row_var pr_id}"><a href="javascript:if (readyToBuy[{tmpl_row_var pr_id}]) { document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit() } else { alert('Please make a choice from the options before continuing.') }" class="button_two">增加篮 </a></span></tmpl_if>
+			   <tmpl_if condition="$data['OutVis']"><span id="OutOfStock_{tmpl_row_var pr_id}" class="button_three">脱销 </span></tmpl_if>
+			</tmpl_if>				
+		</td>
+				<!-- Product detail end --->
+				</form>
+ </tr>
+	<tr align="left" valign="top">
+		<td height="30" colspan="2" class="dotline">&nbsp;</td>
+ </tr>
+
+			</tmpl_loop>
+</table>

@@ -1,0 +1,33 @@
+<tmpl_if condition="$data['Q_Stock']->numRows() > 0">
+	<p>
+	Products to buy as of <?=date('Y-m-d'); ?>:
+	</p>
+	<table width="100%" cellpadding="4" cellspacing="0">
+		<tr>
+			<td><strong>Stock Code</strong></td>
+			<td><strong>Product</strong></td>
+			<td><strong>Name</strong></td>
+			<td><strong>Qty</strong></td>
+			<td><strong>Order ID</strong></td>
+		</tr>
+		<?php 
+			$oddEven = 1;
+		?>
+	<tmpl_loop query="Q_Stock">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td width="15%" nowrap>{tmpl_row_var sto_stock_code}</td>
+			<td>{tmpl_row_var sto_name}</td>
+			<td nowrap >{tmpl_row_var or_purchaser_firstname} {tmpl_row_var or_purchaser_lastname}</td>
+			<td width="15%">{tmpl_row_var sto_qty}</td>
+			<td width="15%">{tmpl_row_var or_tr_id}</td>
+		</tr>
+	</tmpl_loop>
+	</table>
+	<input type="button" value="Generate Supplier Order Sheet" onclick="document.location='index.php?act=OnlineShop.AcmeGenerateSupplierOrderSheet';">
+<tmpl_else>
+	<p>There are currently no products to order.</p>
+</tmpl_if>
+<input type="button" value="Manage Supplier Order Sheets" onclick="document.location='index.php?act=shopsystem_supplier_order_sheets.List';">

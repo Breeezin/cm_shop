@@ -1,0 +1,23 @@
+<TABLE BORDER="0" WIDTH="100%">
+   <TR>
+	<TH ALIGN="LEFT" WIDTH="33%">Reference :</TH><TD><?=ss_getTrasacationRef($data['Fields']['tr_id'])?></TD></TR>
+   <TR>
+	<TH ALIGN="LEFT">Order Total :</TH><TD><?=$data['Fields']['cn_currency_symbol']?><?=$data['Fields']['tr_total']?> <?=$data['Fields']['cn_currency_code']?></TD></TR> 
+	<TH ALIGN="LEFT">Amount Charged :</TH><TD><?=$data['ChargedIn']?></TD></TR> 
+	{tmpl_var_raw ProcessorForm}
+	<tmpl_if condition="ss_optionExists('Shop Advanced Ordering')">
+		<?php
+			$authNumber = getRow("
+				SELECT or_authorisation_number FROM shopsystem_orders
+				WHERE or_tr_id = {$data['Fields']['tr_id']}
+			");
+			$data['authNumber'] = $authNumber['or_authorisation_number'];
+		?>
+		<TH ALIGN="LEFT">
+			Payment Authorisation Number :
+		</TH>
+		<TD>
+			{tmpl_var authNumber}
+		</TD>
+	</tmpl_if>
+</TABLE>	

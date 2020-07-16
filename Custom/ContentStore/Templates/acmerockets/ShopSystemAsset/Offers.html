@@ -1,0 +1,150 @@
+<?php
+	requireClass('ShopSystem_ProductsAdministration');	
+	$temp = new Request("Security.Sudo",array('Action'=>'start'));			
+	$productAdmin = new ShopSystem_ProductsAdministration($data['this']->asset->getID());		
+	$temp = new Request("Security.Sudo",array('Action'=>'stop'));	
+?>
+
+{tmpl_var_raw CurrencyConverterHTML}
+
+<div class="row">
+	<div class="col-sm-12">
+		<h1> {tmpl_var SearchCategory}</h1>
+		<div class="description-category">
+			<p><?= $data['SearchCategoryAll']['ca_description_html']?></p>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="row">
+			<div id="content" class="col-sm-12">
+				<h2 style="display:none;">{tmpl_var SearchCategory}</h2>
+				<div class="refine-search hidden"></div>
+				<div class="filter clearfix">
+					<div class="order-sort clearfix pull-left">
+						<div class="group-text pull-left">
+							<label class="control-label" for="input-sort">Sort By:</label>
+						</div>
+						<div class="select-wrap pull-left">
+							<select id="input-sort" class="form-control input-sm" onchange="location = this.value;">
+								<option value="Shop_System/Service/Engine/OrderBy/Avail.Price/pr_ca_id/{tmpl_var SearchCategoryID}" <?php
+									if( $data['this']->ATTRIBUTES['OrderBy'] == 'Avail.Price' ) echo "selected=\"selected\""; ?>>
+									Default
+								</option>
+								<option value="Shop_System/Service/Engine/OrderBy/ProductName/pr_ca_id/{tmpl_var SearchCategoryID}" <?php
+									if( $data['this']->ATTRIBUTES['OrderBy'] == 'ProductName' ) echo "selected=\"selected\""; ?>>
+									Name
+								</option>
+								<option value="Shop_System/Service/Engine/OrderBy/Price/pr_ca_id/{tmpl_var SearchCategoryID}" <?php
+									if( $data['this']->ATTRIBUTES['OrderBy'] == 'Price' ) echo "selected=\"selected\""; ?>>
+									Price
+								</option>
+								<option value="Shop_System/Service/Engine/OrderBy/BoxSize/pr_ca_id/{tmpl_var SearchCategoryID}" <?php
+									if( $data['this']->ATTRIBUTES['OrderBy'] == 'BoxSize' ) echo "selected=\"selected\""; ?>>
+									Box Size
+								</option>
+								<option value="Shop_System/Service/Engine/OrderBy/Updates/pr_ca_id/{tmpl_var SearchCategoryID}" <?php
+									if( $data['this']->ATTRIBUTES['OrderBy'] == 'Updates' ) echo "selected=\"selected\""; ?>>
+									Recent Updates
+								</option>
+							</select>
+						</div>
+					</div>
+					<div class= "btn-group display pull-right group-switch hidden-xs">
+						<button type="button" id="grid-view" class= "btn-switch active" data-toggle="tooltip" title="" data-original-title="Grid"></button>
+				<button type= "button" id="list-view" class="btn-switch" data-toggle= "tooltip" title="" data-original-title="List"></button>
+					</div>
+				</div>
+	<?php
+	// 3 across unless small desktop
+	$col = -1;
+	?>
+				<div id="products" class="product-grid">
+					<div class="products-block">
+						<div class="row products-row">
+						<tmpl_loop query="Q_Products">
+							<tmpl_if condition="$data['LastCategory'] !== $row['pr_ca_id']">
+								<tmpl_eval expression="$data['LastCategory'] = $row['pr_ca_id']; $categoryRow = $data['Q_Categories']->getRow($data['Q_Categories']->getRowWithValue('ca_id',$data['LastCategory'])); $data['CategoryName']=$categoryRow['ca_name'];">		        	
+							</tmpl_if>
+	<?php
+	if( ++$col >= 3 )
+	{
+	?>
+						</div>
+						<div class="row products-row">
+	<?php $col = 0; } ?>
+							<div class= "col-lg-4 col-md-4 col-sm-4 col-xs-12 product-col border">
+								<div class="product-block">
+									<div class="image">
+										<!-- Sale lable -->
+										<?php if( $row['pro_special_price'] > 0 ) { ?>
+										<div class="product-label bts">
+											<div class="product-label-special">
+												Sale
+											</div>
+										</div>
+										<?php } ?>
+										<!-- / Sale lable -->
+										<a class="img" href="{tmpl_row_var ProductDetailLink}">
+										<tmpl_if condition="strlen($row['Image'])">
+											<img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="img-responsive" />
+										</tmpl_if>
+										<div class="action">
+											<a class="quickview iframe-link btn-product" data-placement="top" href="{tmpl_row_var ProductPopupLink}" title="Quick View">
+												<i class="zmdi zmdi-eye"></i>
+											</a>
+											<a style= "display:none;" data-placement="top" class="zoom info-view btn-product" title="{tmpl_row_var pr_name}" href="{tmpl_row_var FullImage}">
+												<i class="zmdi zmdi-zoom-in"></i>
+											</a>
+										</div>
+									</div>
+									<div class="rating clearfix">
+										<div class="bg-rating clearfix">
+										<tmpl_if condition="$row['pr_customer_rating'] !== null and $row['pr_customer_rating_count'] !== null">
+											<strong> Product Rating:</strong>
+											<?php 
+												$data['Star1'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+												$data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+												$data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+												$data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+												$data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+												if ($row['pr_customer_rating'] >= 70) $data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+												if ($row['pr_customer_rating'] >= 80) $data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" >';
+												if ($row['pr_customer_rating'] >= 90) $data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" >';
+												if ($row['pr_customer_rating'] >= 95) $data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+											?>{tmpl_var_raw Star1}{tmpl_var_raw Star2}{tmpl_var_raw Star3}{tmpl_var_raw Star4}{tmpl_var_raw Star5}<br />
+										</tmpl_if>
+										</div>
+									</div>
+									<div class="product-meta clearfix">
+										<h6 class="name">
+											<a href="{tmpl_row_var ProductDetailLink}"> {tmpl_row_var pr_name} </a>
+										</h6>
+										<!--p class="description">{tmpl_row_var_parse pr_short}</p-->
+										<div class="bottom clearfix">
+											<tmpl_if condition="$row['pr_id'] > 0">
+												{tmpl_row_var_raw PricesHTML}
+											</tmpl_if>
+										</div>
+										<div class="cart">
+											<button class="btn btn-cart" title= "Add to Cart" type="button" onclick="cart.add({tmpl_row_var pr_id});">Add to Cart</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</tmpl_loop>
+						</div>
+					</div>
+				</div>
+				<div class="paging clearfix">
+					<div class="pull-left"></div>
+					<div class="pull-right">
+						{tmpl_var_raw PageThru}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,48 @@
+<?
+	if (!$data['Settings']['JustCategories']) {
+		print("<p>
+			The following categories are available. Click the category name you are interested
+			in to view the products available in that category.
+		</p>");
+	}
+
+	if (!array_key_exists('HasShowCategories',$_REQUEST)) {
+		function showCategories($data,$parent = null) {
+			if ($parent === null) {
+				$parentSQL = "IS NULL";	
+			} else {
+				$parentSQL = "= ".safe($parent);	
+			}
+			$whereSQL = '';
+			if (0 and count($GLOBALS['cfg']['multiSites']) and strlen($GLOBALS['cfg']['folder_name'])) {
+				$Q_SiteCats = query("SELECT * FROM MultiSite_Categories WHERE SiteFolder LIKE '{$GLOBALS['cfg']['folder_name']}'");
+				$catIDs = $Q_SiteCats->columnValuesList('CategoryLink');
+				if (strlen($catIDs)) {
+					$whereSQL = " AND ca_id IN (".safe($catIDs).")";
+				} else {
+					$whereSQL = " AND ca_id IS NULL";
+				}
+				
+			}
+			$Q_Subs = query("
+				SELECT * FROM shopsystem_categories
+				WHERE ca_parent_ca_id $parentSQL
+					AND ca_as_id = {$data['as_id']}
+					$whereSQL
+				ORDER BY ca_sort_order, ca_name
+			");	
+			if ($Q_Subs->numRows()) {
+				print("<ul>");
+				while ($cat = $Q_Subs->fetchRow()) {
+					$niceCategoryName = ss_alphaNumeric($cat['ca_name'],'_');
+					print("<li><a href=\"{$data['AssetPath']}/Service/Engine/pr_ca_id/{$cat['ca_id']}/Category/{$niceCategoryName}.html\">".ss_HTMLEditFormat($cat['ca_name'])."</a></li>");
+					showCategories($data,$cat['ca_id']);
+				}
+				print("</ul>");
+			}
+		}
+		$_REQUEST['HasShowCategories'] = 1;
+	}
+
+	showCategories($data,$data['ca_id']);	
+?>

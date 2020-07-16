@@ -1,0 +1,90 @@
+	<SCRIPT LANGUAGE="Javascript">
+	<!--
+		function blurthiswindow() {
+//			document.body.blur();
+		}
+
+//		window.onfocus = 'blurthiswindow()';
+		
+		function mykeyhandler() {
+			if (window.event && window.event.keyCode == 8) { // try to cancel the backspace
+				if (window.event.srcElement.tagName.toUpperCase() != "INPUT" && window.event.srcElement.tagName.toUpperCase() != "TEXTAREA") {
+					window.event.cancelBubble = true;
+					window.event.returnValue = false;
+					return false;
+				}		 
+			}
+		}
+		
+		document.onkeydown = mykeyhandler;
+
+		var ExpandedAssets = new Array();
+		var PreviouslyExpandedAssets = new Array();
+		{LOOP $assets}
+		<CFLOOP LIST="#ATTRIBUTES.OpenAssets#" INDEX="i">
+			ExpandedAssets[#i#] = 1;	
+			PreviouslyExpandedAssets[#i#] = 1;
+		</CFLOOP>
+	
+		function returnOpenAssets() {
+			var List = '';
+			for (var i=0; i<ExpandedAssets.length; i++) {
+				if (ExpandedAssets[i]) {
+					List = List+i+',';
+				}
+			}
+			return List;
+		}
+		
+		function openClose(which,theImage,assetPath,assetLink,history,depth) {
+			theId=document.getElementById('cht'+assetLink);
+			assetID = which.substring(2,which.length);
+			if (theId && (theId.style.position == 'relative')) {
+				// Collapse the display
+				ExpandedAssets[assetID] = 0;
+				
+				if (theId) {
+					theId.style.position='absolute';
+					theId.style.visibility='hidden';	
+				} 
+				
+				if (theImage.src.indexOf('Branch') == -1) {
+					theImage.src = '#RelativeHere#Images/treeEndCollapsed.gif';
+				} else {
+					theImage.src = '#RelativeHere#Images/treeBranchCollapsed.gif';
+				}
+			} else {
+				// Expand the display
+				ExpandedAssets[assetID] = 1;
+	
+				// Need to get the asset tree using AssetTreePart
+				if (PreviouslyExpandedAssets[assetID] != 1) {
+					window.frames.treeLoader.location = '#CGI.SCRIPT_NAME#?act=Asset.TreePart&OpenAssets=#URLEncodedFormat(ATTRIBUTES.OpenAssets)#&Disable=#URLEncodedFormat(ATTRIBUTES.Disable)#&Exclude=#URLEncodedFormat(ATTRIBUTES.Exclude)#&CallBack=#URLEncodedFormat(ATTRIBUTES.CallBack)#&ElementID='+which+'&as_parent_as_id='+assetLink+'&AssetParentPath='+assetPath+'&Depth='+depth+'&History='+history;
+				} else {
+					if (theId) {
+						theId.style.position='relative';
+						theId.style.visibility='inherit';	
+					}
+				}
+				if (theImage.src.indexOf('Branch') == -1) {
+					theImage.src = '#RelativeHere#Images/treeEndExpanded.gif';
+				} else {
+					theImage.src = '#RelativeHere#Images/treeBranchExpanded.gif';
+				}
+			}
+		}
+	
+		function drawTree(element) {
+			temp = document.getElementById(element);		
+			temp.innerHTML = window.frames.treeLoader.treeDef;
+		}
+	//-->
+
+	</SCRIPT>
+
+	<CFIF NOT IsDefined("ATTRIBUTES.NoDiv")><DIV ID="AssetTree" STYLE="width:#ATTRIBUTES.Width#;height:#ATTRIBUTES.Height#; overflow:auto;border:solid black #ATTRIBUTES.Border#;" CLASS="treeBackground"></CFIF><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"><TR STYLE="height:5"><TD> </TD></TR><TR><TD ID="mainTree"></TD></TR></TABLE><CFIF NOT IsDefined("ATTRIBUTES.NoDiv")></DIV></CFIF>
+	<IFRAME STYLE="position:absolute;visibility:hidden" NAME="treeLoader" SRC="#CGI.SCRIPT_NAME#?act=Asset.TreePart&OpenAssets=#URLEncodedFormat(ATTRIBUTES.OpenAssets)#&Disable=#URLEncodedFormat(ATTRIBUTES.Disable)#&Exclude=#URLEncodedFormat(ATTRIBUTES.Exclude)#&CallBack=#URLEncodedFormat(ATTRIBUTES.CallBack)#&ElementID=mainTree">
+	</IFRAME>
+	
+	<CFSETTING SHOWDEBUGOUTPUT="No">
+</CFOUTPUT>

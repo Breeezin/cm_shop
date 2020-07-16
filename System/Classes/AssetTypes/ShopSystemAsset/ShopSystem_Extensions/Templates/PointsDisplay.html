@@ -1,0 +1,62 @@
+<?
+	$backURL = getBackURL();//$_SESSION['BackStack']->getURL();
+	global $cfg;
+	//$cfg['currentServer'] 
+	$shortBackURL = str_replace($cfg['currentServer'],'',$backURL);		
+?>
+
+<p>Points record for {tmpl_var UserName}</p>
+<p>Current unused points total: <strong><tmpl_if_var_strlen name="Balance">{tmpl_var Balance}<tmpl_else>0</tmpl_if></strong></p>
+<tmpl_if_query_has_rows query="Q_Points">
+	<table width="100%" border="1">
+		<tr>
+			<th align="left" width="25%">Earned from order #</th>
+			<th align="left" width="25%">Used on order #</th>
+			<th align="left" width="25%">Points</th>
+			<th align="left" width="25%">Expires On</th>
+			<th align="left" width"=20%">Manage</th>
+		</tr>
+		<tmpl_loop query="Q_Points">
+			<form>
+			<tr>
+				<td>{tmpl_row_var EarnedOrder}</td>
+				<td><tmpl_if_row_var_strlen name="SpentOrder">{tmpl_row_var SpentOrder}<tmpl_else>&nbsp;</tmpl_if></td>
+				<td>{tmpl_row_var up_points}</td>
+				<td>{tmpl_row_var_date name="up_expires" format="d M Y"}</td>
+				<td>
+					<select NAME="jumperSelect" onChange="jumper(this)">
+						<option value="">Manage</option>
+						<OPTION VALUE="index.php?act=ShopSystem_AcmeUserPointsAdministration.Edit&up_id={tmpl_row_var up_id}&BreadCrumbs=<?=ss_URLEncodedFormat('<A HREF="'.getBackURL().'">'.$row['up_points'].'</A>');?>">View/Edit</option>
+						<OPTION STYLE="background-color:red; color:white" VALUE="javascript:confirmDelete('index.php?act=ShopSystem_AcmeUserPointsAdministration.Delete&up_id={tmpl_row_var up_id}&BreadCrumbs=<?=ss_URLEncodedFormat('<A HREF="'.getBackURL().'">'.$row['up_points'].'</A>');?>')">Delete</OPTION>
+					</select>
+				</td>
+			</tr>
+			</form>
+		</tmpl_loop>
+	</table>
+</tmpl_if>
+
+
+<!--- Supporting Javascript Functions --->
+<SCRIPT language="Javascript">
+<!--
+
+	function confirmDelete(URL) {
+		if ( confirm("Are you sure you want to delete this record ?") ) {
+			document.location=URL+ "&BackURL=<?=$shortBackURL?>";
+		}
+	}
+	
+	
+	function jumper(selectList) {
+		urlAppend = selectList.options[selectList.selectedIndex].value;
+		selectList.form.reset();
+		if (urlAppend.toLowerCase().indexOf('javascript') == -1) {
+			
+			urlAppend =  urlAppend + "&BackURL=<?=$shortBackURL?>";
+		}
+		//alert(urlAppend);	
+		document.location = urlAppend;
+	}
+//-->
+</SCRIPT>

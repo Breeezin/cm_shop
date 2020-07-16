@@ -1,0 +1,23 @@
+{tmpl_if $data['JavaScriptOnly']}
+<SCRIPT LANGUAGE="Javascript">
+
+function UpdateTwoState(name,allowChange,allowChangeUse) {
+	if (allowChange) {
+		if (allowChangeUse) {
+			var next = {'1' : '0', '0' : '1'};
+			var currentValue = document.forms.{tmpl_var FormName}[name].value;
+			var nextValue    = next[currentValue];
+			
+			document.forms.{tmpl_var FormName}[name].value = nextValue;
+			document.images['IMG'+name].src = '{tmpl_var RelativeHere}Images/threeState_' + nextValue + '.gif';
+		} else {
+			alert("Feature not enabled : You are currently unable to restrict the viewing of assets to a particular user group (e.g. for creating 'Members Only' areas). If you would like to enable this feature, please contact your website developer.");
+		}
+	} else {
+		alert("Permission Denied : To change the permissions for this asset you must take ownership.");
+	}
+}
+</SCRIPT>
+{tmpl_else}
+<INPUT TYPE="HIDDEN" NAME="{tmpl_var FieldName}" VALUE="{tmpl_var Value}"><A HREF="javascript:UpdateTwoState('{tmpl_var FieldName}',{tmpl_var AllowChange},{tmpl_var AllowChangeUse})"><IMG ID="IMG{tmpl_var FieldName}" src="Images/threeState_{tmpl_var Value}.gif" BORDER="0"></A>
+{/tmpl_if}

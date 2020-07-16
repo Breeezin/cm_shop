@@ -1,0 +1,93 @@
+<form action="{tmpl_var AssetPath}/Stats/Yes" name="{tmpl_var TrimAssetName}Form" method="POST">
+<table border="0" cellpadding="5" cellspacing="0">
+	<tr>
+		<td>{tmpl_var as_name}</td>
+		{tmpl_if $data['HasTypeFilter']}	
+		<td>{tmpl_var_raw TypeSelect}</td>		
+		{tmpl_end}
+		<td><input name="AST_SEARCH_KEYWORDS" type="text" value="{tmpl_var Keywords}"></td>	
+		<td><input type="submit" value="Search"></td>
+	</tr>
+</table>
+</form>
+{tmpl_if $data['AllList'] != null}
+<table width="100%" cellpadding="5" cellspacing="0" >
+{tmpl_evaluate $counter = 1}
+<tr><td colspan="2">{tmpl_var Found}</td></tr>
+<tr align="left">
+	<th>Name</th>
+	{tmpl_if count($data['AssetTypes']) > 1}
+		<th>Type</th>
+	{tmpl_end}
+	<th>Description</th>
+</tr>
+<?php 
+	foreach($data['AllList'] as $row) {	
+?>
+<tr align="left" class="Search{tmpl_evaluate $rowClass = $counter%2==0?'Odd':'Even'; print($rowClass)}">		
+		<?php 
+			$link = '';
+			if ($row['as_type'] == 'OnlineShop') { 
+				$result = new Request(
+						'Asset.PathFromID',
+						array('as_id'	=>	$row['AssetLink'])
+				);
+				$assetPath = ss_EscapeAssetPath(ss_withoutPreceedingSlash($result->value));
+				$link = $assetPath.'/Service/Detail/Product/'.$row['as_id'];
+			} else if ($row['as_type'] == 'OnlineShopCat') { 
+				$result = new Request(
+						'Asset.PathFromID',
+						array('as_id'	=>	$row['AssetLink'])
+				);
+				$assetPath = ss_EscapeAssetPath(ss_withoutPreceedingSlash($result->value));
+				$link = $assetPath.'/Service/Engine/pr_ca_id/'.$row['as_id'];	
+			} else if ($row['as_type'] == 'DataCollection') {
+				$result = new Request('Asset.PathFromID',
+							array('as_id'	=>	$row['AssetLink']));
+				$assetPath = ss_EscapeAssetPath(ss_withoutPreceedingSlash($result->value));
+				$link = $assetPath.'/Service/SubPage/DaCoID/'.$row['as_id'];
+			} else {
+				$result = new Request('Asset.PathFromID',
+							array('as_id'	=>	$row['as_id'])
+						);
+				$assetPath = ss_EscapeAssetPath(ss_withoutPreceedingSlash($result->value));
+				$link = $assetPath;
+			}			
+		?>					
+		<td width="20%" valign="top">			
+            <p><a href="<?=$link?>">{tmpl_row_var as_name}</a><strong> </strong>         </p>
+  </td>
+		{tmpl_if count($data['AssetTypes']) > 1}
+		<td width="10%" nowrap valign="top">
+		<?php 
+			if ($row['as_type'] == 'OnlineShop' ||$row['as_type'] == 'OnlineShopCat' || $row['as_type'] == 'DataCollection') { 			
+		?>
+			{tmpl_eval  print $row['AssetParentName']}
+		<?php } else { ?>
+			{tmpl_eval  print $data['AssetTypes'][$row['as_type']]}
+		<?php } ?>							
+		</td>
+		{tmpl_end}
+		<td valign="top">
+		{tmpl_if strlen($row['as_search_content'])}			
+			{tmpl_evaluate print(substr($row['as_search_content'], 0, 255))} 		
+		{tmpl_else}	
+			{tmpl_evaluate print(substr($row['as_search_description'], 0, 255))} 		
+		{tmpl_end}
+		&nbsp;		
+		<a href="<?=$link?>">read more</a>	<img src="Images/arrow.gif" width="13" height="6">		</td>
+</tr>
+<tr class="Search{tmpl_evaluate $rowClass = $counter%2==0?'Odd':'Even'; print($rowClass)}">
+	<td colspan="3" align="right" valign="top" class="dotline">&nbsp;</td>
+ </tr>
+{tmpl_evaluate $counter++}
+{tmpl_end}
+<tr><td colspan="2">{tmpl_var_raw PageThru}</td></tr>
+</table>
+{tmpl_else}
+{tmpl_if $data['DidSearch']}
+Your search did not return any information.
+<br>
+Please retry using the search field above.
+{tmpl_end}
+{tmpl_end}

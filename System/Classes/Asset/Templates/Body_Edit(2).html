@@ -1,0 +1,352 @@
+<IFRAME ID="PipeFrame" NAME="PipeFrame" src="about:blank" STYLE="width:100%;height:100;display:none;"></IFRAME>
+<!--- Display a form to edit the details of an asst --->
+<FORM METHOD="POST" ACTION="{tmpl_var Script_Name}?act={tmpl_var act}&DoAction=Yes" NAME="AssetForm" ID="AssetForm" ENCTYPE="MULTIPART/FORM-DATA" ONSUBMIT="processForm()">
+
+    {tmpl_errors errors}
+    <TABLE ID="AssetTypeEdit" BORDER="0" WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+		<TR>
+			<TD> 				
+				{tmpl_if $data['as_type'] == "Users"}
+					<TABLE CELLPADDING="5" CELLSPACING="0" width="100"><TR><TD VALIGN="TOP" class="bodytext">
+					Users
+					</TD></TR></TABLE>
+				{tmpl_elseif ($data['as_system'] == 1) || ($data['as_owner_au_id'] == 0 and !ss_HasPermission('IsSuperUser'))}
+					<TABLE CELLPADDING="5" CELLSPACING="0" width="100"><TR><TD VALIGN="TOP" class="bodytext">
+		          	 <?=str_replace(" ","&nbsp;",ss_HTMLEditFormat($data['at_display']))?>&nbsp;Name&nbsp;:&nbsp;<?=str_replace(" ","&nbsp;",ss_HTMLEditFormat($data['as_name']))?> {tmpl_var as_deleted}<INPUT TYPE="hidden" NAME="as_name" VALUE="{tmpl_var as_name}">
+					</TD></TR></TABLE>
+		        {tmpl_else} 
+		        <TABLE CELLPADDING="5" CELLSPACING="0" width="100"><TR><TD VALIGN="TOP" class="bodytext">
+					<SCRIPT TYPE="text/javascript">
+					<!--
+						// copyright 1999 Idocs, Inc. http://www.idocs.com
+						// Distribute this script freely but keep this notice in place
+						var allowedCharacters = 'abcdefghijklmnopqrstuvwxyz 0123456789-,.)(';
+						
+						function letternumber(e) {
+							var key;
+							var keychar;
+							
+							if (window.event)
+							   key = window.event.keyCode;
+							else if (e)
+							   key = e.which;
+							else
+							   return true;
+							keychar = String.fromCharCode(key);
+							keychar = keychar.toLowerCase();
+							
+							// control keys
+							if ((key==null) || (key==0) || (key==8) || 
+							    (key==9) || (key==13) || (key==27) )
+							   return true;
+							
+							// alphas and numbers
+							else if ((allowedCharacters.indexOf(keychar) > -1))
+							   return true;
+							else {
+							   alert('Sorry, that character is not allowed in the asset name.');
+							   return false;
+							}
+						}
+						
+						
+					  	function checkAssetName() {
+							// This is a safety incase they try to do a cut and paste
+							var checkStr = document.forms.AssetForm.as_name.value;
+							var allValid = true;
+							var newVersion = '';
+							for (var i = 0;  i < checkStr.length;  i++) {
+								ch = checkStr.charAt(i);
+								if (allowedCharacters.indexOf(ch.toLowerCase()) == -1) {
+									allValid = false;
+								} else {
+									newVersion += ch;
+								}
+							}
+							if (!allValid) {
+								document.forms.AssetForm.as_name.value = newVersion;
+								alert('Some characters have been removed from your asset name as they are not allowed. The following characters are allowed : '+allowedCharacters);
+							}
+							return true;
+						}
+						
+					//-->
+					</SCRIPT>				  
+				Name: </TD><TD><INPUT TYPE="TEXT" NAME="as_name" VALUE="{tmpl_var as_name}" SIZE="30" MAXLENGTH="255" ONKEYPRESS="return letternumber(event);" ONCHANGE="checkAssetName();"></TD>
+				<TD>
+		          <SELECT NAME="as_appear_in_menus">
+		          {tmpl_if strlen($data['as_appear_in_menus']) && $data['as_appear_in_menus']}
+		          	{tmpl_eval $CBYes = "SELECTED";}
+		          	{tmpl_eval $CBNo  = "";}
+		          {tmpl_else}
+		          	{tmpl_eval $CBYes = "";}
+		          	{tmpl_eval $CBNo  = "SELECTED";}
+		          {tmpl_end}
+		            <OPTION VALUE="1" {tmpl_eval print($CBYes)}>Appears In Menus</OPTION>
+		            <OPTION VALUE="0" {tmpl_eval print($CBNo)}>Does Not Appear In Menus</OPTION>		    		
+		    	</SELECT> {tmpl_var as_deleted}
+				</TD></TR>
+				</TABLE>
+				 {tmpl_end} 
+				
+			</TD>
+			<TD ALIGN="RIGHT">
+				<TABLE CELLPADDING="5" CELLSPACING="0"><TR><TD>
+				  	<!--- Save, Move, Copy, Delete --->
+
+			        <table id="enabledButtons" width="100" border="0" cellpadding="0" cellspacing="0">
+				          <tr>
+				          <SCRIPT LANGUAGE="Javascript">
+				          	 function disableButtons() {
+				          	 	document.getElementById('enabledButtons').style.display = 'none';
+				          	 	document.getElementById('disabledButtons').style.display = '';
+				          	 }	
+				          </SCRIPT>
+				            <td width="70%">&nbsp;</td>
+							{tmpl_if $data['as_type'] != "Users"}
+								<td><INPUT TYPE="IMAGE" src="Images/but-save-close.gif" ALT="Save Asset" TITLE="Save and Close" NAME="SaveCloseButton" STYLE="border:none 1px;" id="SaveCloseButton" onMouseOver="MM_swapImage('label','','Images/but-save-close-lb.gif','SaveCloseButton','','Images/but-save-close-on.gif',1)" onMouseOut="MM_swapImgRestore()" ONCLICK="document.getElementById('SaveStarting').innerHTML = 'Saving&nbsp;and&nbsp;Closing...&nbsp;please&nbsp;wait';disableButtons();"></td>
+							{tmpl_end}
+							<td><INPUT TYPE="IMAGE" src="Images/but-save.gif" ALT="Save Asset" TITLE="Save" STYLE="border:none 1px;" id="SaveButton" onMouseOver="MM_swapImage('label','','Images/but-save-lb.gif','SaveButton','','Images/but-save-on.gif',1)" onMouseOut="MM_swapImgRestore()" ONCLICK="document.getElementById('SaveStarting').innerHTML = 'Saving...&nbsp;please&nbsp;wait';disableButtons();"></td>
+							{tmpl_if $data['as_type'] == "Page"}
+								<td><INPUT name="import" TYPE="IMAGE" src="Images/but-import.gif" ALT="Import Asset" TITLE="Import" STYLE="border:none 1px;" id="Image6" onMouseOver="MM_swapImage('label','','Images/but-import-lb.gif','Image6','','Images/but-import-on.gif',1)" onMouseOut="MM_swapImgRestore()" ONCLICK="document.getElementById('SaveStarting').innerHTML = 'Importing... please wait';disableButtons();"></td>
+								<td><INPUT name="export" TYPE="IMAGE" src="Images/but-export.gif" ALT="Export Asset" TITLE="Export" STYLE="border:none 1px;" id="Image5" onMouseOver="MM_swapImage('label','','Images/but-export-lb.gif','Image5','','Images/but-export-on.gif',1)" onMouseOut="MM_swapImgRestore()" ONCLICK="document.getElementById('SaveStarting').innerHTML = 'Exporting... please wait';disableButtons();"></td>
+							{tmpl_end}
+							{tmpl_if !(($data['as_system'] == 1) || ($data['as_owner_au_id'] == 0 and !ss_HasPermission('IsSuperUser')))}
+					            <td><A HREF="javascript:moveAsset()" ><img border="0" src="Images/but-move.gif" name="Image2" id="Image2" onMouseOver="MM_swapImage('label','','Images/but-move-lb.gif','Image2','','Images/but-move-on.gif',1)" onMouseOut="MM_swapImgRestore()"></A></td>
+					            <td><A HREF="javascript:copyAsset()"><img border="0" src="Images/but-copy.gif" name="Image3" id="Image3" onMouseOver="MM_swapImage('label','','Images/but-copy-lb.gif','Image3','','Images/but-copy-on.gif',1)" onMouseOut="MM_swapImgRestore()"></A></td>
+					            <td><A HREF="javascript:deleteAsset()"><img border="0" src="Images/but-delete.gif" name="Image4" id="Image4" onMouseOver="MM_swapImage('label','','Images/but-delete-lb.gif','Image4','','Images/but-delete-on.gif',1)" onMouseOut="MM_swapImgRestore()"></A></td>
+				           	{tmpl_end}
+				          </tr>
+						  <tr><td align="right" colspan="8"><img src="Images/but-holder-lb.gif" name="label" width="89" height="12" id="label"></TD>
+						  </tr>
+						  <tr>
+						  	<td align="right" colspan="8" ID="SaveCompleted" STYLE="color: Red">&nbsp;</TD>
+					  	</tr>
+		         </table>
+				        		
+			        <table id="disabledButtons" style="display:none;" width="100" border="0" cellpadding="0" cellspacing="0">
+				          <tr>
+				            <td width="70%">&nbsp;</td>
+							{tmpl_if $data['as_type'] != "Users"}
+							<td><img src="Images/but-save-close.gif" STYLE="border:none 1px;" id="SaveCloseButton"></td>
+							{tmpl_end}
+							<td><img src="Images/but-save.gif" STYLE="border:none 1px;" id="SaveButton"></td>
+							{tmpl_if $data['as_type'] == "Page"}
+								<td><img src="Images/but-import.gif" STYLE="border:none 1px;"></td>
+								<td><img src="Images/but-export.gif" STYLE="border:none 1px;"></td>
+							{tmpl_end}
+							{tmpl_if !(($data['as_system'] == 1) || ($data['as_owner_au_id'] == 0 and !ss_HasPermission('IsSuperUser')))}
+					            <td><img border="0" src="Images/but-move.gif"></td>
+					            <td><img border="0" src="Images/but-copy.gif"></td>
+					            <td><img border="0" src="Images/but-delete.gif"></td>
+				           	{tmpl_end}
+				          </tr>
+						  <tr><td align="right" colspan="8"><img src="Images/but-holder-lb.gif" name="label2" width="89" height="12" id="label2"></TD>
+						  </tr>
+						  <tr>
+						  	<td align="right" colspan="8" ID="SaveStarting" STYLE="color: Red">&nbsp;</TD>
+					  	</tr>
+				        </table>		
+
+				</TD></TR></TABLE>
+			</TD>
+		</TR>		
+		
+		<TR> 
+	        <TD COLSPAN="2">
+					 <SCRIPT language="javascript">
+						function toggleView(choice,icon) {
+							
+							var panel = document.getElementById('Panel' + choice);
+							var panelBar = document.getElementById('PanelBar' + choice);
+							var panelSpan = document.getElementById('PanelSpan' + choice);
+							var panelBarIcon = document.getElementById('PanelBarIcon' + choice);
+							var panelBarArrow = document.getElementById('PanelBarArrow' + choice);
+				
+							if (panel.style.display == 'none') {
+
+								// Make visible
+								panel.style.display = '';
+							
+								
+								//if (choice != 0) {
+							 
+								//panel.style.position = 'relative';
+								
+								//alert("togglveiew: 2-2:pos "+panel.style.position);
+								panelBar.className = 'panelBarOpen';
+								//alert("togglveiew: 2-3");
+								panelSpan.className = 'tabtext-onCopy';
+								//alert("togglveiew: 2-4");
+								panelBarArrow.src = 'Images/arrow-up.gif';
+								//alert("togglveiew: 2-5");
+								panelBarIcon.src = 'Images/'+icon+'-icon-on.gif';
+								//alert("togglveiew: 2-6");
+								//}
+							} else {
+								// Make hidden
+								//alert("togglveiew: 3");
+								//panel.style.visibility = 'hidden';
+								//panel.style.position = 'absolute';
+								panel.style.display = 'none';
+								panelBar.className = 'panelBarClosed';
+								panelSpan.className = 'tabtext-off';
+								panelBarArrow.src = 'Images/arrow-dwn.gif';
+								panelBarIcon.src = 'Images/'+icon+'-icon.gif';
+							}
+//							alert(panelBarIcon.src);
+						}
+					</SCRIPT> 
+					
+                              <table width="100%" border="0" cellspacing="7" cellpadding="0">
+                                <tr> 
+                                  <td>
+           
+                                  {tmpl_eval $result = new Request("Asset.OpenerCloser",array('Open'	=>  1,'Icon' =>	'page', 'Panel'	=>	3, 'Name' => $data['at_display'],));	print($result->display);}
+				
+				<TABLE ID="Panel3" WIDTH="100%" STYLE="display:none;" CLASS="panelBackground" cellpadding="10">
+					<TR>
+						<TD> 
+                           <table bgcolor="white" width="100%" border="0" cellspacing="0" cellpadding="8" style="border: 1px solid black;"><tr><td>
+                           {tmpl_eval $data['AssetTypeObject']->edit($data['this']);}
+							</td></tr></table>
+						</TD>
+					</TR>
+				</TABLE>
+                        </td>
+                                </tr>
+                                <tr> 
+                                  <td> 
+								
+
+				{tmpl_eval $result = new Request("Asset.OpenerCloser",array('Icon' =>	'layout', 'Panel'	=>	0, 'Name' => 'Layout',));	print($result->display);}
+
+				<TABLE ID="Panel0" WIDTH="100%" STYLE="display:none;" CLASS="panelBackground" cellpadding="10">
+					<TR>
+						<TD>
+                           <table bgcolor="white" width="100%" border="0" cellspacing="0" cellpadding="3" style="border: 1px solid black;"><tr><td>
+						{tmpl_eval $data['this']->layoutForm(); }												
+							</td></tr></table>
+						
+						</TD>
+					</TR>
+				</TABLE>			
+                                  </td>
+                                </tr>
+<? /*                                 
+                                <tr> 
+                                  <td> 
+
+                                  {tmpl_openclose Icon="sub" Panel="1" Name="Sub Items"}
+				<TABLE ID="Panel1" WIDTH="100%" STYLE="display:none;" CLASS="panelBackground" cellpadding="10">
+	                  <TR>
+	                    <TD>
+                           <table bgcolor="white" width="100%" border="0" cellspacing="0" cellpadding="3" style="border: 1px solid black;"><tr><td>
+						
+						 <TABLE CELLSPACING="0" CELLPADDING="5">
+	                        <TR> 
+	                          <TD ><SELECT NAME="SubAssets[]" SIZE="13" STYLE="width:50ex">
+	                          {tmpl_loop Q_SubAssets}
+	                                <OPTION VALUE="{tmpl_row_var as_id}">{tmpl_row_var_html as_name}</OPTION>
+	                          {tmpl_end}
+	                            </SELECT> <INPUT TYPE="HIDDEN" NAME="subAssetSortOrder" VALUE=""></TD>
+	                          <TD VALIGN="TOP"> <INPUT TYPE="BUTTON" VALUE="Up" CLASS="childrenButton" onClick="subAssetUp()"> 
+	                            <BR> <INPUT TYPE="BUTTON" VALUE="Down" CLASS="childrenButton" onClick="subAssetDown()"> 
+	                            <BR> <INPUT TYPE="BUTTON" VALUE="Edit" CLASS="childrenButton" onClick="subAssetEdit()"> 
+	                            <BR> <INPUT TYPE="BUTTON" VALUE="Add" CLASS="childrenButton"  onClick="subAssetAdd()"> 
+	                            <BR> <INPUT TYPE="BUTTON" VALUE="Refresh" CLASS="childrenButton"  onClick="subAssetRefresh();this.blur();"> 
+	                            <BR> <SMALL><STRONG>Note:</STRONG> To delete a sub 
+	                            asset you must edit the asset.</SMALL> </TD>
+	                        </TR>
+	                      </TABLE> 
+							</td></tr></table>
+						  
+						  </TD>
+	                  </TR>
+	            </TABLE> 
+              </td>
+              </tr>
+       */ ?>
+               <tr> 
+              <td> 
+	             {tmpl_if $data['IsDeployer']}
+				{tmpl_eval $result = new Request("Asset.OpenerCloser",array('Icon' =>	'security', 'Panel'	=>	2, 'Name' => 'Security',));	print($result->display);}
+				<TABLE ID="Panel2" WIDTH="100%" STYLE="display:none;" CLASS="panelBackground" cellpadding="10">
+	                <TR>
+	                    <TD>
+                           <table bgcolor="white" width="100%" border="0" cellspacing="0" cellpadding="3" style="border: 1px solid black;"><tr><td>
+							{tmpl_eval $result = new Request("Asset.Security",array('as_id' => $data['as_id'], 'as_owner_au_id'	=>	$data['as_owner_au_id'],));	print($result->display);}
+							</td></tr></table>
+						</TD>
+	            	</TR>
+	            {tmpl_end}
+	             {tmpl_if $data['IsDeployer']}
+                               <tr> 
+                                  <td> 
+				{tmpl_eval $result = new Request("Asset.OpenerCloser",array('Icon' =>	'development', 'Panel'	=>	4, 'Name' => 'Development',));	print($result->display);}
+				<TABLE ID="Panel4" WIDTH="100%" STYLE="display:none;" CLASS="panelBackground" cellpadding="10">
+	                <TR>
+	                    <TD>
+                           <table bgcolor="white" width="100%" border="0" cellspacing="0" cellpadding="3" style="border: 1px solid black;"><tr>
+							<TD class="bodytext">Type: </TD><TD class="bodytext">{tmpl_fieldset_field fieldset="fieldSet" field="as_type"}</TD>					
+							</tr>
+							<tr>
+							<TD class="bodytext">Development: </TD><TD class="bodytext">{tmpl_fieldset_field fieldset="fieldSet" field="as_dev_asset"}</TD>					
+							</tr>
+							</table>
+						</TD>
+	            	</TR>
+	          	</TABLE>            
+	          	    
+                                  </td>
+                                </tr> 
+                                {tmpl_end}    	
+	          	</TABLE>
+				</td>
+                </tr>                            
+                
+  		</table>
+				
+				<SCRIPT LANGUAGE="Javascript">
+					toggleView(3,'sub');
+					//toggleView(0,'layout');
+				</SCRIPT>
+				
+			</TD>
+	    </TR>
+    </TABLE>
+    <INPUT TYPE="HIDDEN" NAME="as_id" 		VALUE="{tmpl_var as_id}">
+    <INPUT TYPE="HIDDEN" NAME="as_parent_as_id" VALUE="{tmpl_var as_parent_as_id}">
+    <INPUT TYPE="HIDDEN" NAME="ViewAfter" 		VALUE="No">
+	<INPUT TYPE="HIDDEN" NAME="soHeight"		VALUE="{tmpl_var SoHeight}">
+	
+
+<script type="text/javascript">
+function mySubmit() {
+	//document.AssetForm.onsubmit(); // workaround browser bugs.
+//	document.AssetForm.submit();
+};
+</script>	
+	
+</FORM>
+{tmpl_if condition="array_key_exists('DoAction',$data)"}
+    <SCRIPT language="JavaScript">
+    	//parent.frames.AssetPanelFrame.MTreeRoot.nodes[{tmpl_var as_id}].changeDisplay('{tmpl_var_js as_name}');
+		parent.assetReload();
+		
+		{tmpl_if count($data['errors'])}
+			alert("Save failed.  Please correct errors and try again.");
+		{tmpl_else}
+			parent.changeTitle({tmpl_var as_id}, '{tmpl_eval print(ss_JSStringFormat(str_replace(' ', '&nbsp;', $data['as_name'])))}');
+			document.getElementById('SaveCompleted').innerHTML = '{tmpl_var_raw JustDid}';			
+			setTimeout("document.getElementById('SaveCompleted').innerHTML = '&nbsp;';",4000);
+//			alert("Save completed.");
+		{tmpl_end}
+		
+				
+		// note actually needed as assets refresh sub assets when they focus
+		
+//		document.forms.AssetForm.FocusGetter.focus();
+	</SCRIPT>
+{tmpl_end}
+

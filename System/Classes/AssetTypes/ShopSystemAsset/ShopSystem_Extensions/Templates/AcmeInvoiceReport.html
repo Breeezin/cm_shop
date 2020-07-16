@@ -1,0 +1,54 @@
+{tmpl_errors Errors}
+
+<tmpl_if condition="!array_key_exists('Q_Invoices',$data)">
+	<p>Please enter the start and end dates to view invoices for:</p>
+</tmpl_if>
+<table class="noPrint">
+	<form method="post" action="index.php?act=OnlineShop.AcmeInvoiceReport">
+	<tr>
+		<td>Start Date:</td>
+		<td><input type="text" name="StartDate" value="{tmpl_var StartDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>End Date:</td>
+		<td><input type="text" name="EndDate" value="{tmpl_var EndDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="Submit" name="Submit" value="Submit"></td>
+	</tr>
+	</form>
+</table>
+<tmpl_if condition="array_key_exists('Q_Invoices',$data)">
+<p>
+	Invoices for period {tmpl_var StartDate} to {tmpl_var EndDate} <input type="button" name="print" onclick="window.print();" class="noPrint" value="Print">
+</p>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Invoice</strong></td>
+		<td><strong>Order</strong></td>
+		<td><strong>Auth</strong></td>
+		<td><strong>Date</strong></td>
+		<td><strong>Client Name</strong></td>
+		<td><strong>Invoice Amount</strong></td>
+		<td><strong>Charged</strong></td>
+	</tr>
+<?php $data['total'] = 0; ?>
+<tmpl_loop query="Q_Invoices">
+	<tr>
+		<td>{tmpl_row_var inv_id}</td>
+		<td>{tmpl_row_var or_tr_id}</td>
+		<td>{tmpl_row_var or_authorisation_number}</td>
+		<td>{tmpl_row_var_date name="in_date" format="d M y"}</td>
+		<td>{tmpl_row_var in_destination}</td>
+		<td>{tmpl_row_var_raw or_total}</td>
+		<td align="right">{tmpl_row_var in_total_value}</td>
+	</tr>
+	<?php $data['total'] += $row['in_total_value']; ?>
+</tmpl_loop>
+	<tr>
+		<td colspan="3">Total</td>
+		<td align="right"><?php print(ss_decimalFormat($data['total']));?></td>
+	</tr>
+</table>
+</tmpl_if>

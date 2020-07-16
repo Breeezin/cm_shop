@@ -1,0 +1,151 @@
+<!-- ?php    ss_DumpVarHide($data);
+ ? -->
+ <style type="text/css">
+
+  .submitLink {
+   color: #00f;
+   background-color: transparent;
+   text-decoration: underline;
+   border: none;
+   cursor: pointer;
+   cursor: hand;
+  }
+
+</style> 
+
+
+<form name="schedulerForm" id="schedulerForm" action="/{tmpl_var_raw AssetPath}" method="get">
+<input type="hidden" name="date" id="date" value="{tmpl_var Date}">
+<input type="hidden" name="br" id="br" value="{tmpl_var br}">
+<table>
+<tr>
+    <td><Strong>Choose View</Strong></td>
+    <td>
+        <input name="T" id="T" type="radio" value="daily" <?php if ($data['T'] == 'daily') echo 'CHECKED'; ?> > Daily 
+        <input name="T" id="T" type="radio" value="weekly" <?php if ($data['T'] == 'weekly') echo 'CHECKED'; ?> > Weekly 
+    </td>
+<td width="50px" rowspan="3" valign="bottom" align="right"><input type="submit" value="Go"></td>    
+</tr>
+<?php
+    if ($data['isAdmin'] || $data['showAll']) {
+        $userSelect ="<tr><td><Strong>Select Users</Strong></td><td>";
+    
+        $userSelect .= '<select  name="userid" id="userid">';
+        $userSelect .= "<option value=\"0\" ".($data['User']==0?'SELECTED':'').">All Users</option>";
+        foreach ($data['AllUsers'] as $name => $id) {
+            if ($data['User'] == $id)
+                $userSelect .= "<option value=\"$id\" SELECTED>$name</option>";
+            else
+                $userSelect .= "<option value=\"$id\">$name</option>";
+        }
+        $userSelect .= '</select></td></tr>';
+        echo $userSelect;
+    }
+    
+    function echoSelect($value,$type='hour') {
+        $result = '';
+        $found = false;
+        if ($type=='hour') {
+            for ($i = 0; $i < 24; $i++){
+                if (!$found && mktime($i) >= mktime(date('G',strtotime($value)))) {   // [int hour [, int minute 
+                   $found = true;
+                   $result .= "<option value='$i' SELECTED >$i</option>";      
+                } else
+                   $result .= "<option value='$i' >$i</option>";
+            }
+            echo $result;
+        } else {
+            for ($i = 0; $i <= 45; $i = $i + 15){
+                if (!$found && mktime(0,$i) >= mktime(0,date('i',strtotime($value)))) {
+                   $found = true;
+                   $result .= "<option value='$i' SELECTED >".($i==0?'00':$i)."</option>";      
+                } else
+                   $result .= "<option value='$i' >".($i==0?'00':$i)."</option>";
+            }
+            echo $result;
+        }
+    }
+?>
+ <script language="Javascript">
+ <!-- 
+     var date = '<?=date('Y-m-d ',strtotime($data['Date']))?>';
+     var datem7 = '<?=date('Y-m-d ',strtotime($data['Date']) - 60 * 60 * 24 * 7 )?>';
+     var datem1 = '<?=date('Y-m-d ',strtotime($data['Date']) - 60 * 60 * 24 * 1 )?>';
+     var datep1 = '<?=date('Y-m-d ',strtotime($data['Date']) + 60 * 60 * 24 * 1 )?>';
+     var datep7 = '<?=date('Y-m-d ',strtotime($data['Date']) + 60 * 60 * 24 * 7 )?>';
+     function fixDateTime(s){
+        if(s == 'start') {
+            h = document.forms.schedulerForm.EvStart_Hour.value;
+            m = document.forms.schedulerForm.EvStart_Min.value;
+            document.forms.schedulerForm.starttime.value = date + h + ':' + m + ':00';
+        } else {
+            h = document.forms.schedulerForm.EvEnd_Hour.value;
+            m = document.forms.schedulerForm.EvEnd_Min.value;
+            document.forms.schedulerForm.endtime.value = date + h + ':' + m + ':00';
+        }
+            
+     }
+     function traverse(s){
+        h = document.forms.schedulerForm.EvStart_Hour.value;
+        m = document.forms.schedulerForm.EvStart_Min.value;
+        eh = document.forms.schedulerForm.EvEnd_Hour.value;
+        em = document.forms.schedulerForm.EvEnd_Min.value;
+        switch (s) {
+            case -7 :
+                document.forms.schedulerForm.date.value = datem7 + '00:00:00';
+                document.forms.schedulerForm.starttime.value = datem7 + h + ':' + m + ':00';
+                document.forms.schedulerForm.endtime.value = datem7 + eh + ':' + em + ':00';
+                break;
+            case -1 :
+                document.forms.schedulerForm.date.value = datem1 + '00:00:00';
+                document.forms.schedulerForm.starttime.value = datem1 + h + ':' + m + ':00';
+                document.forms.schedulerForm.endtime.value = datem1 + eh + ':' + em + ':00';
+                break;
+            case 1 :
+                document.forms.schedulerForm.date.value = datep1 + '00:00:00';
+                document.forms.schedulerForm.starttime.value = datep1 + h + ':' + m + ':00';
+                document.forms.schedulerForm.endtime.value = datep1 + eh + ':' + em + ':00';
+                break;
+            case 7 :
+                document.forms.schedulerForm.date.value = datep7 + '00:00:00';
+                document.forms.schedulerForm.starttime.value = datep7 + h + ':' + m + ':00';
+                document.forms.schedulerForm.endtime.value = datep7 + eh + ':' + em + ':00';
+                break;            
+        }
+        return true;
+     }
+     
+     function createNew(h,m){
+        document.forms.schedulerForm.action = "/{tmpl_var_raw AssetPath}/Service/New";
+        document.forms.schedulerForm.starttime.value = date + h + ':' + m + ':00';
+        document.forms.schedulerForm.endtime.value = date + h + ':' + m + ':00';
+        document.schedulerForm.submit();
+     }
+     function deleteEvent (id,br){
+        if ( confirm("Delete this event?") ) {
+            document.forms.schedulerForm.action = "/{tmpl_var_raw AssetPath}/Service/Delete/EvID/" + id + "/br/" + br;
+            document.forms.schedulerForm.submit();
+        }
+     }
+// -->
+</script>
+<tr>
+    <td><Strong>Filter Times</Strong></td>
+    <td><INPUT NAME="starttime" value="{tmpl_var Start}" TYPE="hidden">
+<select name="EvStart_Hour" ONCHANGE="fixDateTime('start');"><?php echoSelect($data['Start'],'hour'); ?></select>
+<select name="EvStart_Min" ONCHANGE="fixDateTime('start')"><?php echoSelect($data['Start'],'min'); ?></select>
+
+<strong>till </strong>
+
+<INPUT NAME="endtime" value="{tmpl_var End}" TYPE="hidden">
+<select name="EvEnd_Hour" ONCHANGE="fixDateTime('end');"><?php echoSelect($data['End'],'hour'); ?></select>
+<select name="EvEnd_Min" ONCHANGE="fixDateTime('end');"><?php echoSelect($data['End'],'min'); ?></select>
+
+</td>
+</tr>
+</table>
+
+<table class="schedularContents">
+{tmpl_var_raw tableContent}
+</table>
+</form>

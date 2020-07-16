@@ -1,0 +1,49 @@
+<SCRIPT language="javascript">	
+	function downloadme(fileName){    	
+		alert(fileName);
+    	document.execCommand("SaveAs",'1',fileName);    	
+	}
+	
+</SCRIPT>
+<FORM action="index.php?act=CSSEditor.Edit&DoAction=Yes" method="POST" name="EditorForm">
+<TABLE width="100%">
+	<TR>	
+		<TH>File Name:</TH>
+		<TD><SELECT name="CSSName" onchange="this.form.submit();">			
+			<?php 
+			$appearsInMenus = "";
+			$doesntappearsInMenus = "SELECTED";
+			$selectedCSS = 0;
+			foreach($data['AllCSSs'] as $key => $value) {				
+				$selected = "";
+				if ($data['SelectedCSS'] == "$key") {
+					$selected = "selected";													
+					$selectedCSS = $value;										
+				}				
+				print("<option value='$key' $selected >$key</option>");
+			}
+			if ($selectedCSS == 1) {							
+				$appearsInMenus = "SELECTED";
+				$doesntappearsInMenus = "";
+			}			
+			
+			?>		
+			</SELECT>&nbsp;<select Name="AppearsIn">						
+			<option <?=$appearsInMenus?> value="Yes">Appears in the stylesheet selector</option>
+			<option <?=$doesntappearsInMenus?> value="No">Does not appear in the stylesheet selector</option></select> 
+			&nbsp;<a href="{tmpl_var_raw CSSLink}" target="_blank">Download Now</a>
+			&nbsp;<input type="button" onclick="this.form.Action.value='Save';this.form.submit()" value="Save" name="Save">
+		</TD>
+	<TR>	
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD><TEXTAREA name="CSSContent" rows="40" cols="100">{tmpl_var_raw CSSContent}</TEXTAREA>		
+		</TD>
+	</TR>
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD><a href="{tmpl_var_raw CSSLink}" target="_blank">Download Now</a>&nbsp;<input type="button" onclick="this.form.Action.value='Save';this.form.submit()" value="Save" name="Save"></TD>
+	</TR>
+</TABLE>
+<INPUT type="hidden" name="Action" value="">
+</FORM>

@@ -1,0 +1,35 @@
+.textContact {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #660808;
+}
+.textContact:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000000;
+}
+.textHeading {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #660808;
+}
+.Bodytext,body,p,td,table {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 12px; 
+	color: #010101; 
+	text-decoration: none
+}
+.textSubHeading {
+	font-size: 12px;
+	font-weight: bold;
+	color: #3C3C3C;
+}
+.Border {
+		border: 1px solid #000000;
+}
+.dotline {
+	background-image: url(Images/dotline.gif);
+	background-repeat: repeat-x;
+	background-position: center;
+}

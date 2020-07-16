@@ -1,0 +1,61 @@
+<tmpl_if condition="$data['Done'] == false">
+{tmpl_errors name="Errors"}
+<form method="post" action="index.php?act=OnlineShop.AcmeDailyReport">
+<p>
+<strong>Correos</strong>
+<tmpl_if_query_has_rows query="Q_ShippedToday">
+<!--<table border="1" width="100%">
+	<tr>
+		<td><strong>Date Shipped</strong></td>
+		<td><strong>Order ID</strong></td>
+		<td><strong>DUA Number</strong></td>
+		<td><strong>Customer Last Name</strong></td>
+	</tr>
+	<atmpl_loop query="Q_ShippedToday">
+	<tr>
+		<td>{atmpl_row_var_date name="shp_date" format="d M Y"}</td>
+		<td>{atmpl_row_var or_tr_id}</td>
+		<td>{atmpl_row_var shp_customs_number}</td>
+		<td>{atmpl_row_var or_purchaser_lastname}</td>
+	</tr>
+	</atmpl_loop>
+</table>-->
+<br>Total number of boxes shipped today: <?=$data['Q_ShippedToday']->numRows();?><br>
+<table>
+	<tr><td>Date:</td><td><input type="text" name="ShipDate" value="{tmpl_var ShipDate}"> (dd/mm/yyyy)</td></tr>
+	<tr><td>Total Cost:</td><td>&euro; <input type="text" name="Amount" value="{tmpl_var Amount}"></td></tr>
+	<tr><td>Reference:</td><td><input type="text" name="Ref" value="{tmpl_var Ref}"></td></tr>
+	<tr><td>Paid?:</td><td><input type="checkbox" name="Paid" value="1" style="border:0px;"></td></tr>
+</table>
+<tmpl_else>
+	<p>
+	No boxes shipped.
+	</p>
+	<input type="hidden" name="ShippingIgnored" value="1">
+</tmpl_if>
+</p>
+<p>
+<strong>Banco</strong><br>
+<table>
+	<tr><td>Balance:</td><td>&euro; <input type="text" name="BankAmount" value="{tmpl_var BankAmount}"></td></tr>
+</table>
+</p>
+<p>
+<strong>Almacen Bjorck Bros.</strong><br>
+<table>
+	<tr><td>Stock:</td><td><input type="text" name="Stock" value="{tmpl_var Stock}"></td></tr>
+</table>
+</p>
+<p>
+<strong>Notes</strong><br>
+<textarea name="Note" style="width:100%" cols="50" rows="7" border="1px solid black">{tmpl_var Note}</textarea>
+</p>
+<input type="submit" name="Submit" value="Update">
+
+</form>
+<tmpl_else>
+<p>
+Done.  You may now <a href="Javascript:window.close();void(0);">close this window</a>.
+</p>
+
+</tmpl_if>

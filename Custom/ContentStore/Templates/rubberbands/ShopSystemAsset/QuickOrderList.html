@@ -1,0 +1,224 @@
+<?php global $shown_toggler; if(! IsSet($shown_toggler)  ) { $shown_toggler = 1; ?>
+<script language="Javascript">
+function showProd(what)
+    {  
+    showme=document.getElementById('more'+what);
+    showme.style.display='none';
+    showme=document.getElementById('less'+what);
+    showme.style.display='block';
+    showme=document.getElementById('prodFold'+what);
+    showme.style.display='block';
+    }
+function hideProd(what)
+    {  
+    showme=document.getElementById('more'+what);
+    showme.style.display='block';
+    showme=document.getElementById('less'+what);
+    showme.style.display='none';
+    showme=document.getElementById('prodFold'+what);
+    showme.style.display='none';
+    }
+
+
+</script>
+<? } ?>
+
+<div class="home-quickorderlist">
+
+  <TMPL_LOOP query="Q_Products">
+  <FORM name="ProductDetail{tmpl_row_var pr_id}" action='https://<?=$_SERVER['HTTP_HOST']?>/{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'>
+    <INPUT type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+    
+    <!-- Product detail start -->
+    <div class="Product-details-contain">
+      
+      <!-- Individual Product --> 
+      
+      <!-- Product Name --> 
+      <div class="ProductName">
+            <?php
+				$data['AddVis'] = true;
+				$data['OutVis'] = false;
+				if (array_key_exists('ProductStockLevels',$_REQUEST) and array_key_exists($row['pr_id'],$_REQUEST['ProductStockLevels']))
+				{
+					if ($_REQUEST['ProductStockLevels'][$row['pr_id']] == 'false') 
+					{
+						$data['AddVis'] = false;
+						$data['OutVis'] = true;
+					}
+				}
+				if ($row['pr_combo'])
+				{
+					$Q_Combos = query(" SELECT pro_stock_available, cpr_qty FROM shopsystem_products, shopsystem_product_extended_options, shopsystem_combo_products
+						WHERE cpr_element_pr_id = {$row['pr_id']}
+						AND cpr_pr_id = pr_id
+						AND pr_id = pro_pr_id
+						");
+
+					$someInStock = true;
+					while ($com=$Q_Combos->fetchRow()) 
+						if ($com['pro_stock_available'] == null)
+							;
+						else if ($com['pro_stock_available'] < $com['cpr_qty'])
+							$someInStock = false;	
+
+					if( !$someInStock )
+					{
+						$data['AddVis'] = false;
+						$data['OutVis'] = true;
+					}
+				}
+            ?>
+			<div class="size1of1">
+              <A href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName" title="More about {tmpl_row_var pr_name} Llamas">{tmpl_row_var pr_name}</A>
+			</div>
+	</div>		
+	<!-- /Product Name -->
+	
+<div class="line shortview">	 				
+<!-- Product Info Left-->         
+<div class="left quicklookcase">
+            <span class="cigarnumber" >
+			<?php
+              if( $row['pr_ve_id'] == 2 )
+              echo $row['pr0_883_f']. " llamas<BR/>";
+			?>
+            </span>
+            <TMPL_IF condition="$data['AddVis'] && $row['pr_id'] > 0">
+            <input type="hidden" name="Options" value="<? print($row['pro_id']);?>">
+            	<SPAN id="AddToBasket_{tmpl_row_var pr_id}" class="addtobasket" >
+				<!-- crap
+            	<A href="javascript:document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit();" class="red-button">
+            		Add to Basket
+            	</A>
+				!-->
+				<input type='submit' class="red-button addtocartbutton" value='Add to Cart' />
+            	</SPAN>
+            </TMPL_IF>
+            			
+            <TMPL_IF condition="$data['OutVis']">
+            	<SPAN id="OutOfStock_{tmpl_row_var pr_id}" class="gold-button" >
+            	Out of Stock
+            	</SPAN>
+            </TMPL_IF>
+      <SPAN>
+        <TMPL_IF condition="strlen($row['pr_as_id'])">
+        <DIV <?= "id=\"more".$row['pr_id']."\""?>  style="display:;" >
+          <A style="display:" href="Javascript:showProd('<?= $row['pr_id']?>');void(0);" class="morelink">+ More</A>
+        </DIV>
+        <DIV <?= "id=\"less".$row['pr_id']."\""?>  style="display:none;" >
+         <A style="display:" href="Javascript:hideProd('<?= $row['pr_id']?>');void(0);" class="morelink">- Less</A> 
+        </DIV>
+        </TMPL_IF>
+      </SPAN>      
+</div>
+<!-- /Product Info Left-->
+
+<!-- Product Info Right-->     
+<div class="right quicklookcase">
+			<span>
+			<?php
+			if( array_key_exists( 'PricesSmall', $row ) )
+				echo $row['PricesSmall'];
+			?>
+            </span>
+		
+    <!-- Thumbnail -->
+			<span>
+              <TMPL_IF condition="strlen($row['WideImage'])">
+                <A href="{tmpl_row_var ProductDetailLink}">
+                <IMG border="0" src="{tmpl_row_var WideImage}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></A>
+              </TMPL_IF>
+            </span>
+            
+  </div><!-- end of rt box -->
+            
+         
+		
+  
+<!-- Product fold -->
+    <DIV <?= "id=\"prodFold".$row['pr_id']."\""?>  style="display:none; float:right;" class="home-mc-boxn-span">
+
+      <!-- thumbnail box + rating -->
+      <DIV class="Thumbnail-box">
+        <TMPL_IF condition="$row['pr_customer_rating'] >= 90">
+          <IMG src="Images/<?=round($row['pr_customer_rating']);?>.gif" title="Rated {tmpl_row_var pr_customer_rating}" />
+        </TMPL_IF>
+      </DIV>
+      <!-- /thumbnail box + rating end -->
+
+        <DIV class="product-short">
+          {tmpl_row_var_parse pr_short} 
+        </DIV>
+
+        <!-- More product details -->
+        <DIV class="more-product-details">
+          <?PHP if( strlen( $row['PrCigarLength'] ) || strlen( $row['PrCigarThickness'] ) ) { ?>
+             <div class="onlineShop_ProductSize"><IMG src="Custom/ContentStore/Templates/acmeexpress/OnlineShopAsset/Images/arrow-shop.gif" style="margin-right:6px;"> <STRONG>Size:</STRONG>
+              <?PHP ss_ShowCigarSize( $row['PrCigarLength'], $row['PrCigarThickness'] ); ?>
+              </div>
+          <?PHP } ?>
+          
+          <?PHP if( array_key_exists( 'ct_name', $row ) and strlen( $row['ct_name'] ) and ($row['ct_name'] != 'Unknown') ) { ?>
+               <div class="onlineShop_ProductSize"><IMG src="Custom/ContentStore/Templates/acmeexpress/OnlineShopAsset/Images/arrow-shop.gif"><STRONG>Type:</STRONG><?PHP echo $row['ct_name']; ?>
+         	</div>
+       
+          <?PHP } ?>
+          
+          <?php
+            $data['AttributesHTML'] = $data['this']->processTemplate('Attributes', $attributes);
+            if ($row['pr_combo'])
+              {
+              $Combo = getRow("SELECT SUM(cpr_qty) AS TheCount FROM shopsystem_combo_products
+                          WHERE cpr_element_pr_id = {$row['pr_id']}");
+              print('<div class="onlineShop_ProductSize"><IMG src="Images/arrow-shop.gif" ><STRONG> Boxes in combo:</STRONG> '.$Combo['TheCount'].'</div><BR>');    //  (you will be charged shipping for '.$Combo['TheCount'].' boxes)
+              $data['AttributesHTML'] = '<STRONG><IMG src="Images/arrow-shop.gif" > Llamas per box:</STRONG> <div class="onlineShop_ProductSize">Varies</div><BR>';
+              }
+          ?>
+          {tmpl_var_raw AttributesHTML}
+          <? /* $row = $tempRow; */ ?>
+  
+          <div id="WishList_{tmpl_row_var pr_id}">
+            <A href="index.php?act=Security.AddToWishList&pr_id=<?php echo $row['pr_id'];?>&BackURL=<?PHP echo $_SERVER['REQUEST_URI'];?>" class="gold-button">
+              Add to Favourites
+            </A>
+          </div>
+        </DIV> <!-- more-product-details -->
+
+        <!-- More product details End-->
+        <!-- Price -->
+        <TMPL_IF condition="$row['pr_id'] > 0">
+          {tmpl_row_var_raw PricesHTML}    <!-- Price end-->
+          <!-- Rating -->
+          <TMPL_IF condition="$row['pr_ve_id'] != 1">
+            <DIV class="product-rating">
+              <TMPL_IF condition="$row['pr_customer_rating'] !== null and $row['pr_customer_rating_count'] !== null">
+                <STRONG> Product Rating:</STRONG>
+                <?php 
+                $data['Star1'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+                $data['Star2'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+                $data['Star3'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+                $data['Star4'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+                $data['Star5'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+                if ($row['pr_customer_rating'] >= 70) $data['Star2'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+                if ($row['pr_customer_rating'] >= 80) $data['Star3'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" >';
+                if ($row['pr_customer_rating'] >= 90) $data['Star4'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" >';
+                if ($row['pr_customer_rating'] >= 95) $data['Star5'] = '<IMG title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+                ?>{tmpl_var_raw Star1}{tmpl_var_raw Star2}{tmpl_var_raw Star3}{tmpl_var_raw Star4}{tmpl_var_raw Star5}<BR />
+                <!--Based on {tmpl_row_var pr_customer_rating_count} customer <?=ss_pluralize($row['pr_customer_rating_count'],'rating','ratings');?>
+                <A href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</A>-->
+              <TMPL_ELSE>
+                <!--<A href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</A>-->
+              </TMPL_IF>
+            </DIV> <!--product-rating-->
+          </TMPL_IF>
+          <!-- Rating end -->
+        </TMPL_IF>
+      </DIV>    <!--product-fold-->
+    </div>              
+   
+  </DIV> <!-- Product-details-contain -->
+    <!-- Product detail end -->
+  </FORM>
+  </TMPL_LOOP>
+</div>

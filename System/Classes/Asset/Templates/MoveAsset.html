@@ -1,0 +1,35 @@
+{tmpl_if $data['AreDefined'] == 1}
+	
+	<SCRIPT language="Javascript">
+		window.opener.moveCallback('{tmpl_var NewAssetName}');
+		window.opener.focus();
+		window.close();
+	</SCRIPT>
+	
+{tmpl_else}
+<!----
+	<P>
+	This asset either does not exist or cannot be moved.
+	</P>
+	<P>
+	<A HREF="Javascript:window.close()">Click here</A> to close this window.
+	</P>
+
+---->
+<P>
+	Please select the location you would like to move {tmpl_eval print($data['Asset']['as_name']);} to.
+	</P>
+	
+	<DIV ID="AssetTree" STYLE="width:275;height:300; overflow:auto;border:solid black 1px;" CLASS="treeBackground"><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"><TR STYLE="height:5"><TD> </TD></TR><TR><TD ID="mainTree">{tmpl_var_raw TreeResult}</TD></TR></TABLE></DIV>
+
+	<SCRIPT language="Javascript">
+		function moveAssetTo(as_id,AssentName,AssetPath,AssetParentID,AssetParentPath) {
+				document.location = "index.php?act=Asset.Move&DoAction=Yes&as_id={tmpl_eval print($data['Asset']['as_id']);}&as_parent_as_id=" + escape(as_id);				
+		}
+	</SCRIPT>
+
+
+<SCRIPT LANGUAGE="Javascript">
+	window.focus();
+</SCRIPT>
+{tmpl_end}

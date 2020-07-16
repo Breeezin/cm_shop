@@ -1,0 +1,214 @@
+<?php
+	requireClass('ShopSystem_ProductsAdministration');	
+	$temp = new Request("Security.Sudo",array('Action'=>'start'));			
+	$productAdmin = new ShopSystem_ProductsAdministration($data['this']->asset->getID());		
+	$temp = new Request("Security.Sudo",array('Action'=>'stop'));	
+
+?>
+<link href="../../../Layouts/acmeexpress/sty_shop.css" rel="stylesheet" type="text/css">
+<link href="../../../Layouts/acmeexpress/sty_main.css" rel="stylesheet" type="text/css">
+
+{tmpl_var_raw CurrencyConverterHTML}
+<table width="100%" border=0 cellpadding="10" cellspacing="0" class="onlineshopListtable">
+  <tbody>
+    <tr>
+      <td>
+        <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" class="onlineShop_ProductListingHeader">
+          <tbody>
+            <tr>
+			      <td width="90%" class="onlineShop_productBand_category">{tmpl_var SearchCategory}</td>
+					<form action="{tmpl_var AssetPath}/Service/Engine" method="POST">
+		                <td align="right">
+		                	<tmpl_if condition="$data['SearchCategoryAll'] === null or (array_key_exists('ca_password',$data['SearchCategoryAll']) and $data['SearchCategoryAll']['ca_password'] === null)">
+								<select name="pr_ca_id" class="onlineShop_productBand_categorySelect" onChange="this.form.submit()">
+									<option selected value="">Select Category</option>
+									<option value="">All Categories</option>
+									<tmpl_loop query="Q_Categories">
+										<option value="{tmpl_row_var ca_id}">{tmpl_row_var ca_name}</option>
+									</tmpl_loop>
+								</select>
+							</tmpl_if>
+		                </td>
+					</form>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div align="right">{tmpl_var_raw PageThru}<br>
+        </div>
+        <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
+			<tmpl_loop query="Q_Products">
+				<tmpl_if condition="$data['LastCategory'] !== $row['pr_ca_id']">
+					<tmpl_eval expression="$data['LastCategory'] = $row['pr_ca_id']; $categoryRow = $data['Q_Categories']->getRow($data['Q_Categories']->getRowWithValue('ca_id',$data['LastCategory'])); $data['CategoryName']=$categoryRow['ca_name'];">		        	
+					<!--
+					<tr>
+	        		    <td height="2" colspan="2" class="onlineShop_DotLine"><img src="Images/holder.gif" width="10" height="2" /></td>
+          			</tr>
+          			-->
+				</tmpl_if>
+
+				<form name="ProductDetail{tmpl_row_var pr_id}">
+					
+				<!-- Product detail start -->
+		            <tr>
+		              	<td width="85" align="center" valign=top class="ResultRowEven">
+		              		<tmpl_if condition="strlen($row['Image'])">
+								<a href="{tmpl_row_var ProductDetailLink}"><img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></a>
+
+							</tmpl_if>
+					 	</td>
+		              	<td align="left" valign="top">
+			                <p><a href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName">{tmpl_row_var pr_name}</a><br>
+						     <span class="onlineShop_ProductListingSubCategory">							{tmpl_var CategoryName}</span>
+							 <span class="onlineShop_ProductDetails"><br>
+							<?php if( array_key_exists( 'prd_short', $row ) ) { ?>
+									{tmpl_row_var_parse prd_short}
+							<?php } else { ?>
+									{tmpl_row_var_parse pr_short}
+							<?php } ?>
+							</span><tmpl_if condition="strlen($row['pr_short'])"><tmpl_if condition="!ss_OptionExists('Hide Prices')"><tmpl_if condition="ss_OptionExists('Sell Products')"></tmpl_if></tmpl_if></tmpl_if></p>
+			                <table width="100%" border="0" cellspacing="0" cellpadding="3">
+								<tr valign="bottom">
+								 <td align="left" colspan="2">
+								 				<table cellspacing="0" cellpadding="0">
+				<tr><td>
+
+<?php
+
+	// Get a product administration object so we have a list of all attribute
+	// and option fields
+	$productAdmin->primaryKey = $row['pr_id'];
+	$temp = null;
+	$productAdmin->loadFieldValuesFromDB($temp);					
+	
+	// Get all the attribute field names
+	ss_paramKey($data['this']->asset->cereal,'AST_SHOPSYSTEM_ATTRIBUTES','');
+	if (strlen($data['this']->asset->cereal['AST_SHOPSYSTEM_ATTRIBUTES'])) {
+		$fieldsArray = unserialize($data['this']->asset->cereal['AST_SHOPSYSTEM_ATTRIBUTES']);
+	} else {
+		$fieldsArray = array();	
+	}
+
+	// Get the attribute field values
+	$attributes = array();
+	foreach($fieldsArray as $fieldDef) {
+		
+		// Param all the settings we might have
+		ss_paramKey($fieldDef,'uuid','');
+		ss_paramKey($fieldDef,'type','');		
+		ss_paramKey($fieldDef,'options',array());		
+		ss_paramKey($fieldDef,'name','unknown');
+								
+		// Check the field is existing in the Users database table
+		$dbFieldName = 'Pr'.$fieldDef['uuid'];		
+		
+		if (array_key_exists($dbFieldName,$productAdmin->fields)) {			
+			$attributes[$fieldDef['name']] = $productAdmin->fields[$dbFieldName]->displayValue($row[$dbFieldName]);			
+		}
+				
+	}	
+
+?>
+				<?
+					$data['AttributesHTML'] = $data['this']->processTemplate('Attributes', $attributes);
+					if ($row['pr_combo']) {
+						$Combo = getRow("
+							SELECT SUM(cpr_qty) AS TheCount FROM shopsystem_combo_products
+							WHERE cpr_element_pr_id = {$row['pr_id']}
+						");
+						print('<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Boxes in combo:</strong> <span class="onlineShop_ProductSize">'.$Combo['TheCount'].'</span><br>');	//  (you will be charged shipping for '.$Combo['TheCount'].' boxes)
+						$data['AttributesHTML'] = '<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Llamas per box:</strong> <span class="onlineShop_ProductSize">Varies</span><br>';
+					}
+					
+				?>
+					{tmpl_var_raw AttributesHTML}
+				<?
+					$data['Q_BackStampCode'] = query("
+						SELECT soit_date_changed, soit_bs_code
+						FROM shopsystem_supplier_order_sheets_items, shopsystem_products, shopsystem_product_extended_options
+						WHERE pr_id = pro_pr_id
+							AND pr_id = {$row['pr_id']}
+							AND pro_stock_code LIKE soit_stock_code
+							AND soit_bs_code IS NOT NULL 
+							AND soit_date_changed IS NOT NULL
+						ORDER BY soit_date_changed DESC
+						LIMIT 0,1					
+					");
+					$tempRow = $row;
+				?>				<tmpl_loop query="Q_BackStampCode">
+					<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Last Factory Code is {tmpl_row_var soit_bs_code} and was received on {tmpl_row_var_date name="soit_date_changed" format="j M y"}</strong><br>									
+					This does not guarantee you will get the same code since stock is continuously changing.<br />
+				</tmpl_loop>
+										
+				<? $row = $tempRow; ?>
+                                        
+		<tmpl_if condition="$row['pr_id'] > 0">
+			<p>{tmpl_row_var_raw PricesHTML}
+			<tmpl_if condition="$row['pr_customer_rating'] !== null and $row['pr_customer_rating_count'] !== null">
+				<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Product Rating:</strong>
+				<?php 
+					$data['Star1'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+					$data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					if ($row['pr_customer_rating'] >= 70) $data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 80) $data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 90) $data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 95) $data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+				?>{tmpl_var_raw Star1}{tmpl_var_raw Star2}{tmpl_var_raw Star3}{tmpl_var_raw Star4}{tmpl_var_raw Star5}<br />
+				<img src="Images/holder.gif" width="10" height="7"> Based on {tmpl_row_var pr_customer_rating_count} customer <?=ss_pluralize($row['pr_customer_rating_count'],'rating','ratings');?>
+				<a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</a>
+			<tmpl_else>
+				<img src="Images/holder.gif" width="10" height="7"> <a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</a>			
+			</tmpl_if></p>
+                                        <tmpl_eval expression="print($data['this']->getOptions($row,$data['OptionFieldsArray']))"> 
+</td>
+				<tmpl_if condition="$row['pr_customer_rating'] >= 90">
+				<td>
+					&nbsp;<img src="Images/<?=round($row['pr_customer_rating']);?>.gif" title="Rated {tmpl_row_var pr_customer_rating}" />
+				</td></tmpl_if>
+				</tr></table>                                        
+                                        </td>
+								</tr>
+								<tr valign="bottom">
+								<?php
+									$data['AddVis'] = true;
+									$data['OutVis'] = false;
+									if (array_key_exists('ProductStockLevels',$_REQUEST) and array_key_exists($row['pr_id'],$_REQUEST['ProductStockLevels'])) {
+										if ($_REQUEST['ProductStockLevels'][$row['pr_id']] == 'false') {
+											$data['AddVis'] = false;
+											$data['OutVis'] = true;	
+										}	
+									}
+								?>
+									<td align="left"><tmpl_if condition="$data['AddVis']"><span id="AddToBasket_{tmpl_row_var pr_id}"><a href="javascript:if (readyToBuy[{tmpl_row_var pr_id}]) { document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit() } else { alert('Please make a choice from the options before continuing.') }"><img src="Images/but-add_to_basket.gif" border="0" /></a></span></tmpl_if><tmpl_if condition="$data['OutVis']"><span id="OutOfStock_{tmpl_row_var pr_id}"><img src="Images/but-outofstock.gif"></span></tmpl_if></td>
+									<td align="right"><a href="javascript:document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_row_var_js ProductDetailLink}'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit()"><img src="Images/but-view_product_detail.gif" alt="View Product Details" width="157" height="17" border="0" /></a></td>
+								</tr>
+						 </table>
+		<tmpl_else>
+			<p></p>
+			</td>
+			</tr>
+		 </table>
+		</td>
+		</tr>
+		</table>
+		</tmpl_if>
+				     </td>
+	             	</tr>
+		          	<tr>
+			            <td height="2" colspan="2" class="onlineShop_DotLine"><img src="Images/holder.gif" width="10" height="2" /></td>
+		          	</tr>
+				<!-- Product detail end --->
+				</form>
+			</tmpl_loop>
+        </table>
+        <div align="right">{tmpl_var_raw PageThru} 
+		</div></td>
+    </tr>
+  </tbody>
+</table>

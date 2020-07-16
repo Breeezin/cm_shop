@@ -1,0 +1,106 @@
+<SCRIPT>
+	function dump(o) {
+		var s = '';
+		for (var prop in o) {
+			s += prop + ' = ' + o[prop] + '\n';
+		}
+		//document.getElementById('dbg').innerHTML = '<pre>' + s + '</pre>';
+		alert(s);
+	}
+		
+	window.resizeTo(620, 380);
+		
+	function getSelectValue(aField) {
+		return document.forms.embedForm[aField].options[document.forms.embedForm[aField].selectedIndex].value;
+	}
+	<?php global $cfg;?>
+	function preview(imagePath) {	
+		
+		document.getElementById('PreviewFrame').src = "<?=$cfg['currentServer']?>"+imagePath;		
+	}
+	
+	function setSelectedImage(selectedImage) {
+		document.getElementById('SelectedImageName').innerHTML = "<B>" + selectedImage+"</B>";
+		document.embedForm.SelectedImage.value = selectedImage;
+	}
+	function deleteImage(selectedImage) {		
+		if (confirm("Are you sure you wish to delete "+selectedImage+"?")) {
+			document.embedForm.SelectedImage.value = selectedImage;
+			document.embedForm.Action.value = "Delete";
+			document.embedForm.submit();
+		} else {
+			for (var i = 0; i < document.embedForm.DeleteImage.length; i++) {
+				document.embedForm.DeleteImage[i].checked = false;
+			}
+			alert("Deleted aborted.");						
+		}
+		
+	}
+	function checkForm() {
+		var selectedImage = document.embedForm.SelectedImage.value;
+		<?=$data['OnClick']?>
+		opener.window.focus();
+		window.close();
+	}
+	
+	
+</SCRIPT>
+<P>
+Choose an existing images, or to upload a new image now, click the browse button.<BR>
+{tmpl_if strlen($data['Error'])}
+&nbsp;&nbsp;&nbsp;&nbsp;<strong>{tmpl_var Error}</STRONG>
+{tmpl_end}
+</P>
+<FORM ACTION="index.php?act={tmpl_var_url act}&DoAction=Yes" ENCTYPE="MULTIPART/FORM-DATA" NAME="embedForm" method="post">
+<TABLE BORDER="0">
+	<TR>
+	<TD valign="top" width="50%">	
+		<DIV ID="Images" STYLE="width:275;height:250; overflow:auto;border:solid black 1px;" CLASS="treeBackground">				
+			<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+				<TR><TH align="left" width="15%">Delete</TH><TH  align="left">Name</TH><TH align="left">Size</TH></TR>				
+				<?php 
+					$dh=opendir($data['Directory']);
+					while ($file=readdir($dh)){
+						if($file!="." && $file!=".."){
+							$fullpath=$data['Directory'].$file;							
+							$size = sprintf("%1.1f",filesize($fullpath)/1024);
+							if(!is_dir($fullpath)){															
+				?>
+				<TR OnMouseOver="this.style.backgroundColor='#CCCCCC'" OnMouseOut="this.style.backgroundColor='white'" onclick="setSelectedImage('<?=$file?>');">
+				<TD align="right"><input type="checkbox" name="DeleteImage" onclick="deleteImage('<?=$file?>')" style="border:0px" value="<?=$fullpath?>"></TD>
+				<TD><a href="javascript:void(0)" onclick="preview('<?=$fullpath?>')"><?=$file?></a></TD>
+				<TD><?=$size?>KB</TD></TR>				
+				<?php 
+							}
+						}
+					}
+					closedir($dh);
+		
+				?>
+			</TABLE>		
+		</DIV>	
+	</TD>
+	<TD valign="top"><IFRAME ID="PreviewFrame" SRC="about:blank" WIDTH="300" HEIGHT="200" NAME="PreviewFrame"></IFRAME><BR><SMALL>Preview: Images may be smaller than actual size.</SMALL><BR>
+	<INPUT TYPE="FILE"   VALUE="" NAME="SharedImage_FileField" SIZE="10em">
+	<INPUT TYPE="HIDDEN" NAME="Filename" VALUE="">
+	<INPUT TYPE="SUBMIT" NAME="FileAction" VALUE="Upload">
+	<INPUT TYPE="hidden" NAME="Action" VALUE="Upload">
+	</TD></TR>	
+</TABLE>
+	<DIV align="right">
+	<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="{tmpl_var as_id}">
+	<INPUT TYPE="HIDDEN" NAME="SelectedImage" VALUE="{tmpl_var SelectedImage}">
+	<INPUT TYPE="HIDDEN" NAME="OnClick" VALUE="{tmpl_var OnClick}">
+	<span id="SelectedImageName">&nbsp;</span>&nbsp;
+	<INPUT TYPE="button" NAME="Submit" VALUE="Select" onclick="checkForm()">	
+	<INPUT TYPE="BUTTON" onClick="window.close()" VALUE="Cancel">
+	</DIV>
+</FORM>
+<script>
+	function init() {
+		var theID = null;
+		var loadAssetID = '{tmpl_var as_id}';		
+	}
+	
+init();
+</SCRIPT>

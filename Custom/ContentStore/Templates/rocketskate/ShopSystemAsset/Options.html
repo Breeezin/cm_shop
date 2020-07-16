@@ -1,0 +1,251 @@
+<tmpl_if condition="$data['pr_id'] > 0">
+	<script language="Javascript">
+
+	<tmpl_if condition="!array_key_exists('ShopOptionsJavascript',$GLOBALS)">
+		<tmpl_eval expression="$GLOBALS['ShopOptionsJavascript'] = 'included';">
+		
+		var prodOps = new Array();
+		var opNames = new Array();
+		var gotInitialPrices = new Array();
+		var initialPrices = new Array();
+		var readyToBuy = new Array();
+		var currentOptions = {tmpl_var CurrentOptions};
+		var optionSelectedIndex = 0;
+		var hasStock = new Array();
+	
+		/*function decimalFormat(num) {
+			var base=100*(num-Math.floor(num))+0.5;
+			return Math.floor(num)+"."+Math.floor(base/10)+Math.floor(base%10);
+		}*/
+
+		<?
+		print("currencyCode = '".ss_JSStringFormat($data['Currency']['CurrencyCode'])."';");
+		print("beforeSymbol = '".ss_JSStringFormat($data['Currency']['Appears']=='before'?$data['Currency']['Symbol']:'')."';");
+		print("afterSymbol = '".ss_JSStringFormat($data['Currency']['Appears']=='after'?$data['Currency']['Symbol']:'')."';");
+		?>
+	
+		function formatPrice(amt,withCurrency) {
+			var result = beforeSymbol+amt+afterSymbol;
+			if (withCurrency) result += ' '+currencyCode
+			return result;
+		}
+		
+		function trySetInnerHTML(el,html) {
+			var o = document.getElementById(el);
+			if (o) o.innerHTML = html;
+		}
+
+		function tryGetInnerHTML(el) {
+			var o = document.getElementById(el);
+			if (o) return o.innerHTML;
+			return null;
+		}
+
+		function grabInitialPrices(pr_id) {
+ 			initialPrices[pr_id]['RRP'] = tryGetInnerHTML('RRP'+pr_id);
+			initialPrices[pr_id]['normalPrice'] = tryGetInnerHTML('normalPrice'+pr_id);
+			initialPrices[pr_id]['specialPrice'] = tryGetInnerHTML('specialPrice'+pr_id);
+ 			initialPrices[pr_id]['RRPApprox'] = tryGetInnerHTML('RRP'+pr_id+'approx');
+			initialPrices[pr_id]['normalPriceApprox'] = tryGetInnerHTML('normalPrice'+pr_id+'approx');
+			initialPrices[pr_id]['specialPriceApprox'] = tryGetInnerHTML('specialPrice'+pr_id+'approx');
+			gotInitialPrices[pr_id] = true;
+		}
+		function displayInitialPrices(pr_id) {
+			trySetInnerHTML('RRP'+pr_id,initialPrices[pr_id]['RRP']);
+			trySetInnerHTML('normalPrice'+pr_id,initialPrices[pr_id]['normalPrice']);
+			trySetInnerHTML('specialPrice'+pr_id,initialPrices[pr_id]['specialPrice']);
+			trySetInnerHTML('RRP'+pr_id+'approx',initialPrices[pr_id]['RRPApprox']);
+			trySetInnerHTML('normalPrice'+pr_id+'approx',initialPrices[pr_id]['normalPriceApprox']);
+			trySetInnerHTML('specialPrice'+pr_id+'approx',initialPrices[pr_id]['specialPriceApprox']);
+		}
+		
+		function updatePrices(pr_id,what) {
+			if (!gotInitialPrices[pr_id]) grabInitialPrices(pr_id);
+			if (what.selectedIndex == 0) {
+				readyToBuy[pr_id] = false;
+				displayInitialPrices(pr_id);
+			} else {
+				readyToBuy[pr_id] = true;
+				// Find the product option for this id;
+				for (var i=0;i<prodOps[pr_id].length;i++) {
+					if (prodOps[pr_id][i].ID == what.options[what.selectedIndex].value) {
+						op = prodOps[pr_id][i];	
+						break;
+					}
+				}
+				// Display the prices
+				if (op.R) {
+					trySetInnerHTML('RRP'+pr_id,formatPrice(op.R,true));
+					trySetInnerHTML('RRP'+pr_id+'approx',op.Ra);
+				} else {
+					trySetInnerHTML('RRP'+pr_id,'N/A');
+					trySetInnerHTML('RRP'+pr_id+'approx','N/A');
+				}
+				if (op.S) {	
+					trySetInnerHTML('specialPrice'+pr_id,formatPrice(op.S,true));
+					trySetInnerHTML('specialPrice'+pr_id+'approx',op.Sa);
+					if (op.P) {
+						trySetInnerHTML('normalPrice'+pr_id,'<span class="onlineShop_oldPrice">'+formatPrice(op.P,true)+'</span>');	
+						trySetInnerHTML('normalPrice'+pr_id+'approx','<span class="onlineShop_oldPrice">'+op.Pa+'</span>');	
+					}
+				} else {
+					trySetInnerHTML('specialPrice'+pr_id,'N/A');
+					trySetInnerHTML('specialPrice'+pr_id+'approx','N/A');
+					if (op.P) {
+						trySetInnerHTML('normalPrice'+pr_id,formatPrice(op.P,true));	
+						trySetInnerHTML('normalPrice'+pr_id+'approx',op.Pa);	
+					}
+				} 
+				
+				// Display add to basket or out of stock
+				AddToBasket = document.getElementById('AddToBasket_'+pr_id);
+				if (AddToBasket) {
+					if (op.St.length == 0 || op.St > 0) {
+						AddToBasket.style.display = '';
+					} else {
+						AddToBasket.style.display = 'none';
+					}
+				}
+				
+				OutOfStock = document.getElementById('OutOfStock_'+pr_id);
+				if (OutOfStock) {
+					if (op.St.length == 0 || op.St > 0) {
+						OutOfStock.style.display = 'none';
+					} else {
+						OutOfStock.style.display = '';
+					}
+				}
+			}	
+		}
+
+		function displayOptions(pr_id,opNameID,path) {
+			for (var j=0;j<opNames[pr_id][opNameID].o.length;j++) {
+
+				// make a fresh copy of path
+				var tempPath = new Array();
+				for (var m=0;m<path.length;m++) tempPath[m] = path[m];
+				
+				// add the current option value
+				tempPath[tempPath.length] = opNames[pr_id][opNameID].o[j];
+				
+				// This is where we can check for matching product options
+				for (var k=0;k<prodOps[pr_id].length;k++) {
+					// Only check if has the same number of options as we have now
+					if (prodOps[pr_id][k].O.length == tempPath.length) {
+						var ops = prodOps[pr_id][k].O;
+						// Now loop through the temp path
+						matches = 0;
+						for (var n=0;n<tempPath.length;n++) {
+							// and check for each option in the temp path in the prod ops	
+							for (var p=0;p<ops.length;p++) {
+								// If any of the options match the temp path value its a match
+								if (ops[p].u == tempPath[n].u) {
+									matches++;	
+									break;
+								}	
+							}
+						}
+						// Check if got a match;
+						if (matches == tempPath.length) {
+							// Add it to the options
+							var desc = '';
+							var comma = '';
+ 							var value = '';
+							for (var r=0;r<tempPath.length;r++) {
+								desc += comma+tempPath[r].n;
+								comma = ', ';
+							}
+							document.forms['ProductDetail'+pr_id].Options.options[document.forms['ProductDetail'+pr_id].Options.options.length] = 
+								new Option(desc,prodOps[pr_id][k].ID);
+							if (currentOptions == prodOps[pr_id][k].ID) {
+								optionSelectedIndex = document.forms['ProductDetail'+pr_id].Options.options.length-1;
+							}
+						}
+						
+					}					
+				}
+				
+				if (opNameID == opNames[pr_id].length-1) {
+					// Exit condition
+				} else {
+					// Otherwise find more option types
+					for (var i=opNameID+1;i<opNames[pr_id].length;i++) {
+						displayOptions(pr_id,i,tempPath);
+					}
+				}
+			}
+		}
+		
+		function fillOptions(pr_id) {
+			for (var i=0;i<opNames[pr_id].length;i++) {
+				displayOptions(pr_id,i,new Array());
+			}
+			document.forms['ProductDetail'+pr_id].Options.selectedIndex = optionSelectedIndex;
+		}
+	</tmpl_if>
+		
+<tmpl_if condition="count($data['ProductOptions']) > 1">
+		gotInitialPrices[{tmpl_var pr_id}] = false;		
+		prodOps[{tmpl_var pr_id}] = new Array();
+		initialPrices[{tmpl_var pr_id}] = new Array();
+		
+	<?
+		$someInStock = 'false';
+	?>
+	<?	$counter=0; foreach ($data['ProductOptions'] as $row) {	
+		if (strlen($row['StockAvailable']) == 0 or $row['StockAvailable'] > 0) $someInStock = 'true';
+	?>
+		prodOps[{tmpl_var pr_id}][<?=$counter++;?>] = {ID: {tmpl_row_var_js ID}, St: '{tmpl_row_var_js StockAvailable}', P: '{tmpl_row_var_js rawPrice}', R: '{tmpl_row_var_js rawRRP}', S: '{tmpl_row_var_js rawSpecialPrice}', Pa: '{tmpl_row_var_js rawPriceApprox}', Ra: '{tmpl_row_var_js rawRRPApprox}', Sa: '{tmpl_row_var_js rawSpecialPriceApprox}', O:new Array( <? $comma = ''; foreach($row['Options'] as $opVals) { print("$comma{p:'{$opVals['parent']}', u:'{$opVals['uuid']}'}"); $comma = ',';} ?>) };
+	<?	}	?>
+		hasStock[{tmpl_var pr_id}] = <?=$someInStock?>;
+
+		opNames[{tmpl_var pr_id}] = new Array();
+	<?	$counter=0; foreach ($data['OptionFieldDefs'] as $row) {  ?>
+		opNames[{tmpl_var pr_id}][<?=$counter++;?>] = {u:'{tmpl_row_var_js uuid}', n:'{tmpl_row_var_js name}',o: new Array(<? $comma=''; foreach($row['options'] as $op) { $data['uuid'] = $op['uuid']; $data['name'] = $op['name']; print($comma); ?>{u:'{tmpl_var_js uuid}', n:'{tmpl_var_js name}'}<? $comma=',';} ?>)};
+	<?	}	?>
+	</script>
+	<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Options:</strong>
+			<select class="onlineShop_Options" name="Options" onchange="updatePrices({tmpl_var pr_id},this);">
+				<option value="">Please Select</option>
+			</select>
+	<br />	
+	<script language="Javascript">
+		readyToBuy[{tmpl_var pr_id}] = false; fillOptions({tmpl_var pr_id});
+		if (currentOptions != -1) updatePrices({tmpl_var pr_id},document.forms['ProductDetail{tmpl_var pr_id}'].Options);
+	</script>
+</table>
+<tmpl_else>
+	</script>
+	<input type="hidden" name="Options" value="<? print($data['ProductOptions'][0]['ID']);?>">
+	<?	$someInStock = 'false'; if (strlen($data['ProductOptions'][0]['StockAvailable']) == 0 or $data['ProductOptions'][0]['StockAvailable'] > 0) $someInStock = 'true'; ?>
+	<?
+		// check if any of the combo products are out of stock
+		$check = getRow("
+			SELECT pr_combo FROM shopsystem_products
+			WHERE pr_id = {$data['pr_id']}
+		");
+		if ($check['pr_combo'] == 1) {
+			$Q_Combos = query("
+				SELECT pro_stock_available, cpr_qty FROM shopsystem_products, shopsystem_product_extended_options, shopsystem_combo_products
+				WHERE cpr_element_pr_id = {$data['pr_id']}
+					AND cpr_pr_id = pr_id
+					AND pr_id = pro_pr_id
+			");
+			while ($com=$Q_Combos->fetchRow()) {
+				if ($com['pro_stock_available'] == null) {
+					// its ok.. not limitied
+				} else if ($com['pro_stock_available'] < $com['cpr_qty']) {
+					// out of stock
+					$someInStock = 'false';	
+				}
+			}
+		}
+	?>
+	
+	<script language="Javascript">readyToBuy[{tmpl_var pr_id}] = true; hasStock[{tmpl_var pr_id}] = <?=$someInStock?>;	</script>
+</tmpl_if>
+<?
+	ss_paramKey($_REQUEST,'ProductStockLevels',array());
+	$_REQUEST['ProductStockLevels'][$data['pr_id']] = $someInStock;
+?>
+</tmpl_if>

@@ -1,0 +1,397 @@
+.onlineShop_ProductListingSubCategory {
+	border:  none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #3E2116;
+	height: 20px;
+	padding-top: 9;
+	padding-bottom: 9;
+
+}
+.onlineShop_DotLine {
+	background-image:  url(Images/dotline-shop.gif);
+	background-repeat: repeat-x;
+	background-position: left center;
+	height: 30px;
+
+}
+.onlineShop_productBand_category {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #F7F5E5;
+	font-weight: bold;
+	background-color: 87684E;
+
+}
+.onlineShop_CategorySelect {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+}
+
+/* Shop Basket */
+.onlineShop_BasketTable {
+	background-color: #FFFFFF;
+
+
+}
+.onlineShop_BasketHeaderRow {
+	background-color: #87684E;
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #ffffff;
+}
+.onlineShop_basketQuantityField {
+
+}
+.onlineShop_totalChargeRow {
+	background-color: #C1C1C1;
+	padding : 0 0 0 5;
+	border:  1px #FFFFFF solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+
+/* Category listing AND product detail */
+.onlineShop_attributeTableHeader {
+
+}
+.onlineShop_attribute {
+
+}
+.onlineShop_optionTableHeader {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+.onlineShop_optionSelector {
+
+}
+.onlineShop_priceTableHeader,.onlineShop_RRPTableHeader {
+
+}
+.onlineShop_oldPrice {
+	text-decoration: line-through;
+}
+.onlineShop_price{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #9C1B00;
+	TEXT-DECORATION: none;
+	font-weight: bold;
+
+}
+.entryErrors {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;	
+	color: #D70610;
+	TEXT-DECORATION: none;
+	font-weight: bold;
+	
+}
+.onlineShop_SpecialPrice { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: 7B0000
+}
+.onlineShop_ProductSize {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color:#87684E;
+}
+.onlineShop_ProductName {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#CC6600;
+}
+.onlineShop_ProductName:hover {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	color:#3E2116;
+	TEXT-DECORATION: underline;
+}
+.onlineShop_ProductDetails {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+}
+/* Product detail */
+.onlineShop_separatorHR {
+
+}
+
+/* Checkout */
+.onlineShop_checkoutSectionHeading {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+}
+.onlineShop_checkoutSectionTable{
+	background-color: #F4F2ED;
+	padding : 0 0 0 5;
+	border:  1px solid #C9BFA7;
+	font-weight: bold;
+	}
+.onlineShop_checkoutSectionTableCurrent{
+	background-color: #6F859A;
+	padding : 0 0 0 5;
+	border:  1px #FFFFFF solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	}
+.onlineShop_userDetailTable {
+	color: #FFFFFF;
+}
+.productname {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+
+}
+.productname:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #177CD5;
+	text-decoration: underline;
+
+}/* Category listing */
+.onlineShop_ProductListingHeader {
+	padding : 0 0 0 5;
+	border:  1px solid #FFFFFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	background-color: 87684E;
+
+
+ } 
+.onlineShop_ProductListingPanel {
+	background-color: #FFFFFF;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: 959090;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: 959090;
+	font-size: 11px;
+} 
+.onlineShop_FormField {
+	border: 1px solid #333333;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+} 
+.shopLogoBack {
+	background-color: #B1D9FC;
+}
+.Calculateshiping {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #B44D00;
+	text-decoration: none;
+}
+.onlineShopBasketSubTotal {
+	padding : 0 0 0 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+	border-top-width: 1px;
+	border-top-style: dashed;
+	border-top-color: #87684E;
+
+
+}
+.onlineShopBasketTotal {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #C13129;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #87684E;
+
+
+}
+.onlineShopBasketOddRow {
+
+	background-color: #E9E5DC;
+}
+.textSmall {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #333333;
+	text-decoration: none;
+	font-weight: bold;
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-align: left;
+	padding-left: 5px;
+}
+.onlineShopShopProgressBar {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+}
+.onlineShopShopProgressBarTable {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #666666;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: solid;
+	border-top-color: C9BFA7;
+	border-left-color: C9BFA7;
+	background-color: #FFFFFF;
+
+
+}
+.onlineShopShopProgressBarCell {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #87684E;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: C9BFA7;
+	border-bottom-color: C9BFA7;
+
+}
+.onlineShopShopProgressBarON {
+	padding : 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: C9BFA7;
+	border-bottom-color: C9BFA7;
+	background-color: #9B1B00;
+}
+.onlineShopBasketTotalNZ {
+
+	padding : 0 0 0 5;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #999999;
+}
+.onlineShopBasketEvenRow {
+
+
+	background-color: #F4F2ED;
+}
+.onlineShop_RRP  { 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;	
+	color: #666666;
+	TEXT-DECORATION: none;
+ } 
+.category-top {
+	background-image: url(../Templates/OnlineShopAsset/Images/i-ferns.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+.productBack {
+	background-color: #FFFFFF;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #333333;
+	border-right-color: #333333;
+	border-bottom-color: #333333;
+	border-left-color: #333333;
+	border-right-style: solid;
+	border-left-style: solid;
+
+}
+.borderGrey {
+	border: 1px solid #666666;
+}
+A {
+	COLOR: #CC6600; 
+	text-decoration: underline;
+}
+.A_hover {
+	COLOR: #333333; 
+	text-decoration: underline;	
+}
+.shopBoxOutline {
+	border: 1px solid #87684E;
+}.Line-vert {
+	background-image: url(../Templates/OnlineShopAsset/Images/line-vert.gif);
+	background-repeat: repeat-y;
+	width: 20px;
+
+}
+.LineHoriz {
+	background-image: url(../Templates/OnlineShopAsset/Images/dotline-shop2.gif);
+	background-repeat: repeat-x;
+	height: 30px;
+}
+.onlineShopNameQuick {
+
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: underline;
+	font-size: 11px;
+	font-weight: bold;
+	color:#C13129;
+}
+.onlineShopNameQuick:hover {
+
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: underline;
+	font-size: 11px;
+	font-weight: bold;
+	color:#3E2116;
+}

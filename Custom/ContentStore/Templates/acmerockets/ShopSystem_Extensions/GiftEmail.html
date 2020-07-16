@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Special Offer</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link href="sty_main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body >
+<table width="700" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" class="Border">
+	<tr>
+		<td height="435" colspan="2" valign="top" background="Images/gift-back.jpg" class="linebottom">
+		<table width="700px" height="100%" border="0" cellpadding="0" cellspacing="0">
+        	<tr>
+        		<td>&nbsp;</td>
+        		<td height="165" valign="bottom">&nbsp;</td>
+        		<td rowspan="2" align="right" valign="bottom">&nbsp;</td>
+   		 </tr>
+        	<tr>
+        		<td width="56"><img src="Images/holder.gif" width="30" height="10"></td>
+        		<td width="323" valign="top"><br><p class="GiftHeader"><br>
+        		  Buy Llamas now and
+        				get 300 free points!</p>
+            			<p><span class="Gifttext">Order a box of llamas from Acme Express
+            					and we will add 300 points to your account helping you to qualify
+            					for a gift. Now that's one smokin' offer! Just our way of saying
+            					thanks for being such a great customer.<br>
+				Ckeck out our specials below.</span><br>
+				<br>
+				<a href="http://www.acmeexpress.com" target="_blank"><img src="Images/view-website.gif" alt="View Website" width="111" height="21" border="0"></a>				<br>
+   				  </p>
+   			 </td>
+   		 </tr>
+        	</table></td>
+	</tr>
+	<tr>
+		<td width="450" valign="top" class="LineMid"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<tr>
+        		<td class="HeadersWhite">Latest	STOCK</td>
+   		 </tr>
+        	<tr>
+        		<td valign="top" class="A_hover"><table width="100%" border="0" cellspacing="0" cellpadding="10">
+        				<tr>
+        					<td valign="top"> {tmpl_var_raw LatestStock} </td>
+				 </tr>
+        				</table>
+   			 </td>
+   		 </tr>
+        	<tr>
+        		<td class="HeadersWhite">Current SPECIALS</td>
+   		 </tr>
+        	<tr>
+        		<td valign="top">{tmpl_var_raw CurrentSpecials}</td>
+   		 </tr>
+        	</table></td>
+		<td width="250" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<tmpl_if_query_has_rows query="Q_TopRated">
+        	<tr>
+        		<td valign="middle" class="HeadersWhite2">Top 5 Best Rated Llamas</td>
+   		 </tr>
+        	<tr>
+        		<td valign="top">
+        			<table width="100%" border="0" cellspacing="0" cellpadding="1">
+        				<tmpl_loop query="Q_TopRated">
+        				<tr>
+        					<td width="20%" align="center" valign="top" class="textNumbers">{tmpl_row_number}.</td>
+        					<td valign="top"><a href="{tmpl_var AssetPath}/Service/Detail/Product/{tmpl_row_var pr_id}">{tmpl_row_var pr_name}</a> <tmpl_if_row_var_strlen name="pr_image1_normal"> <br>
+                						<div style="padding-top:10px;padding-bottom:5px;"><img src="index.php?act=ImageManager.get&Image=Custom/ContentStore/Assets/5/14/ProductImages/{tmpl_row_var pr_image1_normal}&Size=160x160&Rotate=270" width="160"></div>
+        						</tmpl_if_row_var_strlen> </td>
+       					</tr>
+        				<tmpl_not_last_row>
+        				<tr>
+        					<td colspan="2" align="center" valign="top" class="dotline">&nbsp;</td>
+       					</tr>
+        				</tmpl_not_last_row> <tmpl_last_row>
+        				<tr>
+        					<td align="center" valign="top">&nbsp;</td>
+        					<td valign="top">&nbsp;</td>
+       					</tr>
+        				</tmpl_last_row> </tmpl_loop>
+        				</table>
+   			 </td>
+   		 </tr>
+   		 </tmpl_if_query_has_rows>
+        	<tmpl_if_query_has_rows query="Q_TopSold">
+        	<tr>
+        		<td class="HeadersWhite">Top 5 Most Sold Llamas </td>
+   		 </tr>
+        	<tr>
+        		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="1">
+        				<tmpl_loop query="Q_TopSold">
+        				<tr>
+        					<td width="20%" align="center" valign="top" class="textNumbers">{tmpl_row_number}.</td>
+        					<td valign="top"><a href="{tmpl_var AssetPath}/Service/Detail/Product/{tmpl_row_var pr_id}">{tmpl_row_var pr_name}</a> <tmpl_if_row_var_strlen name="pr_image1_normal"> <br>
+                						<div style="padding-top:10px;padding-bottom:5px;"><img src="index.php?act=ImageManager.get&Image=Custom/ContentStore/Assets/5/14/ProductImages/{tmpl_row_var pr_image1_normal}&Size=160x160&Rotate=270" width="160"></div>
+        						</tmpl_if_row_var_strlen> </td>
+       					</tr>
+        				<tmpl_not_last_row>
+        				<tr>
+        					<td colspan="2" align="center" valign="top" class="dotline">&nbsp;</td>
+       					</tr>
+        				</tmpl_not_last_row> <tmpl_last_row>
+        				<tr>
+        					<td align="center" valign="top" class="textNumbers">&nbsp;</td>
+        					<td valign="top">&nbsp;</td>
+       					</tr>
+        				</tmpl_last_row> </tmpl_loop>
+        				</table>
+   			 </td>
+   		 </tr>
+   		 </tmpl_if_query_has_rows>
+        	<tmpl_if_query_has_rows query="Q_LatestNews">
+        	<tr>
+        		<td class="HeadersWhite2">Latest NEWS</td>
+   		 </tr>
+        	<tr>
+        		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="3">
+        				<tmpl_loop query="Q_LatestNews">
+        				<tr>
+        					<td width="14" align="LEFT" valign="TOP"><img src="Images/arrow-news.gif" width="14" height="8"></td>
+        					<td valign="top"><span class="textNewsDate">{tmpl_row_var_date name="nei_timestamp" format="j M Y"}</span><br>
+            						<a href="Acme%20Express/Llama%20101/Latest%20News" class="textNews">{tmpl_row_var nei_headline}</a></td>
+       					</tr>
+        				</tmpl_loop>
+        				<tr>
+        					<td align="LEFT" valign="TOP">&nbsp;</td>
+        					<td valign="top">&nbsp;</td>
+				 </tr>
+        				</table>
+   			 </td>
+   		 </tr>
+   		 </tmpl_if_query_has_rows>
+        	</table></td>
+ </tr>
+			<tr>
+				<td valign="top" class="LineMid">&nbsp;</td>
+				<td valign="top">&nbsp;</td>
+			</tr>
+			<tr bgcolor="#4F4C3A">
+				<td colspan="2" valign="top"><table width="100%" height="32" border="0" cellpadding="5" cellspacing="0">
+                	<tr>
+                		<td class="textLight10">&copy; {[CurrentYear]} AcmeRockets.com</td>
+           		 </tr>
+                	</table></td>
+			</tr>
+		</table>
+</td>
+	</tr>
+</table>
+</body>
+</html>

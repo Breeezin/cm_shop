@@ -1,0 +1,43 @@
+<p>
+You previous orders are shown below. To view the invoice
+for this order, or reorder, please chose the relevant option
+under each order.</p>
+<table width="100%" border="0" cellpadding="5" cellspacing="0" class="orderTable">
+  <tr> 
+    <td class="orderRow">&nbsp;</td>
+    <td class="orderRow"><div align="left"><strong>Date</strong></div></td>
+    <td class="orderRow"><div align="left"><strong>Order ID</strong></div></td>
+    <td class="orderRow"><div align="left"><strong>Pay By</strong></div></td>
+    <td class="orderRow"><div align="left"><strong>Total</strong></div></td>        
+    <td class="orderRow">&nbsp;</td>
+    <td class="orderRow">Tracking Code</td>    
+  </tr>
+  {tmpl_loop Q_Orders} 
+  <tr align="left" valign="top"> 
+    <td class="backOnRow"><table width="100%" border="0" cellspacing="0" cellpadding="2">
+        <tr> 
+          <td><a href="javascript:void(0);" ONCLICK="x=Math.round((screen.availWidth-500)/2);y = Math.round((screen.availHeight-600)/2); window.open('index.php?act=OnlineShopMember.ViewInvoice&tr_id=<?=$row['tr_id']?>&as_id=<?=$row['or_as_id']?>&or_id=<?=$row['or_id']?>','SearchResult','width=500,height=600,top='+y+',left='+x+',screeenY='+y+',screenX='+x);"><img src="Images/viewinvoice.gif" border="0"></a></td>
+        </tr>
+        <tr> 
+          <td><a href="index.php?act=OnlineShopMember.ReOrder&or_id=<?=$row['or_id']?>"><img src="Images/reorder.gif" border="0"></a></td>
+        </tr>
+      </table></td>
+    <td class="backOnRow"> 
+      <?=formatDateTime($row['or_recorded'], "d/m/Y")?>
+    </td>
+    <td class="backOnRow"><div align="left"> 
+        <?=$row['tr_id']?>
+      </div></td>
+    <td class="backOnRow"><?php if($row['tr_payment_method'] == 'Cheque') print('Cheque'); else if($row['tr_payment_method'] == 'Direct') print('Bank Transfer'); else print('Credit Card');?></td>
+    <td class="backOnRow"><div align="left"><strong> 
+        <?=$row['or_total']?>
+        </strong></div></td>
+    <td class="backOnRow"><div align="right">{tmpl_if strlen($row['or_shipped'])}<img src="Images/shipped.gif" width="57" height="15">{tmpl_end} 
+        {tmpl_if ($row['tr_status_link']==2)}<img src="Images/paid.gif" width="63" height="15">{tmpl_end} 
+        {tmpl_if ($row['tr_status_link']==1)}<img src="Images/pending.gif" width="63" height="15">{tmpl_end} 
+        {tmpl_if strlen($row['or_actioned'])}<img src="Images/actioned.gif">{tmpl_end} 
+      </div></td>
+     <td class="backOnRow">{tmpl_if strlen($row['or_tracked_and_traced'])}<?=$row['or_tracking_code']?>{tmpl_end}&nbsp;</td>
+  </tr>
+  {tmpl_end} 
+</table>

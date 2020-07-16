@@ -1,0 +1,44 @@
+{tmpl_errors Errors}
+
+<tmpl_if condition="!array_key_exists('Q_Products',$data)">
+	<p>Please enter the start and end dates to view products shipped for, or leave dates blank to view products shipped today:</p>
+</tmpl_if>
+<table class="noPrint">
+	<form method="post" action="index.php?act=OnlineShop.AcmeCEDOPReport">
+	<tr>
+		<td>Start Date:</td>
+		<td><input type="text" name="StartDate" value="{tmpl_var StartDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>End Date:</td>
+		<td><input type="text" name="EndDate" value="{tmpl_var EndDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="Submit" name="Submit" value="Submit"></td>
+	</tr>
+	</form>
+</table>
+<tmpl_if condition="array_key_exists('Q_Products',$data)">
+<p>
+{tmpl_var Message}
+</p>
+<table width="100%" border="1" cellpadding="2">
+	<tr>
+		<td><strong>Box</strong></td>
+		<td><strong>Box Code</strong></td>
+		<td><strong>Number of Boxes</strong></td>
+		<td><strong>Date Shipped</strong></td>
+		<td><strong>DUA Number</strong></td>
+	</tr>
+<tmpl_loop query="Q_Products">
+	<tr>
+		<td>{tmpl_row_var shp_pr_name}</td>
+		<td>{tmpl_row_var shp_stock_code}</td>
+		<td>{tmpl_row_var shp_qty}</td>
+		<td>{tmpl_row_var_date format="d M y" name="shp_date"}</td>
+		<td>{tmpl_row_var shp_customs_number}</td>
+	</tr>
+</tmpl_loop>
+</table>
+</tmpl_if>

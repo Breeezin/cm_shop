@@ -1,0 +1,13 @@
+<html><head>
+<script language="Javascript">p = new Array();
+<tmpl_loop query="Q_Products">
+	<tmpl_if condition="$row['pr_offline'] != NULL">
+		p[p.length] = {k:'{tmpl_row_var pr_id}_{tmpl_row_var pro_id}', n:'{tmpl_row_var_js pr_name} - {tmpl_row_var_js pro_stock_code}({tmpl_row_var_js ve_name}) - {tmpl_row_var_js pro_stock_available} (Offline)'};
+	<tmpl_else>
+		p[p.length] = {k:'{tmpl_row_var pr_id}_{tmpl_row_var pro_id}', n:'{tmpl_row_var_js pr_name} - {tmpl_row_var_js pro_stock_code}({tmpl_row_var_js ve_name}) - {tmpl_row_var_js pro_stock_available}'};
+	</tmpl_if>
+</tmpl_loop>
+{tmpl_var_raw CallBack}
+</script>
+</head>
+</html>

@@ -1,0 +1,24 @@
+<table border="0" cellspacing="5" cellpadding="0">
+	<tmpl_if condition="$data['Donation']">
+		<tr>
+			<th align="left" class="onlineShop_priceTableHeader">Please enter donation amount:</th>
+			<td>$<input type="text" name="DonationAmount" value="" size="5"></td>
+		</tr>	
+	<tmpl_else>
+		<tmpl_if condition="$data['OnSpecial']">
+			<tr>
+				<th align="left" class="onlineShop_spediscountTableHeader">{tmpl_var SpecialDescription}&nbsp;Price&nbsp;:</th>
+				<td align="right" id="specialPrice{tmpl_var pr_id}" class="onlineShop_SpecialPrice">{tmpl_var SpecialPrice}</td>
+			</tr>
+		<tmpl_else>
+			<tmpl_if condition="$data['NormalPrice'] !== null">
+			<tr>
+				<th align="left" class="onlineShop_priceTableHeader">Price&nbsp;:</th>
+				<td align="right" id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">
+						{tmpl_var NormalPrice}
+				</td>
+			</tr>
+			</tmpl_if>
+		</tmpl_if>
+	</tmpl_if>
+</table>

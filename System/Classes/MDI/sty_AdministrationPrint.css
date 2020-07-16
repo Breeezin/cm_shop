@@ -1,0 +1,109 @@
+.Bodytext,body,p,td,table {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #333333; 
+	text-decoration: none
+}
+body {
+	border:0px; 
+	background-color:white;
+}
+.noPrint {
+	display: none;
+}
+.AdminRequired { 
+	color: Red 
+}
+.AdminErrorField { 
+	background : LightSkyBlue; 
+}
+.AdminButtons { 	
+	font-size: 8pt; 
+	background-color: Silver;
+	padding-left: 15px; 
+	padding-right: 15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	font-family: Arial, Helvetica, sans-serif; 
+}
+.AdminEvenRow { 
+	background : #EEEEEE; 
+}
+.AdminOddRow {  
+}
+.AdminNote { 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: smaller; 
+	color: #333333; 
+	text-decoration: none;
+	font-weight: normal;
+ }
+.AdminDisplayName {  
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 9pt; 
+	color: #333333; 
+	text-decoration: none;
+	font-weight: bolder;
+}
+
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+.statsbar {
+	background-image: url(../Tools/Statistics/Templates/Images/bar-back.gif);
+	border: 1px solid #666666;
+}
+.bottomline {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #999999;
+}
+.border-statsinner {
+
+	border: 1px solid #999999;
+}
+.whitespace {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #999999;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+}
+.statsbarwhite {
+	border: 1px solid #666666;
+	background-color: #FFFFFF;
+
+}
+.statsbarsilver {
+	border: 1px solid #666666;
+	background-color: silver;
+
+}
+
+.formborder,select,input {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	border: 1px solid #666666;
+}
+textarea {
+	color: #333333;
+	border: 1px solid #666666;
+}
+a {
+	color: #333333;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}

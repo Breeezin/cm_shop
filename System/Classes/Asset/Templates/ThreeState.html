@@ -1,0 +1,24 @@
+<SCRIPT LANGUAGE="Javascript">
+
+function {tmpl_var FnName}() {
+	{tmpl_if $data['AllowChange']}
+		{tmpl_if $data['AllowChangeUse']}
+			var next = {'' : '1', '1' : '0', '0' : ''};
+			var currentValue = document.forms.{tmpl_var FormName}.{tmpl_var FieldName}.value;
+			var nextValue    = next[currentValue];
+			
+			document.forms.{tmpl_var FormName}.{tmpl_var FieldName}.value = nextValue;
+			document.images['IMG{tmpl_var FieldName}'].src = 'Images/threeState_' + nextValue + '.gif';
+		{tmpl_else}
+			alert("Feature not enabled : You are currently unable to restrict the viewing of assets to a particular user group (e.g. for creating 'Members Only' areas). If you would like to enable this feature, please contact your website developer.");
+		{tmpl_end}
+	{tmpl_else}
+			alert("Permission Denied : To change the permissions for this asset you must take ownership.");
+	{tmpl_end}
+}
+
+</SCRIPT>
+	
+<INPUT TYPE="HIDDEN" NAME="{tmpl_var FieldName}" VALUE="{tmpl_var Value}">
+<A HREF="javascript:{tmpl_var FnName}()"><IMG ID="IMG{tmpl_var FieldName}" src="Images/threeState_{tmpl_var Value}.gif" BORDER="0"></A>
+

@@ -1,0 +1,345 @@
+.Bodytext,body,p,td,table {   font-size: 12px; color: #333333; text-decoration: none; font-family: Lucinda Grande, "Trebuchet MS", Arial, Helvetica, sans-serif;}
+H1 {  
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#7C0D0D;
+}
+.footerText {   font-size: 10px; color: #87684E; text-decoration: none}
+.footerText:hover {   font-size: 10px; color: #7C0D0D; text-decoration: none}
+.AdminRequired { color: Red }
+.AdminErrorField { background : LightSkyBlue; }
+.AdminButtons { 	
+	font-size: 8pt; 
+	font-variant: small-caps; 
+	background-color: Silver;
+	padding-left:15px; 
+	padding-right:15px; 
+	border: thin outset white; 
+	cursor: hand; 
+	 
+}
+.AdminEvenRow { background : #EEEEEE; }
+.AdminOddRow {  }
+.BreadCrumbs {
+	font-size: 10px;
+	color: black;
+	text-decoration: none;
+}
+.BreadCrumbs:hover {
+	font-size: 10px;
+	color: black;
+	text-decoration: underline;
+}
+.dotline {
+	background-image: url(Images/dotline.gif);
+	background-repeat: repeat-x;
+	background-position: center;
+}
+.Border {
+	border: 1px solid #50472D;
+}
+.Copyright {
+	
+	font-size: 10px;
+	font-weight: bold;
+	color: #D7CF7D;
+	text-decoration: none;
+	padding-bottom: 10px;
+}
+A {
+	COLOR: #aa7504; 
+	text-decoration: underline;
+}
+.A_hover {
+	COLOR: #000; 
+	text-decoration: underline;	
+}
+.textLight10 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: none;
+}
+.textLight11 {
+	
+	font-size: 11px;
+	font-weight: normal;
+	color: #F7F5E5;
+	text-decoration: none;
+	line-height: 18px;
+
+}
+input, textarea,select {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #AEAEAE;
+	border-right-color: CCCCCC;
+	border-bottom-color: CCCCCC;
+	border-left-color: #AEAEAE;
+	
+	font-size: 10px;
+	text-align: left;
+	padding-left: 5px;
+}
+.EmailFormAssetSubmitButton {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: FFFFFF;
+	font-weight: bold;	
+	font-size: 9px;
+	background-color: A4B75D;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: ffffff;
+	border-right-color: #ffffff;
+	border-bottom-color: #ffffff;
+	border-left-color: ffffff;
+	padding-left: 5px;
+	padding-right: 5px;	
+	text-align: center;
+}
+.noBorder {
+	background-color: transparent;
+	border: 0px solid ;	
+}
+
+.textWelcome {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 17px;
+	color: #CC6600;
+	font-weight: normal;
+
+}
+.textSubHeaders {
+	font-size: 11px;
+	color: #3092A7;
+	font-weight: bold;
+}
+.textSubHeaders {
+	font-size: 10px;
+	color: #87684E;
+	font-weight: bold;
+	font-family: Georgia, "Times New Roman", Times, serif;
+
+}
+strong {
+	font-weight: bold;
+}
+.textNews {
+	
+	font-size: 11px;
+	color: #696767;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+	font-weight: bold;
+
+}
+.textNewsDate {
+
+	
+	font-size: 11px;
+	font-weight: bold;
+	color: #696767;
+	text-decoration: none;
+}
+.textNews:hover {
+	
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+	BORDER-BOTTOM: 0px none;
+}
+.textMed11 {
+
+	
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: none;
+	line-height: 17px;
+}
+.textMed11link {
+
+
+	
+	font-size: 11px;
+	font-weight: normal;
+	color: #D9CBAF;
+	text-decoration: underline;
+	line-height: 17px;
+}
+.Bannersml {
+	background-image: url(Images/banner-sml.jpg);
+	background-position: right top;
+}
+.Brownback {
+	width: 387px;
+	background-color: #3E2116;
+
+}
+li {
+	list-style-image: url(Images/bullet.gif);
+		MARGIN-TOP: 8px;
+	MARGIN-BOTTOM: 8px;
+}
+.textHeader {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #aa7504;
+}
+.Sizename {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: #D2CAB6;
+	padding: 4px 4px 4px 8px;
+
+}
+.SizeBrands {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #87684E;
+	background-color: E9E5DC;
+	padding: 4px;
+
+}
+.SizeDetails {
+	
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-right: 1px;
+	padding-left: 1px;
+
+
+}
+.Size {
+	
+	font-size: 10px;
+	font-weight: bold;
+	color: #7C5631;
+	padding-top: 5px;
+	padding-left: 5px;
+
+}
+.textQuotes {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 19px;
+	color: #5F4C16;
+	font-weight: normal;
+}
+.linevert {
+	background-image: url(Images/line-vert.gif);
+	background-repeat: repeat-y;
+	background-position: center;
+	width: 14px;
+}
+.VolumeNo {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #FFFFFF;
+}
+.HeadersWhite {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	color: #FFFFFF;
+	padding: 5px 5px 10px 15px;
+	background-color:#000000;
+	font-weight: bold;
+}
+.LineMid {
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #666354;
+}
+.HeadersWhite2 {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	color: #dcc699;
+	padding: 5px 5px 10px 15px;
+	background-color:#3d3c3c;
+	font-weight: bold;
+
+}
+.textPoints {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #EFEDE7;
+}
+.textNumbers {
+
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 18px;
+	font-weight: normal;
+	color: #aa7504;
+}
+.onlineShop_price{
+	
+	font-size: 12px;
+	color: #9C1B00;
+	TEXT-DECORATION: none;
+	font-weight: bold;
+}
+.onlineShop_oldPrice {
+	text-decoration: line-through;
+}
+.onlineShop_ProductName {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	TEXT-DECORATION: none;
+	color:#7C0D0D;
+}
+.onlineShop_ProductName:hover {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 13px;
+	font-weight: bold;
+	color:#3E2116;
+	text-decoration: underline;
+}
+.QuotesBorder {
+	background-color: #ab7a29;
+}
+
+
+.GiftHeader {
+	font-family: Arial, Verdana,  Helvetica, sans-serif;
+	font-size: 12px;
+	color: #C1905C;
+	font-weight:bold;
+}
+.Gifttext {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #C3B192;
+	line-height: 22px;
+}
+.linebottom {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000000;
+}
+.backnewslogo {background-image:url(Images/logo.gif);  background-repeat:no-repeat; height:73px; } 

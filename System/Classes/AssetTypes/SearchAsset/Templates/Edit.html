@@ -1,0 +1,37 @@
+<SCRIPT language="javascript">
+	function resetTypes(checked) {
+		field = document.AssetForm['AST_SEARCH_TYPES[]'];		
+		for(var i=0; i < field.length; i++) {
+			field[i].checked = checked;
+		}
+		
+		return true;
+	}
+	function enableAssets(theField) {
+		
+		if (theField.checked) {
+			document.getElementById('EnableAsset').style.display = '';
+		} else {
+			document.getElementById('EnableAsset').style.display = 'none';			
+		}
+	}
+</SCRIPT>
+<TABLE>
+	<TR>
+		<TD colspan="2">
+			Display a maximum of <INPUT TYPE="TEXT" SIZE="2" NAME="{tmpl_var Prefix}ITEMSPERDISPLAY" VALUE="{tmpl_var PerDisplay}"> items when the search result is displayed in a page.
+		</TD>
+	</TR>
+	<TR><TD colspan="2">Leave blank to display all.<BR></TD></TR>	
+	<TR><TD colspan="2"><BR>Check searchable item type. <a href="javascript:void(0);" onclick="resetTypes(true);">Check All</a> <a href="javascript:void(0);" onclick="resetTypes(false);">Uncheck All</a></TD></TR>
+	<TR>
+		<TD width="50%">{tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_TYPES"}</TD>
+		<TD>&nbsp;</TD>
+	</TR>
+	<TR><TD colspan="2"><BR>Would you like to display the type filter? {tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_SHOWTYPEFILTER"}<BR></TD></TR>
+	<TR><TD colspan="2">Would you like to select searchable items? {tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_ENABLE_ITEMS"}<BR></TD></TR>
+</TABLE>
+<FIELDSET TITLE="Search Items" id="EnableAsset" style="{tmpl_var_raw EnableSearchItem}">
+	<LEGEND>Search Items</LEGEND>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_ASSETS"}
+</FIELDSET>

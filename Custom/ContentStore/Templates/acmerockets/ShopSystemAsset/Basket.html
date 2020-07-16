@@ -1,0 +1,201 @@
+
+<tmpl_if condition="count($data['Basket']['Products']) || ( $_SESSION['User']['us_account_credit'] < 0 )">
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+	
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td colspan="2"align="left">{tmpl_var_raw CurrencyConverterHTML}</td>
+	</tr>
+	
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td><hr size="1"></td>
+	</tr>
+	<tr>
+	 <td align="left">&nbsp;</td>
+	 <td>
+  </tmpl_if>
+
+<!--basket-->
+	<table width="100%" border="0" cellpadding="5" cellspacing="0" class="onlineShop_BasketTable basket">
+		<tr>
+			<td colspan="5"><span class="textSubHeaders">Cart</span></td>
+		</tr>
+		<tr>
+			<td colspan="5">To change a quantity of a product, alter the number then press enter. To remove a product,
+				enter 0 as the quantity then press enter.<br /><br /></td>
+	 </tr>
+		<tr>
+			<td class="onlineShop_BasketHeaderRow">Product</td>
+			<td class="onlineShop_BasketHeaderRow">Qty</td>
+			<td class="onlineShop_BasketHeaderRow">Services</td>
+			<td class="onlineShop_BasketHeaderRow">Price</td>
+			<td class="onlineShop_BasketHeaderRow">Sub Total</td>
+	 </tr>
+	 <script language="Javascript">
+		var qtyChanged = 0;
+	 </script>
+<? 
+	$data['TotalPrice'] = 0;
+	$data['Basket']['TotalServices'] = 0;
+	$flipFlop = 0;
+	foreach($data['Basket']['Products'] as $item)
+	{ 
+		$data['Name'] = $item['Product']['pr_name'];
+		$data['Options'] = $item['Product']['Options'];
+		$data['Qty'] = $item['Qty'];
+		$data['Key'] = $item['Key'];
+		$data['StockCode'] = $item['Product']['pro_stock_code'];
+		$data['UnitPrice'] = $item['Product']['Price'];
+		$flipFlop = 1-$flipFlop;
+		$data['Class'] = '';
+		if ($flipFlop == 1)
+			$data['Class'] = 'onlineShopBasketOddRow';	
+
+	?>
+		 
+		<tr align="left" valign="middle">
+			<td class="{tmpl_var Class}">
+				<strong>{tmpl_var Name}<tmpl_if condition="strlen($data['Options'])"> ({tmpl_var Options})</tmpl_if></strong><br />{tmpl_var StockCode}
+			</td>
+<?php
+		if( $item['Product']['pr_is_service'] == 'false' )
+		{
+?>
+				<form action="{tmpl_var AssetPath}/Service/UpdateBasket/Key/{tmpl_var_url Key}/Mode/Set">
+					<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+					<td class="{tmpl_var Class}"><input name="Qty" value="{tmpl_var Qty}" size="3" onChange="this.form.submit();" class="onlineShop_basketQuantityField"></td>
+				</form>
+				<td class="{tmpl_var Class}">
+<?php
+				// available services for this product
+				$selectedServices = query( 'select * from product_service_options join shopsystem_products on sv_pr_id_service = pr_id join shopsystem_product_extended_options on pro_pr_id = pr_id where sv_pr_id = '.$item['Product']['pr_id'].' and pr_offline IS NULL' );
+
+				while( $service = $selectedServices->fetchRow() )
+				{
+					?>
+					<form action="{tmpl_var AssetPath}/Service/UpdateBasket/AddService/<?=$service['sv_id']?>/Mode/Set">
+					<input type="hidden" name="BackURL" value="<?php echo $_SERVER['REQUEST_URI'];?>">
+					<input type='hidden' name="Qty" value="{tmpl_var Qty}" />
+					<?php
+//					echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+					if( array_key_exists('AddService', $item) && is_array($item['AddService']) && in_array( $service['sv_id'], $item['AddService'] ) )
+					{
+						if( stristr( $service['pr_name'], "padding" ) )
+							echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="alert( \'In removing this you assume responsibility for any damage.\' ); this.form.submit();"';
+						else
+							echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+						echo ' checked>';
+					}
+					else
+					{
+						echo '<INPUT style="border:0px;" TYPE="CHECKBOX" NAME="DoIt" VALUE="1" class="checkBox" onChange="this.form.submit();"';
+						echo '>';
+					}
+
+					echo $service['pr_name'];
+					echo '<br /></form>';
+				}
+		}
+		else
+		{
+//				$data['Basket']['TotalServices'] += $item['Qty']*$item['Product']['Price'];
+		?>
+			<td class="{tmpl_var Class}">{tmpl_var Qty}</td>
+			<td class="{tmpl_var Class}"></td>
+		<?php
+		}
+
+?>
+
+			
+			
+			</td>
+			<td class="{tmpl_var Class}"><tmpl_if condition="$data['UnitPrice'] == 0">FREE<tmpl_else>{tmpl_eval print($data['This']->formatPrice('display',$data['UnitPrice']))}</tmpl_if></td>
+			<td class="{tmpl_var Class}"><tmpl_if condition="$data['UnitPrice'] == 0">FREE<tmpl_else>{tmpl_eval print($data['This']->formatPrice('display',$data['Qty']*$data['UnitPrice']))}</tmpl_if></td>
+	 </tr>
+<? 		
+	} ?>
+	 
+	<? $data['Tax'] = $data['Basket']['Tax']['Code']; ?>
+	<tmpl_if condition="strlen($data['Tax'])">
+	<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketSubTotal"><?php print(ListLast($data['TaxCountryNoteHTML'],'~')); ?></td>
+		<td class="onlineShopBasketSubTotal">
+			{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Tax']['Amount']))}			
+		</td>
+	</tmpl_if>
+	 </tr>
+	 <tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="onlineShopBasketSubTotal">Sub-total: </td>
+		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['SubTotal']))}</td>
+	</tr>
+	<?php /*
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td class="onlineShopBasketSubTotal">Services: </td>
+		<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['TotalServices']))}</td>
+	</tr>
+	*/ ?>
+	<tmpl_if condition="$data['Basket']['Freight']['Amount'] != 0">
+	 <tr>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td colspan="3">&nbsp;</td>
+		</tmpl_if>
+		<td class="onlineShopBasketSubTotal">Shipping/Tracking:</td>
+		<td class="onlineShopBasketSubTotal">
+			{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Freight']['Amount']))}			
+		</td>
+	 </tr>
+	</tmpl_if>
+ </tr>
+	 <? 
+		if (array_key_exists('Discounts',$data['Basket'])) { 
+			foreach($data['Basket']['Discounts'] as $data['DiscountName'] => $data['DiscountAmount']) {
+	 ?>
+		<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketSubTotal">{tmpl_var DiscountName}: </td>
+			<td class="onlineShopBasketSubTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['DiscountAmount']))}</td>
+	 </tr>
+	 <? 
+			}
+		}
+	 ?>
+		<tr>
+			<td>&nbsp;</td>
+		<tmpl_if condition="$data['Style'] == 'WithInputs'">
+			<td>&nbsp;</td>
+		</tmpl_if>
+			<td>&nbsp;</td>
+			<td class="onlineShopBasketTotal">Total: </td>
+			<td class="onlineShopBasketTotal">{tmpl_eval print($data['This']->formatPrice('display',$data['Basket']['Total']))}</td>
+	 </tr>
+	 </table>
+	 
+	 <!--end of basket-->
+
+	<tmpl_if condition="$data['Style'] == 'WithInputs'">
+        	</td>
+	</tr>
+
+</table>
+	</tmpl_if>
+<tmpl_else>
+	<p>You currently have no items in your cart.</p>
+</tmpl_if>
+

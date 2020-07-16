@@ -1,0 +1,45 @@
+<HTML>
+<BODY>
+<tmpl_if condition="!array_key_exists('DoAction',$data)">
+	<FORM NAME="uploadForm" ACTION="index.php?act=ImageManager.SimpleUpload&DoAction=Yes" enctype="multipart/form-data" method="post">
+		<INPUT TYPE="HIDDEN" NAME="ReturnField" VALUE="{tmpl_var ReturnField}">
+		<INPUT TYPE="HIDDEN" NAME="ReturnJSFunction" VALUE="{tmpl_var ReturnJSFunction}">
+		<INPUT TYPE="HIDDEN" NAME="Preview" VALUE="{tmpl_var Preview}">
+		<INPUT TYPE="HIDDEN" NAME="ReturnForm" VALUE="{tmpl_var ReturnForm}">
+		<P>Please click the browse button below to select your file and then hit the 'upload' button.</P>
+		<P><INPUT TYPE="FILE" NAME="NewFile" SIZE="20"></P>
+		<P><INPUT TYPE="SUBMIT" VALUE="Upload"></P>
+	</FORM>
+	<SCRIPT LANGUAGE="Javascript">
+		window.focus();
+	</SCRIPT>
+<tmpl_else>
+	<tmpl_if condition="array_key_exists('NewFileName',$data)">
+	<SCRIPT LANGUAGE="Javascript">
+		//alert('File has been uploaded');
+		<tmpl_if condition="strlen($data['ReturnJSFunction'])">
+			window.opener.{tmpl_var ReturnJSFunction}'{tmpl_var_js NewFileName}');
+		<tmpl_else>
+			window.opener.document.forms.{tmpl_var ReturnForm}.{tmpl_var ReturnField}.value = '{tmpl_var_js NewFileName}';
+			window.opener.document.forms.{tmpl_var ReturnForm}.{tmpl_var ReturnField}_Action.value = 'Upload';
+			previewOriginal = window.opener.document.getElementById('{tmpl_var ReturnField}_PreviewOriginal');
+			previewOriginal.style.display = 'none';
+			preview = window.opener.document.getElementById('{tmpl_var ReturnField}_Preview');
+			<tmpl_if condition="$data['Preview'] == 'None'">
+				preview.src = 'Custom/Cache/Incoming/{tmpl_var_url NewFileName}';
+			<tmpl_else>
+				preview.src = 'index.php?act=ImageManager.get&Image=Custom/Cache/Incoming/{tmpl_var_url NewFileName}&Size={tmpl_var Preview}';
+			</tmpl_if>
+			preview.style.display = '';
+			revert = window.opener.document.getElementById('{tmpl_var ReturnField}_Revert');
+			revert.style.display = '';
+
+
+		</tmpl_if>
+		window.close();
+			</SCRIPT>
+	</tmpl_if>
+</tmpl_if>
+
+</BODY>
+</HTML>

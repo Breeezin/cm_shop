@@ -1,0 +1,61 @@
+<tmpl_if condition="ss_optionExists('Email Form Record Enquiries')">
+<table width="100%">
+<tr><td><a href="javascript:void(0);" onclick="parent.openNamedNonAssetPanel('index.php?act=SubmissionsAdministration.List&as_id={tmpl_var as_id}','View Enquiries','EmailFormEnquiries{tmpl_var as_id}');return false;" class="bodytextGrey"><img src="Images/but-enquiries.gif" border="0" alt="View Enquiries"></a>
+</td><td width="15">&nbsp;
+</td><td>
+	<table>
+		<tr>
+			<td valign="top">Email Recipient : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_EMAIL_RECIPIENT"} (Defaults to main website email address)</td>
+		</tr>
+		<tr>
+			<td valign="top">Email Subject : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_EMAIL_SUBJECT"} (Defaults to &quot;Website Enquiry&quot;)
+				<tmpl_if condition="ss_optionExists('Email Form Fields In Subject')"><br /> Use [FieldName] (including the square brackets) above to display a field's value in the subject of the email. e.g. [Name]</tmpl_if>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">Submit Button Text : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_SUBMIT_BUTTON"} (Defaults to &quot;Submit&quot;)</td>
+		</tr>
+	</table>			
+</td></tr></table>
+<tmpl_else>
+<FIELDSET TITLE="Settings" style="padding:5px;">
+	<table>
+		<tr>
+			<td valign="top">Email Recipient : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_EMAIL_RECIPIENT"} (Defaults to main website email address)</td>
+		</tr>
+		<tr>
+			<td valign="top">Email Subject : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_EMAIL_SUBJECT"} (Defaults to &quot;Website Enquiry&quot;)
+				<tmpl_if condition="ss_optionExists('Email Form Fields In Subject')"><br /> Use [FieldName] (including the square brackets) above to display a field's value in the subject of the email. e.g. [Name]</tmpl_if>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">Submit Button Text : </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_SUBMIT_BUTTON"} (Defaults to &quot;Submit&quot;)</td>
+		</tr>
+	</table>			
+</FIELDSET>
+</tmpl_if>
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_FIELDS"}
+<FIELDSET TITLE="Thank You Page" style="padding:5px;">
+	<LEGEND>Thank You Page</LEGEND>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_THANK_YOU_PAGE"}
+</FIELDSET>
+
+<FIELDSET TITLE="Custom Display Template" style="padding:5px;">
+	<LEGEND>Custom Display Template</LEGEND>
+	<p>
+You may define a custom template for your form instead of simply having the field names in 
+one column and the fields in another column. If you would like to use the template function, please tick this box: {tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_USE_CUSTOM_DISPLAY_TEMPLATE"}
+</p>
+<p>
+To create a template, you need to insert special tags where you would like your fields to appear.
+To add a tag, simply surround the field name with square brackets. e.g. [Name].  Also be sure to add 
+a submit button by entering a [Submit] tag in your template.
+</p>
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_EMAILFORM_CUSTOM_DISPLAY_TEMPLATE"}
+</FIELDSET>

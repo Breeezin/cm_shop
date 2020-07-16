@@ -1,0 +1,31 @@
+<tmpl_if_query_has_rows query="Q_Products">
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+<tmpl_loop query="Q_Products">
+					<tr>
+            			<td width="10" valign="top">&nbsp;</td>
+                        		<td valign="top"><p><a href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName">{tmpl_row_var pr_name}</a></p>
+                        		    	<p>{tmpl_row_var_parse pr_short}</p>
+                        		    	<p>{tmpl_row_var_raw PricesHTML}</p>
+                        		    	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                    		<tr valign="middle">
+                                    			<td width="230">
+                                    				<tmpl_if condition="strlen($row['Image'])">
+                                    				<img border="0" src="{tmpl_row_var Image}&Size=230x230&Rotate=270" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" />
+                                    				<!-- 230 x 50 -->
+                                    				</tmpl_if>
+                                    			</td>
+                                    			<td width="175" align="right"><a href="{tmpl_row_var ProductDetailLink}"><img src="Images/but-view-product-details.gif" width="175" height="17" border="0"></a></td>
+                               			 </tr>
+                           		 </table>
+                   			 </td>
+                        		<td width="10" valign="top">&nbsp;</td>
+                    </tr>
+                    <tmpl_not_last_row>
+                      	<tr><td colspan="3" valign="top" class="dotline">&nbsp;</td></tr>
+                   	</tmpl_not_last_row>
+                   	<tmpl_last_row>
+	                   	<tr><td valign="top">&nbsp;</td><td valign="top">&nbsp;</td><td valign="top">&nbsp;</td></tr>
+                   	</tmpl_last_row>
+</tmpl_loop>
+</table>
+</tmpl_if>

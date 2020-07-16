@@ -1,0 +1,97 @@
+/* ----------------------------------------------------------------
+---------------------------------------------------------------- */
+body { margin:0; padding:0; font-family:arial, helvetica, sans-serif; font-size:12px; color:#151414; line-height:18px;}
+	#body { background-color:#2A2A2A; background-image:url(Images/i-home-backbody.jpg); background-repeat:repeat-x; background-position:top; line-height:18px; }
+	p, td, th, tbody { font-family:arial, helvetica, sans-serif; font-size:12px; color:#151414; }
+	a{ color:#6F532F; text-decoration:underline; }
+	a:hover { color:#FFBC53; text-decoration:none; }
+	a:visited { text-decoration:underline;  }
+	
+	h1 { font-size:13px; font-family:Georgia, "Times New Roman", Times, serif; color:#000000;} 
+	h2 { font-size:large; }	
+	h3 { color:#510303; font-family:Georgia, "Times New Roman", Times, serif; font-weight:bold; }
+	h4 { font-size:small; }
+	h5 { font-size:x-small }
+	h6 { font-size:xx-small; }
+	
+	table { padding:0; border:0; border-spacing:0; border-collapse:collapse; }
+
+/* Email / form Styles */
+.EmailFormAssetDescriptionCell {  }
+.EmailFormAssetSubmitButton {  }
+input,textarea,select { font:Georgia, "Times New Roman", Times, serif; font-size:11px; background-color:#F9F9F7; border:1px solid #BCAE8D;}  
+li {list-style-image: url(Images/i-bullet.gif); line-height: 18px; font-size:11px; margin-bottom:6px; margin-bottom:6px;}
+	
+/* ----------------------------------------------------------------
+	Main Layout Styles
+---------------------------------------------------------------- */
+.backmainleft { background-image: url(Images/i-home-backleft.jpg); background-position:right top; background-repeat:no-repeat; }
+.backmainright  {background-image:url(Images/i-home-backright.jpg); background-position:left top; background-repeat:no-repeat;}
+.toparea {}
+.topbar { background-image:url(Images/i-bartop.gif); border:1px solid #383431; width:750px; }
+.noBorder {	background-color: transparent; border: 0px solid;}
+.borderleft {border-left:1px solid #383431;}
+.hometopcontent { width:367px; background-image:url(Images/i-home-backbannerleft.jpg); padding-top:87px; padding-left:64px; padding-right:20px; padding-bottom:20px; color:#D6CC9E; font-size:11px; line-height:16px; } 
+.homeintrotopcontent {color:#B09357;}
+.hometoptable { border-bottom:1px solid #383431; border-left:1px solid #383431; border-right:1px solid #383431;}
+.homecigars {background-image:url(Images/i-home-backcigars.jpg); background-repeat:no-repeat; background-color:#120C06; color:#F5F4EA; line-height:15px; font-size:10px; border:1px solid #383431; }
+.homecigarpadding {padding:50 15 10 55; }
+.homelatestnews {background-image:url(Images/i-mainnewsback.jpg); background-repeat:no-repeat; background-color:#1C160F; border:1px solid #383431; padding-top:54px; padding-left:30px; padding-right:20px; padding-bottom:20px; }
+.homebackmiddlebar {background-image:url(Images/1-home-backmiddle.jpg); background-repeat:repeat-x; background-position:top;}
+.homemaincontent { background-image:url(Images/i-contentback.jpg); background-position:top; background-repeat:repeat-x; background-color:#F0EDE6; padding:20px; border:1px solid #383431; }
+.defaultmaincontent { background-image:url(Images/i-default-contentback.jpg); background-position:top; background-repeat:repeat-x; background-color:#ffffff; padding:20px; border:1px solid #383431; }
+.homemainsidebar {background-image:url(Images/1-home-backrightcontent.jpg); background-position:top; background-repeat:no-repeat; background-color:#120E08;  border:1px solid #383431;  }
+.homebarbottom { background-image:url(Images/i-backbotbar.jpg); background-repeat:repeat-x; background-position:bottom; background-color:#100000; border:1px solid #383431; }
+.borderbottom { border-bottom:1px solid #383431; padding:20px; }
+.topratedback{ border-bottom:1px solid #383431; padding:20px; }
+.testimonialsback { padding:20px;}
+.footerText {color:#7D7B75; font-size:smaller; }
+
+.defaultbarbottom { background-image:url(Images/i-backbotbar.jpg); background-repeat:repeat-x; background-position:bottom; background-color:#100000; border:1px solid #383431; width:750px; }
+.defaultmainsidebar {background-image:url(Images/1-home-backrightcontent.jpg); background-position:top; background-repeat:no-repeat; background-color:#120E08;  border:1px solid #383431; padding:15px; }
+.topboxinfo { border:1px dotted #CBB395;}
+.padding10 {padding:10px;}
+.paddingswirl { padding:12px 0px 5px 5px; }
+
+/* ----------------------------------------------------------------
+	CMS Menu Styles
+---------------------------------------------------------------- */
+
+	.MenuTable {  }
+    .MenuFirstCell { padding:10px; font-weight:bold; text-align:center; padding-left:20px; padding-right:20px;   }
+	.MenuCellOn { padding:10px; padding-left:20px; padding-right:20px; text-align:center;  font-weight:bold; background-image:url(Images/i-menu-over.gif); background-repeat:repeat-x; background-position:bottom;   }
+	.MenuCellOff {  padding:10px; text-align:center;  padding-left:20px; padding-right:20px;  }
+	
+	.MenuLink { color:#BCB77D; font-size:11px; text-decoration:none; font-weight:bold; }
+	.MenuLink:hover { color:#FFF7C6; font-size:11px;  text-decoration:none; font-weight:bold;  }
+	.MenuLink:visited { font-size:11px; text-decoration:none; font-weight:bold; }
+	.textsideLinks { font-size:11px; text-decoration:none; color:#EEEBD6; line-height:18px;}
+	.textsideLinks:hover { font-size:11px; text-decoration:underline; color:#FFBC53; line-height:18px;}
+	.Line {border-top-width: 1px; border-bottom-width: 4px; border-top-style: solid; border-bottom-style: solid; border-top-color: #D9D9CE; border-bottom-color: #D9D9CE;}
+    .LineTop {border-top-width: 4px; border-top-style: solid; border-top-color: #D9D9CE;}
+    .LineBott {border-top-width: 7px; border-top-style: solid; border-top-color: #D9D9CE;}
+	
+/* ----------------------------------------------------------------
+	CMS Styles
+---------------------------------------------------------------- */
+
+	.textWelcome { 	font-family: Georgia, "Times New Roman", Times, serif; font-size: 12px; TEXT-DECORATION: none; color:#312515; }
+	.SmallText { font-size:11px;  }
+	.GoldText { color:#F1E9DC; }
+	.textTestimonials { padding:10px; font-family:Georgia, "Times New Roman", Times, serif; font-size:12px; color:#A7A494; font-style:italic;}
+	.textTestimonialsDate {font-family:Georgia, "Times New Roman", Times, serif; font-size:12px; color:#A7A494; font-weight:bold;}
+	.textNews { font-size:11px; color:#EEEBD6; }
+	.textNewsDate { font-size:11px; color:#A09D97; font-weight:bold; }
+	.dotline {background-image:  url(Images/dotline-shop.gif); background-repeat: repeat-x; background-position: left center; height: 30px;}
+	.Sizename { font-size: 12px; font-weight: bold; color: #FFFFFF; background-color: #B39D82; padding: 4px 4px 4px 8px;}
+    .SizeBrands { font-size: 12px; font-weight: bold; color: #390100; background-color: #C8BBA9; padding: 4px;}
+    .SizeDetails { font-size: 12px;  color: #7C5631; padding-right: 1px;padding-left: 1px;}
+    .Size { font-size: 12px; font-weight:bold; color: #7C5631; padding-top: 5px; padding-left: 5px;}
+	.onlineShopSizeQuick {font-size:11px; color:#825B2C;}
+	.textQuotes {font-family:Georgia, "Times New Roman", Times, serif; font-size:11px; color:#574A31;}
+	.boxtopfill {background-image: url(Images/top.gif); background-repeat: repeat-x;}
+    .boxleftfill {background-image: url(Images/left.gif); background-repeat: repeat-y;}
+    .boxrightfill {background-image: url(Images/right.gif); background-repeat: repeat-y;}
+    .boxbott {background-image: url(Images/bott1.gif); background-repeat: repeat-x;}
+    .textSubHeaders { color:#3B3B3B; font-family:Georgia, "Times New Roman", Times, serif; font-weight:bold; font-size:11px;}
+	.textHeader { font-size: 12px; font-weight: bold; color: #40331A;}

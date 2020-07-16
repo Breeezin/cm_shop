@@ -1,0 +1,31 @@
+<table cellspacing="0" cellpadding="3" width="100%" border="0"><tbody>
+{tmpl_evaluate $counter = 1}
+{tmpl_loop ListQuery}
+<?php
+	if (substr($row['cit_content'],0,3) == '<p>') {
+		$row['cit_content'] = substr($row['cit_content'],3);
+	}
+	if (substr($row['cit_content'],-4,4) == '</p>') {
+		$row['cit_content'] = substr($row['cit_content'],0,-4);
+	}
+	$row['Number'] = ++$data['CurrentRow'];
+?>
+<tr>
+	<td valign="top" width="50"><IMG SRC="Custom/ContentStore/Layouts/acmeexpress/Images/QandA.gif" ALT="h-q" width="31" height="32" BORDER="0"></td>
+	<td valign="top"><p class="textHeader"><a href="Javascript:toggleDisplay('CCC{tmpl_row_var Number}');">{tmpl_row_var cit_title}</a></p>
+		<div id="CCC{tmpl_row_var Number}" style="display:none;">{tmpl_row_var_parse cit_content}</div>
+	</td>
+</tr>
+<tr><td class="dotline" valign="top" colspan="2" height="30"></td></tr>
+{tmpl_evaluate $counter++}
+{tmpl_end}
+<TR><TD>{tmpl_var_raw PageThru}</TD></TR>
+</tbody>
+</table>
+
+<?
+	$temp = new Request("Asset.Embed",array(
+		'as_id'	=>	754,
+	));
+	print $temp->display;
+?>

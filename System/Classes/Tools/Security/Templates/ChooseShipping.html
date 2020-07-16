@@ -1,0 +1,13 @@
+You have selected a product for which we will have to charge you shipping.<br/>
+Please select your preferred method. <br/>
+<br/>
+Weight :{tmpl_var weight}lbs<br/>
+Zip code :{tmpl_var zip_code}<br/>
+Destination Country :{tmpl_var country}<br/>
+<br/>
+All charges displayed are in US Dollars.<br/>
+<br/>
+<form action="{tmpl_var ThisURL}" method="post" name="form1" id="form1">
+{tmpl_var_raw foo}
+<input type='Submit' VALUE="Continue"/>
+</form>

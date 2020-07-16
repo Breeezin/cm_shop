@@ -1,0 +1,84 @@
+<style type="text/css">
+
+  .submitLink {
+   color: #00f;
+   background-color: transparent;
+   text-decoration: underline;
+   border: none;
+   cursor: pointer;
+   cursor: hand;
+  }
+
+</style> 
+
+
+<form name="schedulerForm" id="schedulerForm" action="/{tmpl_var_raw AssetPath}" method="get">
+<input type="hidden" name="date" id="date" value="{tmpl_var Date}">
+<input type="hidden" name="br" id="br" value="{tmpl_var br}">
+<table>
+<tr>
+    <td><Strong>Choose View</Strong></td>
+    <td>
+        <input name="T" id="T" type="radio" value="daily" <?php if ($data['T'] == 'daily') echo 'CHECKED'; ?> > Daily 
+        <input name="T" id="T" type="radio" value="weekly" <?php if ($data['T'] == 'weekly') echo 'CHECKED'; ?> > Weekly 
+    </td>
+<td width="250px" rowspan="3" valign="top" align="right"><input type="submit" value="Go"></td>    
+</tr>
+<?php
+    if ($data['isAdmin'] || $data['showAll']) {
+        $userSelect ="<tr><td><Strong>Select Users</Strong></td><td>";
+    
+        $userSelect .= '<select  name="userid" id="userid">';
+        $userSelect .= "<option value=\"0\" ".($data['User']==0?'SELECTED':'').">All Users</option>";
+        foreach ($data['AllUsers'] as $name => $id) {
+            if ($data['User'] == $id)
+                $userSelect .= "<option value=\"$id\" SELECTED>$name</option>";
+            else
+                $userSelect .= "<option value=\"$id\">$name</option>";
+        }
+        $userSelect .= '</select></td></tr>';
+        echo $userSelect;
+    }
+    
+?>
+</table>
+<table>
+<tr>
+   <td colspan="2">
+ <script language="Javascript">
+ <!-- 
+     var date = '<?=date('Y-m-d ',strtotime($data['Date']))?>';
+     var datem7 = '<?=date('Y-m-d ',strtotime($data['Date']) - 60 * 60 * 24 * 7 )?>';
+     var datep7 = '<?=date('Y-m-d ',strtotime($data['Date']) + 60 * 60 * 24 * 7 )?>';
+
+     function traverse(s){
+        switch (s) {
+            case -7 :
+                document.forms.schedulerForm.date.value = datem7 + '00:00:00';
+                break;
+            case 7 :
+                document.forms.schedulerForm.date.value = datep7 + '00:00:00';
+                break;            
+        }
+        return true;
+     }
+     
+     function createNew(date){
+        document.forms.schedulerForm.action = "/{tmpl_var_raw AssetPath}/Service/New";
+        document.forms.schedulerForm.date.value = date + ' 08:00:00';
+        document.schedulerForm.submit();
+     }
+     function deleteEvent (id,br){
+        if ( confirm("Delete this event?") ) {
+            document.forms.schedulerForm.action = "/{tmpl_var_raw AssetPath}/Service/Delete/EvID/" + id + "/br/" + br;
+            document.forms.schedulerForm.submit();
+        }
+     }
+     
+// -->
+</script>
+
+
+{tmpl_var_raw tableContent}
+ </td></tr></table>
+</form>

@@ -1,0 +1,146 @@
+<link href="../../../Layouts/acmeexpress/sty_main.css" rel="stylesheet" type="text/css">
+<tmpl_if condition="$data['Q_Product']->numRows() == 0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td><p>Sorry, this product no longer exists in our database. Please <a href="{tmpl_var AssetPath}">try
+				searching again</a></p>
+			<p>&nbsp;</p></td>
+	</tr>
+</table>
+<tmpl_else>
+<tmpl_loop query="Q_Product">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<form name="ProductDetail{tmpl_row_var pr_id}">
+	<tr>
+		<td colspan="2" class="LineTop">&nbsp;</td>
+	</tr>
+	<tr>
+		<td rowspan="2" align="center" valign="middle"><table width="100%" border="0" cellspacing="0" cellpadding="10">
+			<tr>
+				<td><tmpl_if condition="strlen($row['pr_image1_normal'])"><img src="{tmpl_var AssetStore}ProductImages/{tmpl_row_var pr_image1_normal}" alt="Product Image" border="0" hspace="0" class="onlineShop_ProductImage"></tmpl_if></td>
+			</tr>
+		</table></td>
+	    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<tr>
+        		<td valign="middle"><tmpl_if condition="strlen($data['CategoryBreadCrumbs'])">
+        			<p>{tmpl_var_raw CategoryBreadCrumbs}        
+        			</tmpl_if>
+            			<p></p>
+				<table cellspacing="0" cellpadding="0">
+				<tr><td>
+            			<?
+					if ($row['pr_combo']) {
+						$Combo = getRow("
+							SELECT SUM(cpr_qty) AS TheCount FROM shopsystem_combo_products
+							WHERE cpr_element_pr_id = {$row['pr_id']}
+						");
+						print('<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Boxes in combo:</strong> <span class="onlineShop_ProductSize">'.$Combo['TheCount'].'</span><br>');	// (you will be charged shipping for '.$Combo['TheCount'].' boxes)
+						$data['AttributesHTML'] = '<strong><img src="Images/arrow-shop.gif" width="10" height="7"> Llamas per box:</strong> <span class="onlineShop_ProductSize">Varies</span><br>';
+					}
+					
+				?>
+			{tmpl_var_raw AttributesHTML}
+			<?
+					$data['Q_BackStampCode'] = query("
+						SELECT soit_date_changed, soit_bs_code
+						FROM shopsystem_supplier_order_sheets_items, shopsystem_products, shopsystem_product_extended_options
+						WHERE pr_id = pro_pr_id
+							AND pr_id = {$row['pr_id']}
+							AND pro_stock_code LIKE soit_stock_code
+							AND soit_bs_code IS NOT NULL 
+							AND soit_date_changed IS NOT NULL
+						ORDER BY soit_date_changed DESC
+						LIMIT 0,1					
+					");
+					$tempRow = $row;
+				?>
+			<tmpl_loop query="Q_BackStampCode"> <strong><img src="Images/arrow-shop.gif" width="10" height="7"> Last
+			Factory Code is {tmpl_row_var soit_bs_code} and was received on {tmpl_row_var_date name="soit_date_changed" format="j M y"}</strong><br>
+			This does not guarantee you will get the same code since stock is
+			continuously changing.<br />
+			</tmpl_loop>
+			<? $row = $tempRow; ?>
+			<span class="onlineShop_ProductListingSubCategory">{tmpl_var_raw OptionsHTML}</span> <span class="onlineShop_ProductListingSubCategory">{tmpl_row_var_raw PricesHTML}</span>
+			<br />
+			<tmpl_if condition="$row['pr_customer_rating'] !== null and $row['pr_customer_rating_count'] !== null">
+				<strong><img src="Images/arrow-shop.gif" width="10" height="7"> 产品评级:</strong>
+				<?php 
+					$data['Star1'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif">';
+					$data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					$data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-empty.gif">';
+					if ($row['pr_customer_rating'] >= 70) $data['Star2'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 80) $data['Star3'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 90) $data['Star4'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+					if ($row['pr_customer_rating'] >= 95) $data['Star5'] = '<img title="'.$row['pr_customer_rating'].'" src="Images/star-full.gif" width="19" height="21">';
+				?>{tmpl_var_raw Star1}{tmpl_var_raw Star2}{tmpl_var_raw Star3}{tmpl_var_raw Star4}{tmpl_var_raw Star5}<br />
+				<img src="Images/holder.gif" width="10" height="7"> Based on {tmpl_row_var pr_customer_rating_count} customer <?=ss_pluralize($row['pr_customer_rating_count'],'rating','ratings');?>
+				<a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</a>			
+			<tmpl_else>
+				<img src="Images/holder.gif" width="10" height="7"> <a href="{tmpl_var AssetPath}/Service/AddCustomerRating/Product/{tmpl_row_var pr_id}" class="SizeDetails">Rate this Llama</a>			
+			</tmpl_if>
+				</td>
+				<tmpl_if condition="$row['pr_customer_rating'] >= 90">
+				<td>
+					&nbsp;<img src="Images/<?=round($row['pr_customer_rating']);?>.gif" title="Rated {tmpl_row_var pr_customer_rating}" />
+				</td></tmpl_if>
+				</tr></table>
+			<p>
+<?php
+			if( array_key_exists( 'prd_long', $row ) ) { ?>
+				{tmpl_row_var_parse prd_long}
+			<?php } else { ?>
+				{tmpl_row_var_parse pr_long}
+			<?php } ?>
+			</p>
+   			 </td>
+   		 </tr>
+        	</table></td>
+	</tr>
+	<tr>
+		<td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        	<tr>
+        		<td height="20" colspan="3" valign="middle">&nbsp;</td>
+   		 </tr>
+        	<tr>
+        		<td width="184" height="54" valign="middle" class="Line"><tmpl_if condition="strlen($data['LastSearch'])"><a href="{tmpl_var LastSearch}" class="button_one">Continue Shopping</a></tmpl_if></td>
+        		<td width="3"><img src="Images/holder.gif" width="3" height="10"></td>
+        		<?php
+									$data['AddVis'] = true;
+									$data['OutVis'] = false;
+									if (array_key_exists('ProductStockLevels',$_REQUEST) and array_key_exists($row['pr_id'],$_REQUEST['ProductStockLevels'])) {
+										if ($_REQUEST['ProductStockLevels'][$row['pr_id']] == 'false') {
+											$data['AddVis'] = false;
+											$data['OutVis'] = true;	
+										}	
+									}
+								?>
+        		<td align="right" class="Line"><tmpl_if condition="ss_OptionExists('Tell a Friend')"><a href="javascript:void(0)" onClick="window.open('{tmpl_var_raw CurrentServer}Tell%20A%20Friend?TellingAbout={tmpl_var_url AssetPath}/Acme Express%2FService%2FDetail%2FProduct%2F{tmpl_row_var_url pr_id}&LinkText={tmpl_row_var_url pr_name}&BeforeText=the&AfterText=', 'EnquiryWindow', 'width=470,height=580,scrollbars')" class="button_one">Tell a Friend</a></tmpl_if><img src="Images/holder.gif" width="10" height="10"><tmpl_if condition="$data['AddVis']"><span id="AddToBasket_{tmpl_row_var pr_id}"><a href="javascript:if (readyToBuy[{tmpl_row_var pr_id}]) { document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit() } else { alert('Please make a choice from the options before continuing.') }" class="button_two">增加篮</a></span></tmpl_if><tmpl_if condition="$data['OutVis']"><span id="OutOfStock_{tmpl_row_var pr_id}" class="button_three">Out Of Stock</span></tmpl_if></td>
+   		 </tr>
+        	<tr>
+        		<td height="54" align="center" valign="middle"><br>
+            			<?php $row['ca_name'] = strtoupper($row['ca_name']); ?>
+            			<tmpl_if condition="strlen($row['ca_name'])"><img src="{tmpl_var AssetStore}CategoryImages/{tmpl_row_var ca_image}" alt="{tmpl_row_var ca_name}" border="0" hspace="0" class="onlineShop_ProductImage"></tmpl_if></td>
+        		<td>&nbsp;</td>
+        		<td align="left" valign="top" bgcolor="EFECE4"><table width="100%" border="0" cellspacing="0" cellpadding="15">
+        				<tr>
+        					<td align="left" valign="top" id="categoryDescriptions"><p class="textSubHeaders">{tmpl_row_var ca_name}</p>
+            						<p class="footerText">{tmpl_row_var_parse ca_description_html}</p>
+   						 </td>
+				 </tr>
+        				</table>
+   			 </td>
+   		 </tr>
+        	<tr>
+        		<td valign="middle" class="LineTop">&nbsp;</td>
+        		<td>&nbsp;</td>
+        		<td align="right" class="LineTop">&nbsp;</td>
+   		 </tr>
+        	</table></td>
+	</tr>
+	</form>
+</table>
+
+</tmpl_loop>
+</tmpl_if>

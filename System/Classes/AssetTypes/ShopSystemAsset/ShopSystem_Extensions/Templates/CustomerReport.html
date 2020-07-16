@@ -1,0 +1,127 @@
+<br><br>
+<strong>User ID</strong> <?echo $data['User']['us_id']; ?><br/>
+<?php flush(); ?>
+<strong>us_first_name</strong> <?echo $data['User']['us_first_name']; ?><br />
+<?php flush(); ?>
+<strong>us_last_name</strong> <?echo $data['User']['us_last_name']; ?><br />
+<?php flush(); ?>
+<strong>us_email</strong> <?echo $data['User']['us_email']; ?><br />
+<?php flush(); ?>
+<strong>us_user_name</strong> <?echo $data['User']['us_user_name']; ?><br />
+<?php flush(); ?>
+<strong>us_password</strong> <?echo $data['User']['us_password']; ?><br />
+<?php flush(); ?>
+<strong>us_activated</strong> <?echo $data['User']['us_activated']; ?><br />
+<?php flush(); ?>
+<strong>us_name</strong> <?echo $data['User']['us_name']; ?><br />
+<?php flush(); ?>
+<strong>Address 1</strong> <?echo $data['User']['us_0_50A1']; ?><br />
+<?php flush(); ?>
+<strong>City</strong> <?echo $data['User']['us_0_50A2']; ?><br />
+<?php flush(); ?>
+<strong>Company</strong> <?echo $data['User']['us_0_B4BF']; ?><br />
+<?php flush(); ?>
+<strong>Post Code</strong> <?echo $data['User']['us_0_B4C0']; ?><br />
+<?php flush(); ?>
+<strong>Phone</strong> <?echo $data['User']['us_0_B4C1']; ?><br />
+<?php flush(); ?>
+<strong>State/Country</strong> <?echo $data['User']['us_0_50A4']; ?><br />
+<?php flush(); ?>
+<strong>us_wholesaler</strong> <?echo $data['User']['us_wholesaler']; ?><br />
+<?php flush(); ?>
+<strong>us_login_url</strong> <?echo $data['User']['us_login_url']; ?><br />
+<?php flush(); ?>
+<strong>us_token</strong> <?echo $data['User']['us_token']; ?><br />
+<?php flush(); ?>
+<strong>us_confirm_receipt</strong> <?echo $data['User']['us_confirm_receipt']; ?><br />
+<?php flush(); ?>
+<strong>us_login_note</strong> <?echo $data['User']['us_login_note']; ?><br />
+<?php flush(); ?>
+<strong>us_notes</strong> <?echo $data['User']['us_notes']; ?><br />
+<?php flush(); ?>
+<strong>us_permanent_tracking</strong> <?echo $data['User']['us_permanent_tracking']; ?><br />
+<?php flush(); ?>
+<strong>us_temporary_tracking</strong> <?echo $data['User']['us_temporary_tracking']; ?><br />
+<?php flush(); ?>
+<strong>us_discount</strong> <?echo $data['User']['us_discount']; ?><br />
+<?php flush(); ?>
+<strong>us_discount_expires</strong> <?echo $data['User']['us_discount_expires']; ?><br />
+<?php flush(); ?>
+<strong>us_account_credit</strong> <?echo $data['User']['us_account_credit']; ?><br />
+<?php flush(); ?>
+<strong>UsAccountCreditNotes</strong> <?echo $data['User']['us_credit_notes']; ?><br />
+<?php flush(); ?>
+<strong>us_credit_from_gateway_option</strong> <?echo $data['User']['us_credit_from_gateway_option']; ?><br />
+<?php flush(); ?>
+
+<strong>Completed Orders</strong>
+<table>
+	<tmpl_loop query="Q_AllCompleteOrders">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+			<td nowrap>{tmpl_row_var tr_timestamp}</td>
+			<td nowrap>{tmpl_row_var tr_client_name}</td>
+			<td nowrap>{tmpl_row_var tr_total}</td>
+			<td nowrap>{tmpl_row_var tr_profit}</td>
+			<td nowrap>{tmpl_row_var pg_name}</td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>
+
+<strong>Abandonded Orders</strong>
+<table>
+	<tmpl_loop query="Q_AllIncompleteOrders">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td><a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id={tmpl_row_var or_id}&tr_id={tmpl_row_var tr_id}&as_id=514&BreadCrumbs=Administration : Orders :'>{tmpl_row_var tr_id}</a></td>
+			<td nowrap>{tmpl_row_var tr_timestamp}</td>
+			<td nowrap>{tmpl_row_var tr_client_name}</td>
+			<td nowrap>{tmpl_row_var tr_total}</td>
+			<td nowrap>{tmpl_row_var tr_profit}</td>
+			<td nowrap>{tmpl_row_var pg_name}</td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>
+
+<strong>Admin Audit</strong>
+<table>
+	<tmpl_loop query="Q_Audit1">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td nowrap>{tmpl_row_var us_first_name}</td>
+			<td nowrap>{tmpl_row_var us_last_name}</td>
+			<td nowrap>{tmpl_row_var au_timestamp}</td>
+			<td nowrap>{tmpl_row_var au_operation}</td>
+			<td nowrap>{tmpl_row_var au_notes}</td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>
+
+<strong>User Audit</strong>
+<table>
+	<tmpl_loop query="Q_Audit2">
+		<?php
+			$oddEven = 1-$oddEven;
+		?>
+		<tr class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+			<td nowrap>{tmpl_row_var us_first_name}</td>
+			<td nowrap>{tmpl_row_var us_last_name}</td>
+			<td nowrap>{tmpl_row_var au_timestamp}</td>
+			<td nowrap>{tmpl_row_var au_operation}</td>
+			<td nowrap>{tmpl_row_var au_table}</td>
+			<td nowrap>{tmpl_row_var au_key}</td>
+			<td nowrap>{tmpl_row_var au_notes}</td>
+		</tr>
+	</tmpl_loop>
+</table>
+<?php flush(); ?>

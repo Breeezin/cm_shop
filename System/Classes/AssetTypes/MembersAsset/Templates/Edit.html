@@ -1,0 +1,39 @@
+<? /*
+<p>&nbsp;<bR>{tmpl_admin_link label="Manage Loyal Members" url="index.php?act=LoyalMembersAdministration.List&as_id={$data['as_id']}" target="LoyalManager" description="Click here to manage the loyal members."}</p>
+<table border="0" cellspacing="0" cellpadding="5">	
+	<tr>
+		<td align="left" valign="top"><strong><span style="vertical-align:top">Notification Email Address:</span></strong></td>
+	 	<td align="left" valign="top">{tmpl_fieldset_field fieldset="FieldSet" field="AST_LOYALMEMBERS_ADMINEMAIL"}</td>
+	</tr>
+	<tr>
+		<td align="left" valign="top"><strong><span style="vertical-align:top">Frequent Buyer Club Membership Fee:</span></strong></td>
+	 	<td align="left" valign="top">{tmpl_fieldset_field fieldset="FieldSet" field="AST_LOYALMEMBERS_FB_FEE"}</td>
+	</tr>
+</table>
+*/ ?>
+<table border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td align="left" valign="top"><strong><span style="vertical-align:top">Allowed User Groups:</span></strong></td>
+		<td align="left" valign="top">{tmpl_fieldset_field fieldset="FieldSet" field="AST_PPMEMBERS_ALLOWED_GROUPS"}</td>
+	</tr>
+	<tr>
+		<td align="left" valign="top"><strong><span style="vertical-align:top">Join User Groups:</span></strong></td>
+		<td align="left" valign="top">{tmpl_fieldset_field fieldset="FieldSet" field="AST_PPMEMBERS_JOIN_GROUPS"}</td>
+	</tr>
+</table>
+
+
+<p><strong>Login Page Content:</strong><br><BR>
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_PPMEMBERS_LOGIN_CONTENT"} </p>
+<p><strong>Welcome Page Content:</strong><br />
+You can type [first_name] and/or [last_name] in your content below if you wish to
+display a personalised greeting.	{tmpl_fieldset_field fieldset="FieldSet" field="AST_PPMEMBERS_WELCOME_CONTENT"}</p>
+<? /*
+
+<p><strong>Frequent Buyer Club Registration Thank You Page:</strong><br />
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_LOYALMEMBERS_FB_REGISTRATION_THANK_YOU_CONTENT"}
+</p>
+<p><strong>Travel Industry Card Registration Thank You Page:</strong><br />
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_LOYALMEMBERS_TI_REGISTRATION_THANK_YOU_CONTENT"}
+</p>
+*/ ?>

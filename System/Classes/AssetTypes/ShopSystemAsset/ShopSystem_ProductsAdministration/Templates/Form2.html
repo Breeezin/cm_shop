@@ -1,0 +1,33 @@
+<fieldset title="Product Details">
+	<legend>Product Details</legend>
+<table width="100%" cellspacing="0" cellpadding="2">
+	<tmpl_eval expression="$displayFields = true; foreach ($data['fields'] as $data['field']) {">
+		<tmpl_eval expression="if ($data['field']->name == 'pr_image1_thumb' || $data['field']->name == 'pr_image1_normal'		|| $data['field']->name == 'pr_image1_large'		|| $data['field']->name == 'pr_image2_normal'		|| $data['field']->name == 'pr_image2_large'		|| $data['field']->name == 'pr_image3_normal'		|| $data['field']->name == 'pr_image3_large'			|| $data['field']->name == 'ExtendedOptions') { $displayFields = false; }">
+		<tmpl_if condition="$displayFields">
+		<tmpl_if condition="$data['field']->name !='PrFreightTypeLink' and $data['field']->name !='pr_dig_id'">	
+		<TR CLASS="{tmpl_if array_key_exists($data['field']->name,$data['errors'])}AdminErrorField{/tmpl_if}">
+			<TD VALIGN="TOP" ALIGN="RIGHT" WIDTH="5" CLASS="AdminRequired"><tmpl_if condition="$data['field']->required">*</tmpl_if></TD>
+			<TD VALIGN="TOP" WIDTH="20%"><SPAN CLASS="AdminDisplayName">
+				{tmpl_eval print($data['field']->displayName)}</SPAN>
+				<tmpl_if condition="strlen($data['field']->note)">
+					<BR><SPAN CLASS="AdminNote">{tmpl_eval print($data['field']->note)}</SPAN>
+				</tmpl_if>
+			</TD>
+			<TD WIDTH="80%">{tmpl_eval print($data['field']->display(false, 'adminForm'))}</TD>
+		</TR>
+		{tmpl_else}
+			{tmpl_eval print($data['field']->display(false, 'adminForm'))}			
+		</tmpl_if>
+		</tmpl_if>
+	</tmpl_eval>
+</TABLE>
+
+</fieldset>
+<?php 
+		$rootFolder = str_replace('index.php','',$_SERVER['SCRIPT_FILENAME']);
+		$customFolder = $rootFolder.'Custom/Classes/OnlineShopAdministration';		
+		$name = 'inc_formFields.php';
+		if (file_exists($customFolder.'/'.$name)) {			
+			include($customFolder."/".$name);
+		}
+	?>

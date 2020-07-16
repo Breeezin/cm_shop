@@ -1,0 +1,11 @@
+<table width="650" border="0" align="center" cellpadding="2" cellspacing="0" class="borderWhite">
+	<tr>
+<tmpl_loop query="Q_Categories">
+	<td class="borderWhiteCell">
+			<div align="center">
+				<a href="{tmpl_var AssetPath}/Service/CategoryList/ca_id/{tmpl_row_var ca_id}" name="link{tmpl_row_var ca_id}" class="largeWhite" id="link{tmpl_row_var ca_id}" onMouseOver="MM_showMenu(window.mm_menu_{tmpl_row_var ca_id},0,14,null,'link{tmpl_row_var ca_id}')" onMouseOut="MM_startTimeout();">{tmpl_row_var ca_name}</a>
+			</div>
+	 </td>
+</tmpl_loop>			
+	</tr>
+</table>

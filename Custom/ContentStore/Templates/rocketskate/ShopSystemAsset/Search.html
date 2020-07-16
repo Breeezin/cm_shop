@@ -1,0 +1,77 @@
+<table width="100%" border="0" cellpadding="7" cellspacing="0">
+<form action="{tmpl_var AssetPath}/Service/Engine" method="POST">
+  <tr>
+  	<td width="10">&nbsp;</td>
+   <td valign="top"><p><span class="onlineShop_ProductName">Search
+   		Products<br>
+   	 </span>You may also search for products by category by selecting
+   		a category from the dropdown below, and clicking go, or search for products
+   		by entering
+   		a	keyword in the &quot;Keyword&quot; input field below.</p>
+   </td>
+  </tr>
+  <tr>
+  	<td>&nbsp;</td>
+  <td><table border="0" cellpadding="5" cellspacing="0">
+  	<tr>
+  		<td>Category:</td>
+  		<td align="left">
+  			<select name="pr_ca_id" class="EmailFormField">
+  				<option value="">All Categories</option>
+  				<tmpl_eval expression="foreach($data['CategoriesArray'] as $data['category'] => $data['id']) {">
+  				<option value="{tmpl_var id}">{tmpl_var category}</option>
+  				</tmpl_eval>
+		 </select>
+	  </td>
+  		<td align="left">Keywords:</td>
+	    <td align="left"><input name="Keywords" type="text" class="EmailFormField" value="" size="20"></td>
+	    <td align="left"><input type="button" value="go" class="button_two"></td>
+     </tr>
+  	</table></td>
+  </tr>
+</form>
+</table>
+<p>&nbsp;</p>
+<div align="center">
+<table width="90%" border="0" cellpadding="5" cellspacing="0">
+
+	<?php
+		$data['Q_MainCats'] = query("
+			SELECT * FROM shopsystem_categories
+			WHERE ca_as_id = {$data['as_id']}
+				AND ca_parent_ca_id IS NULL
+			ORDER BY ca_sort_order, ca_name
+		");
+		$wantLine = false;
+		$data['nextRowHTML'] = '';
+		$counter = 0;
+	?>
+	<tmpl_loop query="Q_MainCats">
+		<tmpl_if condition="$counter % 4 == 0">
+			<tr>	
+		</tmpl_if>
+	
+		<td align="center"><tmpl_if condition="strlen($row['ca_image'])"><a href="{tmpl_var AssetPath}/Service/Engine/pr_ca_id/{tmpl_row_var ca_id}"><img src="<?=ss_storeForAsset($data['as_id'])?>CategoryImages/{tmpl_row_var ca_image}" alt="{tmpl_row_var ca_name}" border="0"></a></tmpl_if></td>
+		<?php
+			$data['nextRowHTML'] .= '<td align="center"><a href="'.ss_HTMLEditFormat($data['AssetPath']).'/Service/Engine/pr_ca_id/'.$row['ca_id'].'">'.ss_HTMLEditFormat($row['ca_name'])."</a><br /><br /></td>";
+		?>
+		
+		<tmpl_if condition="$counter % 4 == 3">
+	</tr>	
+			<tr align="center" valign="middle">
+				<tmpl_var_raw name="nextRowHTML">
+				<?php $data['nextRowHTML'] = ''; ?>
+			</tr>
+		</tmpl_if>
+		<?php $counter++; ?>
+   	</tmpl_loop>
+
+	<tmpl_if condition="$counter % 4 != 0">
+		</tr>	
+		<tr align="center" valign="middle">
+			<tmpl_var_raw name="nextRowHTML">
+		</tr>
+	</tmpl_if>
+	
+</table>
+</div>

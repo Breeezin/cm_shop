@@ -1,0 +1,56 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td align="left">&nbsp;</td>
+		<td>
+			<table width="100%" border="0" cellpadding="5" cellspacing="0">
+				<tr><td><table width="100%" cellspacing="0" cellpadding="5">
+				<form name="adder" action="{tmpl_var AssetPath}/Service/ViewProfile" method="post">
+					<input type="hidden" name="DoAction" value="Yes">
+                {tmpl_if condition="$data['isAdmin']"}
+				<tr>
+					<td width="100"><strong>Stockist:</strong></td>
+					<td>
+						 <select name="us_id" onChange="document.adder.submit();">
+							<option selected value="-1">Please Select</option>
+							<tmpl_loop query="Q_Users">
+								<option value="{tmpl_row_var us_id}" <? $selected = $data['us_id'] == $row['us_id'] ? 'selected' : ''; print $selected;?>>{tmpl_row_var Us0_Company} - {tmpl_row_var us_email}</option>
+							</tmpl_loop>
+						</select>
+					</td>
+				</tr>
+                {/tmpl_if}
+                <tr>
+                    <td colspan="2">
+                    Click <a href="{tmpl_var AssetPath}/Service/AddToProfile">here</a> to add products to your profile.<br>
+                    Click <a href="{tmpl_var AssetPath}/Service/RemoveFromProfile">here</a> to remove products your profile.
+                    </td>
+                </tr>
+                <tr>
+					<td width="100" valign="top"><strong>Products:</strong></td>
+					<td>
+                        <div class="scrollPanel3">
+                        <table border="0" cellpadding="2" cellspacing="0">
+                        <tmpl_loop query="Q_Products">
+                        <tmpl_if condition="$data['LastCategory'] !== $row['pr_ca_id']">
+        					<tmpl_eval expression="$data['LastCategory'] = $row['pr_ca_id']; $categoryRow = $data['Q_Categories']->getRow($data['Q_Categories']->getRowWithValue('ca_id',$data['LastCategory'])); $data['CategoryName']=$categoryRow['ca_name'];">
+        	          		<tr>
+        	            		<td><strong>{tmpl_var CategoryName}<strong></td>
+                  			</tr>
+        				</tmpl_if>
+                            <tr>
+                                <td><li>{tmpl_row_var pr_name} - {tmpl_row_var pro_stock_code}</li></td>
+                            </tr>
+                        </tmpl_loop>
+                        </table>
+                        </div>
+					</td>
+				</tr>
+				</form>
+				</table>
+				</td></tr>
+			</table>
+		</td>
+	</tr>
+	
+</table>
+

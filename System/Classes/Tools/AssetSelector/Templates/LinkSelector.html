@@ -1,0 +1,518 @@
+<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+	<!--<script type="text/javascript" src="System/Libraries/Field/FCKeditor/dialog/js/fck_image.js"></script>-->
+	<script type="text/javascript" src="System/Libraries/Field/FCKeditor/dialog/js/fck_dialog_common.js"></script>
+	<script language="Javascript">
+		//var oEditor = window.opener.FCKLastDialogInfo.Editor;
+		dialogArguments = window.opener.FCKLastDialogInfo;
+		var oEditor = dialogArguments.Editor;
+		var FCK		= oEditor.FCK ;
+		
+		// Get the selected image (if available).
+		var oLink = FCK.Selection.MoveToAncestorNode( 'A' ) ;
+		if ( oLink ) FCK.Selection.MoveToNode( oLink ) ;
+	</script>
+</tmpl_if>
+
+
+<script language="Javascript">
+	function popup_is_fake() {
+		if (parent.popup_windows_supported) {
+			return true;	
+		} else {
+			return false;	
+		}
+		
+	}
+
+	function popup_opener() {
+		if (popup_is_fake()) { 
+			return parent.popup_opener;
+		} else {
+			return window.opener;
+		}
+	}
+	
+	function popup_close() {
+		if (popup_is_fake()) { 
+			parent.popup_window_close();		
+		} else {
+			window.close();
+		}
+	}
+</script>
+<SCRIPT language="javascript">
+	window.resizeTo(620, 680);
+	
+	function dump(o) {
+		var s = '';
+		for (var prop in o) {
+			s += prop + ' = ' + o[prop] + '\n';
+		}
+		//document.getElementById('dbg').innerHTML = '<pre>' + s + '</pre>';
+		alert(s);
+	}
+	
+	function setSelectedValue(aField, selectedValue) {
+		var selectedIndex = -1;
+		
+		theSelect = document.forms.linkForm[aField];		
+		
+		originalLength = theSelect.options.length;		
+		for(var i=originalLength-1; i >= 0; i--) {			
+			if (theSelect.options[i].value == selectedValue) {
+				selectedIndex = i;
+				break;
+			}
+		}				
+		theSelect.selectedIndex = selectedIndex;			
+	}
+	
+	function setRadioValue(aField, which) {	
+		for (var i = 0; i < document.forms.linkForm[aField].length; i++) {
+			if (document.forms.linkForm[aField][i].value == which) {
+				document.forms.linkForm[aField][i].checked = true;
+				break;
+			}
+		}
+	}
+	
+	function getRadioValue(aField){
+		value = -1;
+		for (var i = 0; i < document.forms.linkForm[aField].length; i++) {
+			if (document.forms.linkForm[aField][i].checked) {
+				value = document.forms.linkForm[aField][i].value;
+			}
+		}
+		return value;
+	}
+	
+	function getSelectValue(aField) {
+		return document.forms.linkForm[aField].options[document.forms.linkForm[aField].selectedIndex].value;
+	}
+	
+	function configPopup() {	
+		
+		if (document.forms.linkForm.Target.options[document.forms.linkForm.Target.selectedIndex].value == "popup") {
+			document.getElementById("PopupConfigTable").style.display = "";		
+			document.getElementById("PopConfigLabel").style.display = "";		
+		} else {
+			document.getElementById("PopupConfigTable").style.display = "none";	
+			document.getElementById("PopConfigLabel").style.display = "none";	
+		}
+		
+	}
+	
+	function linkAsset(as_id,as_name,AssetPath,AssetParentID,AssetParentPath) {
+		document.getElementById("PrvFrm").src = "index.php?act=Asset.Display&as_id=" + as_id;
+		document.forms.linkForm.AssetPath.value = AssetPath;
+		document.forms.linkForm.as_id.value = as_id;
+		
+		setRadioValue('LinkType', 'Asset');
+	}
+
+	
+
+	function checkForm() {
+		var result = true;
+		var theURL = "";
+		var selectedAssetID = document.forms.linkForm.as_id.value;
+		var selectedAssetPath = document.forms.linkForm.AssetPath.value;
+		var linkURL = document.forms.linkForm.LinkURL.value;
+		var emailAddress = document.forms.linkForm.EmailAddress.value;
+		var linkType = getRadioValue('LinkType');
+		//var anchorName = document.forms.linkForm.AnchorName.value;
+
+		
+		
+		
+		if (linkType.length == 0) {
+			alert("Please select an asset to link to, or enter a URL to create a new link asset.");
+			return false;
+		} else if (linkType == "Asset") {
+			linkURL = "ASSET://" + selectedAssetID;	
+		} else if (linkType == "NextItem") {
+			linkURL = "ASSET://Next";	
+		} else if (linkType == "PreviousItem") {
+			linkURL = "ASSET://Previous";	
+		} else if (linkType == "Email") {
+			linkURL = "mailto:" + emailAddress;			
+		} else if (linkType == "CurrentItem") {
+			linkURL = "ASSET://Current";	
+		} else {
+			if (linkURL.substr(0, 4) != 'http') {
+				linkURL = 'http://' + linkURL;
+			}
+		}
+		
+		var anchorTarget = document.forms.linkForm.AnchorTarget.value;
+		
+		if (anchorTarget.length > 0) {
+			if (anchorTarget.substr(0, 1) != '#') {
+				anchorTarget = '#' + anchorTarget;
+			}
+			if (linkType.length) {
+				linkURL += anchorTarget;
+			} else {
+				linkURL = anchorTarget;
+			}
+		}
+		
+		target = getSelectValue('Target');	
+		if (target == "popup") { 
+			target = "";
+			errorMsg = "";
+			
+			
+			var pWidth = parseInt(document.linkForm.PopupWidth.value);
+			if (isNaN(pWidth)) {
+				errorMsg += "Popup window width should be numeric.\n";
+			} else if (pWidth < 10){
+				errorMsg += "Popup window width should be greater than eqaul to 10.\n";			 			
+			}
+			
+			var pHeight = parseInt(document.linkForm.PopupHeight.value);
+			
+			if (isNaN(pHeight)) {
+				errorMsg += "Popup window height should be numeric.\n";
+			} else if (pHeight < 10){
+				errorMsg += "Popup window height should be greater than eqaul to 10.\n";			 			
+			}
+			
+			var pTop = parseInt(document.linkForm.PopupTop.value);						
+			if (isNaN(pTop)) {
+				errorMsg += "Popup window's top postion value should be numeric.\n";
+			}
+			
+			var pLeft = parseInt(document.linkForm.PopupLeft.value);
+			if (isNaN(pLeft)) {
+				errorMsg += "Popup window's left postion value should be numeric.\n";
+			}
+			
+
+			if (errorMsg.length) {
+				alert("Please fix the errors: \n"+errorMsg);	
+				return false;		 	
+			} 
+			var randID = Math.round(100*Math.random());
+			theURL = "javascript:newwindow=window.open('"+linkURL+"', 'AssetDisplay"+randID+"','width="+pWidth+",height="+pHeight+",top="+pTop+",left="+pLeft+",resizable="+getSelectValue('PopupResizable')+",menubar="+getSelectValue('PopupMenubar')+",status="+getSelectValue('PopupStatus')+",scrollbars="+getSelectValue('PopupScrollbar')+",addresbar="+getSelectValue('PopupAddressbar')+",panel="+getSelectValue('PopupPanel')+"');newwindow.focus();void(0);";
+		} else {
+			theURL = linkURL;
+		}
+		
+		
+		var param = new Object();
+		var fields = ["f_href", "f_target", "f_name", "f_onclick"];			
+		//alert(theURL + " vs " +  target);
+		param.f_href = theURL;		
+		param.f_target = target;		
+		param.f_name = '';		
+		param.f_onclick = '';		
+		
+		//dump(param);
+		
+		<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+			if (oLink) {
+				oLink.href = param.f_href;
+			} else {
+				oLink = FCK.CreateLink(param.f_href);
+			}
+			if (!oLink) {
+				alert('Error creating link');
+				window.close();
+				return true;
+			}
+			
+			//alert(param.f_url+' '+param.f_alt);
+			oLink.target = param.f_target;
+			//SetAttribute( oImage, "alt"   , param.f_alt ) ;		
+			window.close();
+		<tmpl_else>
+			popup_opener().Dialog._return(param);		
+			popup_close();
+		</tmpl_if>
+				
+		return true;
+	}	
+</SCRIPT>
+<FORM ACTION="index.php?act={tmpl_var_url act}&DoAction=Yes" ENCTYPE="MULTIPART/FORM-DATA" NAME="linkForm" method="post">
+<TABLE BORDER="0" cellpadding="3" cellspacing="5">
+	<TR>
+	<TD colspan="2" valign="top">{tmpl_eval $treeResult = new Request("Asset.Tree",array('OnClick' => 'linkAsset','OpenAssets' => array('1' => 1,),'FilterByAdmin'		=>	true,));}
+
+		<DIV ID="AssetTree" STYLE="width:275;height:250; overflow:auto;border:solid black 1px;" CLASS="treeBackground">
+			<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+				<TR STYLE="height:5"><TD></TD>
+				</TR><TR>
+				<TD ID="mainTree">
+				{tmpl_eval print($treeResult->display);}
+				</TD></TR>
+			</TABLE>
+		</DIV>
+	</TD>
+		<TD colspan="2" valign="top"><IFRAME ID="PrvFrm" SRC="about:blank"  WIDTH="290" HEIGHT="250" NAME="PreviewFrame"></IFRAME></TD>
+	</TR>
+</TABLE>
+  <TABLE BORDER="0" width="100%" cellpadding="3" cellspacing="5" width="80%" align="center">
+    <TR> 
+      <TH width="25%" valign="top" align="right">Link Type : </TH>
+      <TD width="75%"> <TABLE width="100%" cellpadding="0" cellspacing="0" >
+          <TR> 
+            <TD width="15%"><input type="radio" name="LinkType" value="Asset"> Asset</TD>
+            <TD COLSPAN="1"><INPUT TYPE="TEXT" NAME="AssetPath" STYLE="width:80%" VALUE="" onFocus="this.blur()" onclick="setRadioValue('LinkType', 'Asset');"></TD>
+          </TR>
+          <TR> 
+            <TD><input type="radio" name="LinkType" value="URL"> URL</TD>
+            <TD COLSPAN="1"><INPUT TYPE="TEXT" NAME="LinkURL" STYLE="width:80%" VALUE="" onClick="setRadioValue('LinkType', 'URL');"></TD>
+          </TR>
+          
+          <TR> 
+            <TD nowrap><input type="radio" name="LinkType" value="Email"> Email</TD>
+            <TD COLSPAN="1"><INPUT TYPE="TEXT" NAME="EmailAddress" STYLE="width:80%" VALUE="" onClick="setRadioValue('LinkType', 'Email');"></TD>
+          </TR>
+          <tr><td></td><td><small>NOTE: Email addresses will be encoded to avoid spamers.</small></td></tr
+          
+          <TR> 
+            <TD COLSPAN="2">
+            	<input type="radio" name="LinkType" value="CurrentItem"> Current Item &nbsp;&nbsp;&nbsp;&nbsp;
+            	<input type="radio" name="LinkType" value="PreviousItem"> Previous Item &nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="LinkType" value="NextItem"> Next Item</TD>
+            <!--<TD nowrap><input type="radio" name="LinkType" value="ShopCategory"> Shop Category</TD>-->
+          </TR>
+        </TABLE></TD>
+    </TR>
+    <!------
+	<TR> 
+      <TH align="right">Name of Anchor :<BR>
+        <SMALL>Allows using this name in the item</SMALL></TH>
+      <TD><INPUT TYPE="TEXT" NAME="AnchorName" VALUE="" STYLE="width:80%"></TD>
+    </TR>
+    ------>
+	<TR> 
+      <TH align="right">Link To Named Anchor :<BR>
+      	<SMALL>e.g. #top </SMALL>
+        </TH>
+      <TD><SMALL>If the anchor you are linking to is on the current page, 'Link Type' must be 'Current Item'.</SMALL><br />
+      	<INPUT TYPE="TEXT" NAME="AnchorTarget" VALUE="" STYLE="width:80%">
+      	
+      </TD>
+    </TR>
+    
+    <TR> 
+      <TH align="right">Open In (Target) :</TH>
+      	<TD><SELECT NAME="Target" onchange="configPopup();">
+          <OPTION VALUE="">Same Window</OPTION>
+          <OPTION VALUE="_blank">New Window</OPTION>          
+          <OPTION VALUE="popup">Popup Window</OPTION>
+        	</SELECT> 
+        </TD>
+    </TR> 
+    <TR> 
+      <TH align="right" valign="top"><span id="PopConfigLabel" style="display:none">Popup Window 
+        Properties</SPAN></TH>
+      <TD><TABLE width="100%" id="PopupConfigTable" name="PopupConfigTable" style="display:none">
+          <!--- 
+	ONCLICK="fdbackwindow=window.open ('','newtaskpopup','width=420,height=470,top=10,left=10,resizable=1,menubar=0,status=0,scrollbars=1,panel=0,addressbar=0')"
+				--->
+          <TR> 
+            <TD>Width <SMALL>pixel</SMALL></TD>
+            <TD><INPUT type="text" name="PopupWidth" value="300"></TD>
+            <TD>Height <SMALL>pixel</SMALL></TD>
+            <TD><INPUT type="text" name="PopupHeight" value="250"></TD>
+          </TR>
+          <TR> 
+            <TD>Top</TD>
+            <TD><INPUT type="text" name="PopupTop" value="10"></TD>
+            <TD>Left</TD>
+            <TD><INPUT type="text" name="PopupLeft" value="10"></TD>
+          </TR>
+          <TR> 
+            <TD>Resizable</TD>
+            <TD><SELECT NAME="PopupResizable">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT> </TD>
+            <TD>Menubar</TD>
+            <TD><SELECT NAME="PopupMenubar">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT></TD>
+          </TR>
+          <TR> 
+            <TD>Scrollbars</TD>
+            <TD><SELECT NAME="PopupScrollbar">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT></TD>
+            <TD>Panel</TD>
+            <TD> <SELECT NAME="PopupPanel">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT></TD>
+          </TR>
+          <TR> 
+            <TD>Addressbar</TD>
+            <TD><SELECT NAME="PopupAddressbar">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT></TD>
+            <TD>Status</TD>
+            <TD><SELECT NAME="PopupStatus">
+                <OPTION VALUE="1" selected>Yes</OPTION>
+                <OPTION VALUE="0">No</OPTION>
+              </SELECT></TD>
+          </TR>
+        </TABLE></TD>
+    </TR>
+  </TABLE>	 
+	<CENTER>
+	<INPUT TYPE="HIDDEN" NAME="as_id" VALUE="">
+	
+	<INPUT TYPE="HIDDEN" NAME="f_href" VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="f_title" VALUE="">
+	<INPUT TYPE="HIDDEN" NAME="f_target" VALUE="">
+	
+	<INPUT TYPE="button" NAME="ACTION" VALUE="Link" onclick="checkForm()">	
+	<INPUT TYPE="BUTTON" onClick="window.close()" VALUE="Cancel">
+	</CENTER>
+</FORM>
+<script>
+
+	function init() {
+		var theID = null;
+
+		<tmpl_if condition="ss_optionExists('Admin FCK Editor')">
+			if (oLink) {
+				var r_href = oLink.href; //GetAttribute( oImage, 'src', '' );
+				var r_target= oLink.target; //GetAttribute( oImage, 'alt', '' );
+				var arg = {
+						f_href: r_href,
+						f_target: r_target
+				};
+			} else {
+				arg = 0;	
+			}
+		<tmpl_else>
+			var arg = popup_opener().Dialog._arguments;
+		</tmpl_if>
+		
+		
+		//		var arg = window.opener.Dialog._arguments;
+		var target = "";
+		
+		if (arg) {			
+			if (arg.f_href != null)  {						
+				prefix = arg.f_href.substr(0,8);				
+				mailPrefix = arg.f_href.substr(0,7);				
+				target = arg.f_target;		
+
+				if (prefix.toLowerCase() == 'asset://') {
+					var linkAnchor = arg.f_href.split("#");		
+				
+					if (linkAnchor.length == 2) {
+						document.linkForm.AnchorTarget.value = linkAnchor[1];
+						arg.f_href = linkAnchor[0];
+					}
+					
+					if (arg.f_href.substr(8,4).toLowerCase() == 'next') {
+						setRadioValue("LinkType","NextItem");	
+					} else if (arg.f_href.substr(8,8).toLowerCase() == 'previous') {
+						setRadioValue("LinkType","PreviousItem");	
+					} else if (arg.f_href.substr(8,7).toLowerCase() == 'current') {
+						setRadioValue("LinkType","CurrentItem");	
+					} else {
+						re = new RegExp("[0-9]+","i");
+						result = arg.f_href.match(re);
+						theID = result[0];		
+					}
+				} else if (mailPrefix.toLowerCase() == 'mailto:') {
+					document.forms.linkForm.EmailAddress.value = arg.f_href.substr(7,300);
+					setRadioValue("LinkType","Email");	
+				} else {
+					prefix = arg.f_href.substr(0,11);	
+					if (prefix.toLowerCase() == 'javascript:') {
+						var href = unescape(arg.f_href);
+						re = new RegExp("javascript:newwindow=window.open", "gi");
+						href=href.replace(re, "");								
+						
+						re = new RegExp(";void(0);", "gi");
+						href=href.replace(re, "");								
+						
+						var hrefArray = href.split("'");
+						// contains url						
+						pURL = hrefArray[1];
+						// popup properties
+						pProperties = hrefArray[5].split(",");						
+						
+										
+						prefix = pURL.substr(0,8);				
+						if (prefix.toLowerCase() == 'asset://') {
+							if (pURL.substr(8,4).toLowerCase() == 'next') {
+								setRadioValue("LinkType","NextItem");	
+							} else if (pURL.substr(8,8).toLowerCase() == 'previous') {
+								setRadioValue("LinkType","PreviousItem");	
+							} else {
+								re = new RegExp("[0-9]+","i");
+								result = pURL.match(re);
+								theID = result[0];	
+								setRadioValue("LinkType","Asset");		
+							}
+						} else {
+							var x = pURL.split('#');
+							document.linkForm.LinkURL.value = x[0];
+							if (x.length == 2) {
+								document.linkForm.AnchorTarget.value = "#"+x[1];
+							}
+							setRadioValue("LinkType","URL");	
+						}
+						
+											
+						for(var i=0; i < pProperties.length; i++) {
+							temp = pProperties[i].split("=");
+														
+							switch(temp[0]) {
+								case "width":
+									document.linkForm.PopupWidth.value = temp[1];
+									break;
+								case "height":
+									document.linkForm.PopupHeight.value = temp[1];
+									break;
+								case "top":
+									document.linkForm.PopupTop.value = temp[1];
+									break;
+								case "left":
+									document.linkForm.PopupLeft.value = temp[1];
+									break;
+								case "resizable":
+									setSelectedValue('PopupResizable', temp[1]);
+									break;
+								case "menubar":
+									setSelectedValue('PopupMenubar', temp[1]);
+									break;
+								case "status":
+									setSelectedValue('PopupStatus', temp[1]);
+									break;
+								case "scrollbars":
+									setSelectedValue('PopupScrollbar', temp[1]);
+									break;
+								case "addresbar":
+									setSelectedValue('PopupAddressbar', temp[1]);
+									break;
+								case "panel":
+									setSelectedValue('PopupPanel', temp[1]);
+									break;
+							}
+						}
+						target = "popup";
+					} else {
+						document.forms.linkForm.LinkURL.value = arg.f_href;
+						setRadioValue("LinkType", "URL");
+					}
+				}
+			}
+			setSelectedValue('Target', target);
+		} 
+		if (theID && MTreeRoot.nodes[theID]) eval(MTreeRoot.nodes[theID].onClick);		
+	}
+	init();
+	configPopup();	
+</SCRIPT>

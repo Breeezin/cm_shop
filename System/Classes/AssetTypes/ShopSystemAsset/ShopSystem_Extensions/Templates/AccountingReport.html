@@ -1,0 +1,116 @@
+{tmpl_errors Errors}
+
+<tmpl_if condition="!array_key_exists('Q_Invoices',$data)">
+	<p>Please enter the start and end dates or leave dates blank for full report:</p>
+</tmpl_if>
+<table class="noPrint">
+	<form method="post" action="index.php?act=OnlineShop.AcmeAccountingReport">
+	<tr>
+		<td>Start Date:</td>
+		<td><input type="text" name="StartDate" value="{tmpl_var StartDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>End Date:</td>
+		<td><input type="text" name="EndDate" value="{tmpl_var EndDate}"> dd/mm/yyyy
+	</tr>
+	<tr>
+		<td>Report Type:</td>
+		<td><select name="ReportType" onchange="changeFilter(this);">
+			<option <?php if ($data['ReportType'] == 'SupplierOrderSheets') print('selected'); ?> value="SupplierOrderSheets">Supplier Order Sheets</option>
+			<option <?php if ($data['ReportType'] == 'Abonos') print('selected'); ?> value="Abonos">Abonos</option>
+		</select>
+		<script language="Javascript">
+			function changeFilter(sel) {
+				if (sel.selectedIndex == 0) {
+					document.getElementById('FilterAb').style.display = 'none';
+					document.getElementById('FilterSup').style.display = '';
+				} else {
+					document.getElementById('FilterSup').style.display = 'none';
+					document.getElementById('FilterAb').style.display = '';
+				}
+			}
+		</script>
+		</td>
+	</tr>
+	<tr>
+		<td>Filter:</td>
+		<td><select id="FilterSup" name="FilterSup" <? if ($data['ReportType'] != 'SupplierOrderSheets') print('style="display:none;"'); ?> >
+			<option <?php if ($data['FilterSup'] == 'All,1=1') print('selected'); ?> value="All,1=1">All</option>
+			<option <?php if ($data['FilterSup'] == 'Paid,sos_paid IS NOT NULL') print('selected'); ?> value="Paid,sos_paid IS NOT NULL">Paid</option>
+			<option <?php if ($data['FilterSup'] == 'Not Paid,sos_paid IS NULL') print('selected'); ?> value="Not Paid,sos_paid IS NULL">Not Paid</option>
+		</select>
+		<select id="FilterAb" name="FilterAb" <? if ($data['ReportType'] == 'SupplierOrderSheets') print('style="display:none;"'); ?>>
+			<option <?php if ($data['FilterAb'] == 'All,1=1') print('selected'); ?> value="All,1=1">All</option>
+			<option <?php if ($data['FilterAb'] == 'Reshipments,CoInType = \'Reshipment\'') print('selected'); ?> value="Reshipments,CoInType = 'Reshipment'">Reshipments</option>
+			<option <?php if ($data['FilterAb'] == 'Refunds,CoInType = \'Refund\'') print('selected'); ?> value="Refunds,CoInType = 'Refund'">Refunds</option>
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="Submit" name="Submit" value="Submit"></td>
+	</tr>
+	</form>
+</table>
+<tmpl_if condition="array_key_exists('Q_Invoices',$data)">
+	<tmpl_if condition="$data['ReportType'] == 'SupplierOrderSheets'">
+		<p>
+			<?php print(ListFirst($data['FilterSup'])); ?> supplier orders for period <? if (strlen($data['StartDate'])) { print($data['StartDate']); } else { print('Any'); } ?> to <? if (strlen($data['EndDate'])) { print($data['EndDate']); } else { print('Any'); } ?> <input type="button" name="print" onclick="window.print();" class="noPrint" value="Print">
+		</p>
+		<table width="100%" border="1" cellpadding="2">
+			<tr>
+				<td><strong>FACTURA SOTABAC</strong></td>
+				<td><strong>FECHA FACTURA</strong></td>
+				<td><strong>IMPORTE</strong></td>
+			</tr>
+		<?php $data['total'] = 0;$data['totalImporte'] = 0; ?>
+		<tmpl_loop query="Q_Invoices">
+			<tr>
+				<td>{tmpl_row_var sos_invoice_number}</td>
+				<td><? if ($row['sos_invoice_date'] !== null) { ?>{tmpl_row_var_date name="sos_invoice_date" format="d M y"}<? } else print("&nbsp;"); ?></td>
+				<td align="right"><?php if ($row['sos_import'] !== null) print(ss_decimalFormat($row['sos_import'])); else print('&nbsp;'); ?></td>
+			</tr>
+			
+			<?php $data['totalImporte'] += $row['sos_import']; ?>
+		</tmpl_loop>
+			<tr>
+				<td colspan="2">Total</td>
+				<td align="right"><?php print(ss_decimalFormat($data['totalImporte']));?></td>
+			</tr>
+		</table>
+	<tmpl_else>
+		<p>
+			<?php print(ListFirst($data['FilterAb'])); ?> abonos for period <? if (strlen($data['StartDate'])) { print($data['StartDate']); } else { print('Any'); } ?> to <? if (strlen($data['EndDate'])) { print($data['EndDate']); } else { print('Any'); } ?> <input type="button" name="print" onclick="window.print();" class="noPrint" value="Print">
+		</p>
+		<table width="100%" border="1" cellpadding="2">
+			<tr>
+				<td><strong>Abono No.</strong></td>
+				<td><strong>Fecha de Invoice</strong></td>
+				<td><strong>Fecha de Abono</strong></td>
+				<td><strong>Este abono es por la Factura No.</strong></td>
+				<td><strong>Nombre del Cliente</strong></td>
+				<td><strong>Type</strong></td>
+				<td><strong>Total Abono (-)</strong></td>
+			</tr>
+		<?php $data['total'] = 0;$data['totalImporte'] = 0; ?>
+		<tmpl_loop query="Q_Invoices">
+			<tr>
+				<td>{tmpl_row_var CoInID}</td>
+				<td><? if ($row['in_date'] !== null) { ?>{tmpl_row_var_date name="in_date" format="d M y"}<? } else print("&nbsp;"); ?></td>
+				<td><? if ($row['CoInDate'] !== null) { ?>{tmpl_row_var_date name="CoInDate" format="d M y"}<? } else print("&nbsp;"); ?></td>
+				<td align="right">{tmpl_row_var CoInOriginalInvoiceLink}</td>
+				<td>{tmpl_row_var in_destination}</td>
+				<td>{tmpl_row_var CoInType}</td>
+				<td align="right"><?php if ($row['CoInTotal'] !== null) print(ss_decimalFormat($row['CoInTotal'])); else print('&nbsp;'); ?></td>
+			</tr>
+			
+			<?php $data['totalImporte'] += $row['CoInTotal']; ?>
+		</tmpl_loop>
+			<tr>
+				<td colspan="6">Total (-)</td>
+				<td align="right"><?php print(ss_decimalFormat($data['totalImporte']));?></td>
+			</tr>
+		</table>
+		
+	</tmpl_if>
+</tmpl_if>

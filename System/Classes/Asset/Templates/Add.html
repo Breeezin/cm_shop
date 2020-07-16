@@ -1,0 +1,136 @@
+<script type="text/javascript" src="System/Classes/MDI/Templates/fake_popup.js"></script>
+{tmpl_if $data['AreDefined']}
+	<SCRIPT language="Javascript">
+		popup_opener().subAssetAddCallback({tmpl_var MaxAst}, '{tmpl_var_js as_name}', '{tmpl_var_js as_type}');		
+		popup_close();
+		//parent.popup_window_close();
+		//window.opener.subAssetAddCallback({tmpl_var MaxAst}, '{tmpl_var_js as_name}', '{tmpl_var_js as_type}');
+		//window.close();		
+	</SCRIPT>
+	
+{tmpl_else}
+
+	<FORM NAME="AddForm" METHOD="POST" ACTION="{tmpl_var Script_Name}?act={tmpl_var act}&DoAction=Yes" onsubmit="checkForm">
+
+	<SCRIPT language="JavaScript">
+		function checkForm(theForm) {
+			
+			if (theForm.as_parent_as_id.value =="") {
+				alert ("Please choose a parent.");
+				return false;
+			} 
+			return true;
+
+		}
+	</SCRIPT>
+	{tmpl_if $data['HasError']}
+		<strong>Error:</strong><BR>
+		Unable to create an item of the requested type.  The item type is either incorrect or
+		this web site has reached it's limit of the given item type.  Please contact your web 
+		developer.
+	{tmpl_end}
+
+	{tmpl_if !$data['IsDefinedParentLink']}
+		<P>
+			Please select the parent of your new item.
+		
+				
+		{tmpl_eval $result = new Request("Asset.Tree",array('OnClick' => 'setAssetPath','OpenAssets' => array('1' => 1,),'FilterByAdmin'		=>	true,));}
+	
+		<DIV ID="AssetTree" STYLE="width:275;height:330; overflow:auto;border:solid black 1px;" CLASS="treeBackground"><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%"><TR STYLE="height:5"><TD> </TD></TR><TR><TD ID="mainTree">{tmpl_eval print($result->display);}</TD></TR></TABLE></DIV>
+				
+		<INPUT TYPE="TEXT" DISABLED NAME="AssetParentPath" VALUE="index.php" size="50">
+		</P>
+		<INPUT TYPE="HIDDEN" NAME="as_parent_as_id" VALUE="1">
+		<SCRIPT language="JavaScript">
+			function setAssetPath(parentLink,parentPath) {
+				document.forms.AddForm.as_parent_as_id.value = parentLink;
+				document.forms.AddForm.AssetParentPath.value = parentPath;
+			}
+		</SCRIPT>	
+	{tmpl_else}
+		<INPUT TYPE="HIDDEN" NAME="as_parent_as_id" VALUE="{tmpl_var as_parent_as_id}">
+	{tmpl_end}
+	<P>
+		Please enter a name for your new item.
+		<SCRIPT TYPE="text/javascript">
+					<!--
+						// copyright 1999 Idocs, Inc. http://www.idocs.com
+						// Distribute this script freely but keep this notice in place
+						var allowedCharacters = 'abcdefghijklmnopqrstuvwxyz 0123456789-,.)(';
+						
+						function letternumber(e) {
+							var key;
+							var keychar;
+							
+							if (window.event)
+							   key = window.event.keyCode;
+							else if (e)
+							   key = e.which;
+							else
+							   return true;
+							keychar = String.fromCharCode(key);
+							keychar = keychar.toLowerCase();
+							
+							// control keys
+							if ((key==null) || (key==0) || (key==8) || 
+							    (key==9) || (key==13) || (key==27) )
+							   return true;
+							
+							// alphas and numbers
+							else if ((allowedCharacters.indexOf(keychar) > -1))
+							   return true;
+							else {
+							   alert('Sorry, that character is not allowed in the item name.');
+							   return false;
+							}
+						}
+						
+						
+					  	function checkAssetName() {
+							// This is a safety incase they try to do a cut and paste
+							var checkStr = document.forms.AddForm.as_name.value;
+							var allValid = true;
+							var newVersion = '';
+							for (var i = 0;  i < checkStr.length;  i++) {
+								ch = checkStr.charAt(i);
+								if (allowedCharacters.indexOf(ch.toLowerCase()) == -1) {
+									allValid = false;
+								} else {
+									newVersion += ch;
+								}
+							}
+							if (!allValid) {
+								document.forms.AddForm.as_name.value = newVersion;
+								alert('Some characters have been removed from your asset name as they are not allowed. The following characters are allowed : '+allowedCharacters);
+							}
+							return true;
+						}
+						
+					//-->
+					</SCRIPT>				  
+		          <INPUT TYPE="TEXT" NAME="as_name" VALUE="{tmpl_var as_name}" SIZE="30" MAXLENGTH="255" ONKEYPRESS="return letternumber(event);" ONCHANGE="checkAssetName();">
+	</P>
+	<P>
+		Please select the type for your new item.
+	</P>
+	<SELECT NAME="as_type">
+		<? foreach ($data['AssetTypes'] as $display => $name) { ?>
+			<OPTION VALUE="<?=ss_HTMLEditFormat($name)?>"><?=ss_HTMLEditFormat($display)?></OPTION>
+		<? } ?>
+	</SELECT>	
+	<tmpl_if condition="ss_optionExists('Schedule Assets')">
+		<p>
+			<label for="OnlineNow">Make item online immediately?</label> <input id="OnlineNow" type="checkbox" name="OnlineNow" value="1">
+		</p>
+	</tmpl_if>
+	<P>
+		Please select below and click the "Create" button.
+	</P>
+	<SELECT NAME="as_appear_in_menus">
+		<OPTION VALUE="1">Appears In Menus</OPTION>
+		<OPTION VALUE="0">Does Not Appear In Menus</OPTION>
+	</SELECT>	
+	<INPUT TYPE="submit" VALUE="Create">
+	</FORM>
+{tmpl_end}

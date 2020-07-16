@@ -1,0 +1,259 @@
+<style type="text/css">
+.right {
+	text-align: right;
+}
+th {
+	text-align: left;
+	font-weight: strong;
+}
+</style>
+<tmpl_if condition="$data['HideButtons'] == 0">
+<script language="Javascript">
+	function openwindow(url,name) {
+		res = window.open(url,name, 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');				
+	}
+</script>
+<p>
+<INPUT type="button" name="logout" value="Daily Report" onclick="openwindow('<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>index.php?act=OnlineShop.AcmeDailyReport&<?=ss_getHashMeInURL();?>','DailyReport');">
+<input type="button" name="jump" value="Shipping Charges History" onclick="openwindow('<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>index.php?act=shopsystem_shipping_charges.List&<?=ss_getHashMeInURL();?>','ShippingCharges');"> 
+<input type="button" name="jump" value="Send Dashboard Email" onclick="openwindow('<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>index.php?act=OnlineShop.AcmeDashBoardEmail&<?=ss_getHashMeInURL();?>','DashboardEmail');"> 
+</p>
+</tmpl_if>
+<!--<INPUT type="button" name="logout" value="Correos" onclick="openwindow('<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>index.php?act=OnlineShop.AcmeShippingReport&<?=ss_getHashMeInURL();?>','Correos');">
+<INPUT type="button" name="logout" value="Banco" onclick="openwindow('<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>index.php?act=OnlineShop.AcmeBank&<?=ss_getHashMeInURL();?>','Bank');"></p>-->
+
+<form action="index.php?act=OnlineShop.AcmeAutoDashboard&Debug=1" method="post">
+<?
+	$data['exporturl'] = 'index.php?act=OnlineShop.AcmeAutoDashboard&Export=1&Today='.ss_URLEncodedFormat($data['Today']);
+	if (array_key_exists('from_start',$data)) {
+		$data['exporturl'] .= '&from_start='.ss_URLEncodedFormat($data['from_start']);
+		$data['exporturl'] .= '&from_end='.ss_URLEncodedFormat($data['from_end']);
+		$data['exporturl'] .= '&to_start='.ss_URLEncodedFormat($data['to_start']);
+		$data['exporturl'] .= '&to_end='.ss_URLEncodedFormat($data['to_end']);
+	}
+	
+?>
+<tmpl_if condition="$data['HideButtons'] == 0">
+<a href="{tmpl_var exporturl}">Export to file</a>
+</tmpl_if>
+<table border="1">
+	<tr>
+		<td></td>
+		<td class="right"><tmpl_if condition="$data['HideButtons'] == 0"><input type="text" size="8" name="Today" value="{tmpl_var Today}"><tmpl_else><strong>{tmpl_var Today}</strong></tmpl_if></td>
+		<? $counter = 0; 
+			foreach ($data['Values'] as $data['desc'] => $values) { 
+				foreach ($values as $data['title'] => $value) { 
+					if ($data['title'] != 'Today') {
+		?>
+		
+		<td class="right">
+			<strong>{tmpl_var title}</strong>
+		</td>
+					
+		<? 
+					}
+				}
+				break;
+			} 
+		?>	
+		
+	</tr>
+	<? $counter = 0; foreach ($data['Values'] as $data['desc'] => $values) { ?>
+		<tr>
+			<td style="text-align: left;" width="150" nowrap><strong>{tmpl_var desc}</strong></td>
+			<? foreach ($values as $column => $value) { ?>
+				<td class="right">
+					<?
+						$value = $value['TheValue'];
+						if ($value === null) $value = 0;
+						if ($column == '% Difference') {
+							echo $value;	
+						} else { 
+							if ($counter != 0 and $counter != 6 and $counter != 8) echo "&euro; ";
+							if( $counter == 6 )
+								$value = number_format($value,1);
+							else
+								$value = number_format($value,0);
+							echo $value;
+						}
+					?>
+				</td>
+			<? } ?>
+		</tr>	
+	<? $counter++; } ?>
+	<tr>
+		<th nowrap>Average Shipping Delay</th>
+		<td nowrap class="right"><? if (strlen($data['AverageShippingDelay'])) { echo number_format($data['AverageShippingDelay'],1).' days'; } else { echo "Unknown"; } ?></td>
+	</tr>
+</table>
+<tmpl_if condition="$data['HideButtons'] == 0">
+<h3>Comparison</h3>
+<table>
+	<tr>
+		<td>Compare</td>
+		<td>
+			<?
+				ss_paramKey($data,'from_start','');
+				ss_paramKey($data,'from_end','');
+				ss_paramKey($data,'to_start','');
+				ss_paramKey($data,'to_end','');
+			?>
+			<input type="text" size="10" name="from_start" value="{tmpl_var from_start}"> -
+			<input type="text" size="10" name="from_end" value="{tmpl_var from_end}">
+			<? /*<select name="from">
+			<?
+				$current = mktime(0,0,0,8,1,2004);
+				while ($current < time() ) {
+					$val = date('Y-m-d 00:00:00',$current);
+					$sel = ($data['from'] == $val)?' selected ':'';
+					echo "<option $sel value=\"{$val}\">".date('M Y',$current)."</option>";	
+					$current = mktime(0,0,0,date('m',$current)+1,1,date('Y',$current));
+				}
+			?>
+			</select>
+			*/ ?>
+		</td>
+		<td>to</td>
+		<td>
+			<input type="text" size="10" name="to_start" value="{tmpl_var to_start}"> -
+			<input type="text" size="10" name="to_end" value="{tmpl_var to_end}">
+			<? /*<select name="to">
+			<?
+				$current = mktime(0,0,0,8,1,2004);
+				while ($current < time() ) {
+					$val = date('Y-m-d 00:00:00',$current);
+					$sel = ($data['to'] == $val)?' selected ':'';
+					echo "<option $sel value=\"{$val}\">".date('M Y',$current)."</option>";	
+					$current = mktime(0,0,0,date('m',$current)+1,1,date('Y',$current));
+				}
+			?>
+			</select>
+			*/ ?>
+		</td>
+		<td>
+			<input type="submit" name="submit" value="Go">
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td align="center">(dd/mm/yyyy)</td>
+		<td></td>
+		<td align="center">(dd/mm/yyyy)</td>
+		<td></td>
+	</tr>
+</table>
+</tmpl_if>
+</form>
+<br />
+<h3>Customers</h3>
+<table border="1">
+	<tr>
+		<td></td>
+		<td class="right"><strong>Number of People</strong></td>
+	</tr>
+	<tmpl_loop query="Q_People">
+	<tr>
+		<td style="text-align: left;" width="150"><strong>{tmpl_row_var ug_name}</strong></td>
+		<td class="right">{tmpl_row_var People}</td>	
+	</tr>
+	</tmpl_loop>
+	<tr>
+		<td style="text-align: left;" width="150"><strong>Wish List Customers</strong></td>
+		<td class="right">{tmpl_var WishListCustomers}</td>	
+	</tr>
+	
+</table>
+
+<br />
+<table border="1">
+	<tr>
+		<td width="150"></td>
+		<td class="right"><strong>Number of People</strong></td>
+		<td class="right"><strong>%</strong></td>
+	</tr>
+	<tr><td style="text-align: left;"><strong>Total Customers</strong></td><td>{tmpl_var DistinctCustomers}</td></tr>
+	<tr><td style="text-align: left;"><strong>Repeat Customers</strong></td><td>{tmpl_var RepeatCustomers}</td><td><?=floor($data['RepeatCustomers']*100/$data['DistinctCustomers'])?>%</td></tr>
+</table>
+<br />
+<h3>Debt</h3>
+<table border="1">
+	<tr>
+		<td>
+		</td>
+		<? foreach ($data['Debts'] as $data['DebtName'] => $values) { ?>
+			<td class="right"><strong>{tmpl_var DebtName}</strong></td>
+		<? } ?>
+	</tr>
+	
+	<tr>
+		<td style="text-align: left;" width="150"><strong>Total Debt</strong></td>
+		<td  class="right" <? if ($data['Debts']['Sotabac']['Total Debt'] > 25000) print 'style="color:red;"';?>>&euro; <? print(number_format($data['Debts']['Sotabac']['Total Debt'],2));?></td>
+		<td  class="right" <? if ($data['Debts']['Correos']['Total Debt'] > 25000) print 'style="color:red;"';?>>&euro; <? print(number_format($data['Debts']['Correos']['Total Debt'],2));?></td>
+	</tr>
+	<tr>
+		<td style="text-align: left;"><strong>Number of Unpaid</strong></td>
+		<td class="right"><?=$data['Debts']['Sotabac']['Number of Unpaid Orders']?></td>
+		<td class="right"><?=$data['Debts']['Correos']['Number of Unpaid Orders']?></td>
+	</tr>
+	<tr>
+		<td style="text-align: left;"><strong>Age of Oldest Unpaid</strong></td>
+		<td class="right"><?=$data['Debts']['Sotabac']['Age of Oldest Unpaid Order']?> days</td>
+		<td class="right"><?=$data['Debts']['Correos']['Age of Oldest Unpaid Order']?> days</td>
+	</tr>
+</table>
+<h3>Money</h3>
+<table border="1">
+	<tr>
+		<th>BBVA</th>
+		<td>&euro; <? print(number_format($data['Bank'],2))?></td>
+	</tr>
+	<tr>
+		<th>Total Debt</th>
+		<td>&euro; <? 
+			$totalDebt = ($data['Debts']['Sotabac']['Total Debt']+$data['Debts']['Correos']['Total Debt']);
+			print(number_format($totalDebt,2));
+		?></td>
+	</tr>
+	<tr>	
+		<th>Debt Ratio</th>
+		<td><? print(number_format($data['Bank']/$totalDebt,2));?>:1</td>
+	</tr>
+</table>
+<h3>Warehouse Stock Value Estimates</h3>
+<table border="1">
+	<tr>
+		<th>Based on supplier price of previous 20 supplier ordersheets</th>
+		<td>&euro; <? print(number_format($data['WarehouseStock']['WaStStock']*$data['WarehouseStock']['WaStSupplierAveragePrice'],2))?></td>
+	</tr>
+	<tr>
+		<th>Based on sales price of previous 25 customer orders</th>
+		<td>&euro; <? print(number_format($data['WarehouseStock']['WaStStock']*$data['WarehouseStock']['WaStOrdersAveragePrice'],2))?></td>
+	</tr>
+</table>
+<h3>Minimum Stock Levels</h3>
+<table border="1">
+	<tr>
+		<td>Box Name</td>
+		<td>Code</td>
+		<td>Minimum</td>
+		<td>Actual</td>
+	</tr>
+	<tmpl_loop query="Q_Missing">
+	<tr>
+		<td style="text-align: left;" width="150"><strong>{tmpl_row_var pr_name}</strong></td>
+		<td style="text-align: left;" ><strong>{tmpl_row_var pro_stock_code}</strong></td>
+		<td class="right">{tmpl_row_var pr_stock_warning_level}</td>	
+		<tmpl_if condition="$row['pr_stock_warning_level'] >= $row['pro_stock_available']">
+			<td class="right" style="color:red">
+		<tmpl_else>
+			<td class="right">
+		</tmpl_if>
+		{tmpl_row_var pro_stock_available}</td>	
+	</tr>
+	</tmpl_loop>
+</table>
+
+<tmpl_if_var_strlen name="Note">
+<h3>Note</h3>
+{tmpl_var_br Note}
+</tmpl_if>

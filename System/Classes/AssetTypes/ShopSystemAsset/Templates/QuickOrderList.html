@@ -1,0 +1,93 @@
+<table width="100%" border=0 cellpadding="5" cellspacing="0" class="onlineshopListtable">
+  <tbody>
+    <tr>
+      <td>
+        <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0" class="onlineShop_ProductListingHeader">
+          <tbody>
+            <tr>
+			      <td width="90%" CLASS="onlineShop_productBand_category">{tmpl_var SearchCategory}</td>
+					<form action="{tmpl_var AssetPath}/Service/Engine" method="POST">
+		                <td align="right">
+							<select name="pr_ca_id" class="onlineShop_productBand_categorySelect" onchange="this.form.submit()">
+								<option selected value="">Select Category</option>
+								<option value="">All Categories</option>
+								<tmpl_loop query="Q_Categories">
+									<option value="{tmpl_row_var ca_id}">{tmpl_row_var ca_name}</option>
+								</tmpl_loop>
+							</select>
+		                </td>
+					</form>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div align="center">{tmpl_var_raw PageThru}</div>
+        <div align="center">{tmpl_var_raw TaxCountryNoteHTML}</div>
+        <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
+        	<tr>
+      		    <td height="2" colspan="3" class="onlineShop_DotLine"><img src="Images/holder.gif" width="10" height="2" /></td>
+   			</tr>
+			<tmpl_loop query="Q_Products">
+				<tmpl_if condition="$data['LastCategory'] !== $row['pr_ca_id']">
+					<tmpl_eval expression="$data['LastCategory'] = $row['pr_ca_id']; $categoryRow = $data['Q_Categories']->getRow($data['Q_Categories']->getRowWithValue('ca_id',$data['LastCategory'])); $data['CategoryName']=$categoryRow['ca_name'];">
+	          		<tr>
+	            		<td colspan="3" class="onlineShop_ProductListingSubCategory">{tmpl_var CategoryName}</td>
+          			</tr>
+		        	<tr>
+	        		    <td height="2" colspan="3" class="onlineShop_DotLine"><img src="Images/holder.gif" width="10" height="2" /></td>
+          			</tr>
+				</tmpl_if>
+
+				<form name="ProductDetail{tmpl_row_var pr_id}" action="">
+					
+				<!-- Product detail start -->
+		            <tr>
+		              	<td valign=top class="ResultRowEven" width="85">
+		              		<tmpl_if condition="strlen($row['Image'])">
+								<a href="{tmpl_row_var ProductDetailLink}"><img border="0" src="{tmpl_row_var Image}" alt="{tmpl_row_var pr_name}" class="onlineShop_ProductThumbnail" /></a>
+							</tmpl_if>
+					 	</td>
+		              	<td align="left" valign="top">
+			                <p><a href="{tmpl_row_var ProductDetailLink}" class="onlineShop_ProductName">{tmpl_row_var pr_name}</a><br>
+							<tmpl_if condition="strlen($row['pr_short'])">
+								<span class="onlineShop_ProductDetails">
+									{tmpl_row_var_parse pr_short}
+								</span><BR>
+							</tmpl_if>
+							</p>
+							
+							<!-- Display options -->
+							<tmpl_eval expression="print($data['this']->getOptions($row,$data['OptionFieldsArray']))">
+							
+							<tmpl_if condition="!ss_OptionExists('Hide Prices')">
+								<!-- Display prices  -->
+								{tmpl_row_var_raw PricesHTML}
+							 	<tmpl_if condition="ss_OptionExists('Sell Products')">
+							 		<!-- Add to basket -->	
+								   <a href="javascript:if (readyToBuy[{tmpl_row_var pr_id}]) { document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_var_js AssetPath}/Service/UpdateBasket/pr_id/{tmpl_row_var pr_id}/Qty/1'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit() } else { alert('Please make a choice from the options before continuing.') }"><img src="Images/but-add_to_basket.gif" border="0" /></a>
+								</tmpl_if>
+							</tmpl_if>
+		                </td>
+		             	<td align="left" valign="top"><p>
+					    	<a href="javascript:document.forms.ProductDetail{tmpl_row_var pr_id}.action = '{tmpl_row_var_js ProductDetailLink}'; document.forms.ProductDetail{tmpl_row_var pr_id}.submit()"><img src="Images/but-view_product_detail.gif" BORDER="0" ALT="View Product Details" /></a><br /> 
+							<tmpl_if condition="ss_OptionExists('Tell a Friend')">
+								<img src="Images/holder.gif" width="10" height="5" /><br />
+								<a href="javascript:void(0)" onclick="window.open('{tmpl_var_raw CurrentServer}Tell%20A%20Friend?TellingAbout={tmpl_var_url AssetPath}%2FService%2FDetail%2FProduct%2F{tmpl_row_var_url pr_id}&LinkText={tmpl_row_var_url pr_name}&BeforeText=the&AfterText=', 'EnquiryWindow', 'width=560,height=580,scrollbars')"><img src="Images/but-tell_a_friend.gif" border="0" alt="Tell A Friend" /></a><br>
+						 	</tmpl_if>
+		            	</td>
+		            </tr>
+		          	<tr>
+			            <td height="2" colspan="3" class="onlineShop_DotLine"><img src="Images/holder.gif" width="10" height="2" /></td>
+		          	</tr>
+				<!-- Product detail end --->
+				</form>
+			</tmpl_loop>
+        </table>
+        <div align="center">{tmpl_var_raw PageThru}</div>
+      </td>
+    </tr>
+  </tbody>
+</table>

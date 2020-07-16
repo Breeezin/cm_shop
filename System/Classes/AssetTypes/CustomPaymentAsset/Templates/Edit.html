@@ -1,0 +1,36 @@
+<table width="100%">
+<tr><td>
+<a href="javascript:void(0);" onclick="res=window.open('{tmpl_var SecureSite}index.php?act=WebPayAdministration.List&as_id={tmpl_var as_id}','PaymentManager','width=760,height=480,scrollbars=yes,menubar=yes,resizable=yes');res.focus();return false;">View Payments</a>
+</td></tr>
+</table>
+<FIELDSET TITLE="Settings" style="padding:5px;">
+	<table>
+		<tr>
+			<td>New Payment Notification Email: </td>
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_ADMINEMAIL"}</td>
+		</tr>
+        <tr>
+            <td colspan="2">{tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_PRODUCTS"}</td>
+        </tr>
+	</table>
+</FIELDSET>
+
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_FIELDS"}
+<FIELDSET TITLE="Thank You Page" style="padding:5px;">
+	<LEGEND>Thank You Page</LEGEND>
+	{tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_THANK_YOU_PAGE"}
+</FIELDSET>
+
+<FIELDSET TITLE="Custom Display Template" style="padding:5px;">
+	<LEGEND>Custom Display Template</LEGEND>
+	<p>
+You may define a custom template for your form instead of simply having the field names in 
+one column and the fields in another column. If you would like to use the template function, please tick this box: {tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_USE_CUSTOM_DISPLAY_TEMPLATE"}
+</p>
+<p>
+To create a template, you need to insert special tags where you would like your fields to appear.
+To add a tag, simply surround the field name with square brackets. e.g. [Name].  Also be sure to add 
+a submit button by entering a [Submit] tag in your template.
+</p>
+{tmpl_fieldset_field fieldset="FieldSet" field="AST_CUSTOMPAYMENT_CUSTOM_DISPLAY_TEMPLATE"}
+</FIELDSET>

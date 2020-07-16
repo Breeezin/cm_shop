@@ -1,0 +1,5 @@
+{tmpl_errors errors}
+<FORM NAME="ConfigForm" METHOD="POST" ACTION="{TMPL_VAR FormAction}">
+{tmpl_var_raw Settings}
+<input type="submit" name="Submit" value="Save">&nbsp;&nbsp;&nbsp;<input type="button" onclick="document.location='index.php?act=WebPayConfiguration.Edit';" name="Cancel" value="Cancel">
+</FORM>

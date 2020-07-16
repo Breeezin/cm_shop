@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>Updating Children</TITLE>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=<?=$GLOBALS['cfg']['Web_Charset']?>">
+</HEAD>
+
+<BODY>
+<SCRIPT language="JavaScript">
+	var assetOpts = new Array();
+	<tmpl_loop query="Q_SubAssets">
+		assetOpts[assetOpts.length] = new Option('{tmpl_row_var_js as_name}', {tmpl_row_var_js as_id});
+	</tmpl_loop>
+	window.parent.subAssetRefreshCallback(assetOpts);
+	//window.close();
+</SCRIPT>
+
+</BODY>
+</HTML>

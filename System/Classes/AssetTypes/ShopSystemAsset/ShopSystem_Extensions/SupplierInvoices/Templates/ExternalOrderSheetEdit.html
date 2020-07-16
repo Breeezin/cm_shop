@@ -1,0 +1,162 @@
+<?
+	$row = $data['Q_OrderSheet']->fetchRow();
+	$data = array_merge($data,$row);
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_mainPrint.css" rel="stylesheet" type="text/css" media="print">
+</head>
+
+<body>
+
+<div class="dontPrint">
+{tmpl_errors name="Errors"}
+<table cellpadding=5>
+<form action="index.php?act=shopsystem_order_sheets.Edit" method="post" name="theForm">
+	<tr>
+	<input type="hidden" name="BackURL" value="{tmpl_var BackURL}">
+	<input type="hidden" name="ors_id" value="{tmpl_var ors_id}">
+	<td><input type="submit" name="Submit" value="Save">
+	<td><input type="button" name="cancel" value="Cancel" onclick="document.location='index.php?act=shopsystem_order_sheets.View&ors_id={tmpl_var ors_id}&BackURL={tmpl_var_url BackURL}';">
+	<td><input type="button" name="cancel" value="Return to List" onclick="document.location='{tmpl_var_js BackURL}';">
+	</td>
+	</tr>
+
+</table>
+</div>
+<br />
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="102" valign="top" bgcolor="#A6DED5"><img src="Images/acme_logo.gif" alt="Bjorck Bros. S.L." width="102" height="183"></td>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr valign="top">
+				<td width="50%"><p><span class="text14">Bjorck Bros. S.L.</span><br>
+		                <span class="text12Italic">        Operador de Zona Franca</span></p>
+			    </td>
+				<td width="50%"><span class="text14">Pedido de Compras<br>
+				</span><span class="text12Italic">Numero {tmpl_var ors_id}</span></td>
+		 </tr>
+			<tr valign="top">
+				<td width="50%">CIF: B35702786<br>
+					Andres Perdomo s/n, Edificio Zona Franca<br>
+					Oficina M214<br>
+					35008 Las Palmas de Gran Canaria<br>
+					Espa&ntilde;a<br>
+					Telefono: + 34 928 466 336<br>
+				Fax:	: + 34 928 468 656</td>
+				<?php if( $data['Vendor' ] == 1 ) { ?>
+				<td width="50%">Supplier: Quality Importers Trading Co. Inc.<br>
+					20871 Johnson Street #113 <br>
+					Pembroke Pines , Fl 33029<br>
+					USA<br>
+					Tel: 954 602 5637<br>
+					Fax: 954 602 5638<br>
+				</td>
+				<?php } else { ?>
+				<td width="50%">Supplier: Swiss Llama Supplies Co. Inc.<br>
+					Somewhere in<br>
+					Switzerland<br>
+				</td>
+				<?php } ?>
+			</tr>
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+                	<tr valign="top">
+                		<td align="left"><strong>Numero de Pedido: </strong></td>
+                		<td>{tmpl_var ors_id}</td>
+                		<td><strong>Divisa: </strong></td>
+                		<td>Euros </td>
+                		<td><strong>Fecha: </strong></td>
+                		<td>{tmpl_var_date name="ors_date" format="d.m.Y"}</td>
+           		 </tr>
+                	<tr valign="top">
+                		<td><strong>Forma de Pago:</strong></td>
+                		<td>Transferencia</td>
+                		<td><strong>Factura Sotabac: </strong></td>
+                		<td><input maxlength="63" size="10" type="text" name="ors_invoice_number" value="{tmpl_var ors_invoice_number}"></td>
+						<td><strong>Fecha Factura: </strong></td>
+                		<td><input maxlength="10" size="10" type="text" name="ors_invoice_date" value="{tmpl_if_var_strlen ors_invoice_date}{tmpl_var_date name="ors_invoice_date" format="d/m/Y"}{tmpl_end}"><br>(dd/mm/yyyy)</td>
+           		 </tr>
+           		 <tr>
+           		 	<td colspan="4">&nbsp;</td>
+           		 	<td><strong>Importe:</strong></td>
+           		 	<td><input maxlength="10" size="10" type="text" name="ors_import" value="{tmpl_var ors_import}"></td>
+           		 </tr>
+           		 </table></td>
+			</tr>
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" class="Borderinvoice">
+					<tr valign="top">
+						<td  align="center" class="Borderordersheet">Order Number</td>
+						<td  align="center" class="Borderordersheet">Stock Code</td>
+						<td  align="center" width="160" class="Borderordersheet">Description</td>
+						<td  align="center" class="Borderordersheet">Box Number (from 0)</td>
+						<td  align="center" class="Borderordersheet">Price</td>
+						<td  align="center" class="Borderordersheet">Discount</td>
+						<td  align="center" class="Borderordersheet">Shipping</td>
+						<td  align="center" class="Borderordersheet">Total</td>
+						<td  align="center" class="Borderordersheet">Ordered Date</td>
+						<td  align="center" class="Borderordersheet">Destination</td>
+						<td align="center" class="Borderordersheet">Manage</td>
+				 </tr>
+				 	<tmpl_loop query="Q_OrderSheetItems">
+					<tr>
+						<td>{tmpl_row_var or_tr_id}</td>
+						<td>{tmpl_row_var orsi_stock_code}</td>
+						<td>{tmpl_row_var orsi_pr_name}</td>
+						<td align="right">{tmpl_row_var orsi_box_number}</td>
+						<td align="right"><?=ss_decimalFormat($row['orsi_price']) ?></td>
+						<td align="right"><?=ss_decimalFormat($row['orsi_discount']) ?></td>
+						<td align="right"><input type="text" size="6" name="Shipping{tmpl_row_var orsi_id}" value="{tmpl_row_var orsi_shipping}"></td>
+						<td align="right"><?=ss_decimalFormat($row['orsi_total']) ?></td>
+						<td>{tmpl_row_var or_recorded}</td>
+						<td>
+						<?php $dest = unserialize( $row['or_shipping_details']);
+//							print_r ($dest['ShippingDetails']);
+							echo $dest['ShippingDetails']['Name']."<br />";
+							echo $dest['ShippingDetails']['0_50A1']."<br />";
+							echo $dest['ShippingDetails']['0_50A2']."<br />";
+							echo $dest['ShippingDetails']['0_50A4']."<br />";
+							echo $dest['ShippingDetails']['0_B4C0']."<br />";
+//							echo "Email:".$dest['ShippingDetails']['Email']."<br />";
+							echo "Phone:".$dest['ShippingDetails']['0_B4C1']."<br />";
+						?>
+						</td>
+						<td>
+							<!--<a href="index.php?act=shopsystem_order_sheets.EditItem&orsi_id={tmpl_row_var orsi_id}&BackURL={tmpl_var_url BackURL}">Edit</a>-->
+							<a href="javascript:if (confirm('Are you sure you want to delete this entry?')) { document.location.href = 'index.php?act=shopsystem_order_sheets.DeleteItem&orsi_id={tmpl_row_var orsi_id}&BackURL={tmpl_var_url BackURL}'; } void(0);">Delete</a>
+						</td>
+					</tr>
+					</tmpl_loop>
+				</table>
+				</td>
+			</tr>
+			<tr align="center" valign="top">
+				<td><table width="100%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+                	<tr valign="top">
+                		<td height="200" colspan="6" align="left"><strong>Anotaciones /Notes:</strong>
+                		<textarea name="ors_notes" style="width:100%;height:180px;">{tmpl_var ors_notes}</textarea>
+                		</td>
+           		 </tr>
+                	</table></td>
+		     <td align="right"><table width="50%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+                	<tr valign="top">
+                		<td colspan="6" align="left"><strong>Importe Total </strong>               			 <p><?=ss_decimalFormat($data['ors_total'])?> Euros</p></td>
+           		 </tr>
+                	</table>
+	    	 <p><br>
+   	 	     <img src="Images/acme_signature.gif" alt="Bjorck Bros. S.L." width="202" height="85"></p></td>
+			</tr>
+		</table></td>
+	</tr>
+</table>
+	</form>	
+						
+
+
+
+</body>
+</html>

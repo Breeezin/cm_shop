@@ -1,0 +1,25 @@
+<SCRIPT language="javascript">
+	function resetTypes(checked) {
+		field = document.AssetForm['AST_SEARCH_TYPES[]'];		
+		for(var i=0; i < field.length; i++) {
+			field[i].checked = checked;
+		}
+		
+		return true;
+	}
+</SCRIPT>
+<TABLE>
+	<TR>
+		<TD colspan="2">
+			Display a maximum of <INPUT TYPE="TEXT" SIZE="2" NAME="{tmpl_var Prefix}ITEMSPERDISPLAY" VALUE="{tmpl_var PerDisplay}"> items when the search result is displayed in a page.
+		</TD>
+	</TR>
+	<TR><TD colspan="2">Leave blank to display all.<BR></TD></TR>	
+	<TR><TD colspan="2"><BR>Check searchable item type. <a href="javascript:void(0);" onclick="resetTypes(true);">Check All</a> <a href="javascript:void(0);" onclick="resetTypes(false);">Uncheck All</a></TD></TR>
+	<TR>
+		<TD width="50%">{tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_TYPES"}</TD>
+		<TD>&nbsp;</TD>
+	</TR>
+	<TR><TD colspan="2"><BR>Would you like to display the type filter? {tmpl_fieldset_field fieldset="FieldSet" field="AST_SEARCH_SHOWTYPEFILTER"}<BR></TD></TR>
+	
+</TABLE>

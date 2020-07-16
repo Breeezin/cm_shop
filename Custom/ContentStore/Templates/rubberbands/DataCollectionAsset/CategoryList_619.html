@@ -1,0 +1,21 @@
+<TABLE>
+<?php 
+	foreach($data['Categories'] as $cat => $Category) {
+?>
+<tr>
+	<td>		
+		<?=$Category['Name']?><BR>
+		<?php 
+			foreach($Category['Options'] as $key => $option) {
+				print("<a href='{$data['AssetPath']}/Service/Show/Category/$cat/By/{$key}'>$option</a><BR>");
+			}
+		?>
+	</td>
+</tr>
+<?php } ?>
+<TR>
+<TD>
+<a href="{tmpl_var AssetPath}?Service=Show">Show all</A>
+</TD>
+</TR>
+</TABLE>

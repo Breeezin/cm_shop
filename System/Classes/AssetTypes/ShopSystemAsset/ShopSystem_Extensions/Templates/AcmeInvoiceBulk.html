@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<title>Bulk Invoice Print</title>
+<html>
+<head>
+<title>Bjorck Bros. S.L.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_mainPrint.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<tmpl_loop query="Q_Invoice">
+<table width="650" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td width="102" valign="top" bgcolor="#A6DED5"><img src="Images/logo.gif" alt="Bjorck Bros. S.L." width="102" height="183"></td>
+		<td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="20">
+			<tr valign="top">
+				<td width="50%"><p><span class="text14">Bjorck Bros. S.L.	Conduce</span><br>
+		                <span class="text12Italic">        Operador de Zona Franca</span></p>
+			    </td>
+				<td width="50%"><span class="text14">Factura / Invoice<br>
+				</span><span class="text12Italic">Numero {tmpl_row_var inv_id}</span></td>
+		 </tr>
+			<tr valign="top">
+				<td width="50%">CIF: B35702786<br>
+Andres Perdomo s/n, Edificio Zona Franca<br>
+Oficina M214<br>
+35008 Las Palmas de Gran Canaria<br>
+Espa&ntilde;a<br>
+Telefono: + 34 928 466 336<br>
+Fax:	: + 34 928 468 656</td>
+				<td width="50%">&nbsp;</td>
+			</tr>
+			<tr align="center" valign="top">
+				<td colspan="2"><table width="100%" border="0" cellpadding="5" cellspacing="0" class="Borderinvoice">
+					<tr valign="top">
+						<td width="40%"><strong>Factura Numero/ Invoice Number : </strong></td>
+						<td>{tmpl_row_var inv_id}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Fecha / Date:</strong></td>
+						<td>{tmpl_row_var_date name="in_date" format="d/m/Y"}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Forma de Pago/Payment Method:</strong></td>
+						<td>{tmpl_row_var in_paymethod}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Destinatario / Buyer :</strong></td>
+						<td>{tmpl_row_var in_destination}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Numero de Cajas/No. of Boxes: </strong></td>
+						<td>{tmpl_row_var in_boxes}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Numero de Paquetes/No. of Packages:</strong></td>
+						<td>{tmpl_row_var in_parcels}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Peso Kg./Weight Kg:</strong></td>
+						<td>{tmpl_row_var in_value}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Valor Unidad /Value per Unit:</strong></td>
+						<td>{tmpl_row_var in_unit_value}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Numero de Unidades (Acmes)/ No.
+						of Units(Llamas):</strong></td>
+						<td>{tmpl_row_var in_units}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Pais de Origen / Country of Origin:</strong></td>
+						<td>{tmpl_row_var in_origin}</td>
+					</tr>
+					<tr valign="top">
+						<td width="40%"><strong>Importe Total/Total Value :</strong></td>
+						<td>{tmpl_row_var in_total_value}</td>
+					</tr>
+				</table></td>
+			</tr>
+		</table></td>
+	</tr>
+</table>
+<p style="page-break-before: always">&nbsp;</p>
+</tmpl_loop>
+</body>
+</html>

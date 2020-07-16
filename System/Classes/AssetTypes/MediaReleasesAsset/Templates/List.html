@@ -1,0 +1,30 @@
+<table 
+                  border=0 align="center" cellpadding=5 cellspacing=0 class=forumMainBorder>
+    	<tbody>
+    		<tr>
+    			<td class=forumThreadTitle width=20>&nbsp;</td>
+    			<td class=forumThreadTitle><strong>Date</strong></td>
+    			<td class=forumThreadTitle><strong>Media Release</strong></td>
+    			<td class=forumThreadTitle>
+    				<div align="left"><strong>Description</strong></div>
+			 </td>
+		 </tr>
+{tmpl_evaluate $counter = 1}
+{tmpl_loop ListQuery}
+    		<tr align="left" valign="top">
+    			<td width=20  class="forumThread{tmpl_evaluate $rowClass = $counter%2==1?'':'Reply'; print($rowClass)}">
+    				<div align=center><a href="{tmpl_var AssetStore}MediaReleases/{tmpl_row_var rel_file}" target="_blank" ><img border="0" src="Images/i-viewrelease.gif"></a></div>
+			 </td>
+    			<td nowrap class="forumThread{tmpl_evaluate $rowClass = $counter%2==1?'':'Reply'; print($rowClass)}">{tmpl_row_var_date name="rel_date" format="d.m.Y"}</td>
+    			<td class="forumThread{tmpl_evaluate $rowClass = $counter%2==1?'':'Reply'; print($rowClass)}">{tmpl_row_var rel_title}</td>
+    			<td  class="forumThread{tmpl_evaluate $rowClass = $counter%2==1?'':'Reply'; print($rowClass)}">
+    				<div align="left">{tmpl_row_var rel_description} <a href="{tmpl_var AssetStore}MediaReleases/{tmpl_row_var rel_file}" target="_blank" class="forumuserName"><br>
+					click to view more</a> <img src="Images/sidearrow.gif" width="9" height="9"><br>
+    					</div>
+			 </td>
+		 </tr>
+{tmpl_evaluate $counter++}
+{tmpl_end}
+			<tr><td colspan="4" align="center">{tmpl_var_raw PageThru}</td></tr>
+    		</tbody>
+    	</table>

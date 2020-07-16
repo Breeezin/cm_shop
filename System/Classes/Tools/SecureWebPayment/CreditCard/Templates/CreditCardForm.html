@@ -1,0 +1,46 @@
+	<TR>
+		<TH ALIGN="right" WIDTH="33%">Type Of Credit Card :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardType"}</TD>
+		<?php if ($data['Processor'] =='WebPay_CreditCard_DPS') { ?>
+		<TD rowspan="4">
+		<?php if (ss_optionExists('Show BNZ Logo')) {?>
+			<img alt="BNZ - Currency Select" src="System/Classes/Tools/SecureWebPayment/CreditCard/Templates/Images/bnz-logo.gif"><BR>&nbsp;<BR>
+		<?php } ?>
+		<img alt="DPS" src="System/Classes/Tools/SecureWebPayment/CreditCard/Templates/Images/dpslogo.gif"><BR><a target="_blank" href="http://www.paymentexpress.com/PrivacyPolicy.htm">DPS privacy policy</a>
+		</td>
+		<?php } ?>
+	</TR>
+	<TR>
+		<TH ALIGN="right">Credit Card Number :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardNumber"}</TD>
+	</TR>
+	
+	<TR>
+		<TH ALIGN="right">Expiry Date :</TH>
+		<TD>{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardExpiry"}</TD>
+	</TR>
+	
+	<TR>
+		<TD ALIGN="right"><STRONG>Holder Name :</STRONG></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardHolder"}</TD>
+	</TR>
+	<?php if (ss_optionExists('Web Pay Company Name')) { ?>
+	<TR>
+		<TD ALIGN="right"><STRONG>Company Name :</STRONG></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardCompany"}</TD>
+	</TR>	
+	<?php } ?>
+	
+	<?php
+		
+		if (ss_optionExists('Web Pay CVV2')) {  					
+			$title = "<a href=\"javascript:void(0);\" onclick=\"window.open('index.php?act=WebPay.ShowCVV2', 'ShowCCV2','width=470,height=550,resizable=no,menubar=no,status=no,addresbar=no,panel=no,scrollbars=yes');\" title=\"What's this?\">CVV2</a> Number";
+			
+	?>
+		
+	<TR>
+		<TD ALIGN="right"><STRONG><?=$title?> :</STRONG><br/>
+		<img src="System/Classes/Tools/SecureWebPayment/Templates/Images/cvv2.jpg" alt="CVV2 position" /></TD>
+		<TD VALIGN="TOP">{tmpl_fieldset_field fieldset="FieldSet" field="TrCreditCardCVV2"}</TD>
+	</TR>	
+	<?php } ?>

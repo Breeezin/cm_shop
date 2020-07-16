@@ -1,0 +1,35 @@
+<table width="100%" cellpadding="0">
+<tr><td valign="top">
+<fieldset title="File">
+	<legend>Flash</legend>
+	<P style="padding:5px;">
+		To change this item's flash, click the browse button and select a file
+		to upload from your computer.
+	</P>
+	<P style="padding:5px;">
+		{tmpl_fieldset_field fieldset="FieldSet" field="AST_FLASH_FILENAME"}
+	</P>
+	{tmpl_if strlen($data['AssetFileFullPath'])}
+	<P>
+	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab##version=6,0,29,0" width="{tmpl_fieldset_field_display fieldset="FieldSet" field="AST_FLASH_WIDTH"}" height="{tmpl_fieldset_field_display fieldset="FieldSet" field="AST_FLASH_HEIGHT"}">
+    	<param name="movie" value="{tmpl_var_raw AssetFileFullPath}{tmpl_var_raw Attributes}">
+    	<param name="quality" value="high">
+    	<embed src="{tmpl_var_raw AssetFileFullPath}{tmpl_var_raw Attributes}" quality="high" pluginspage="https://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="{tmpl_fieldset_field_display fieldset="FieldSet" field="AST_FLASH_WIDTH"}" height="{tmpl_fieldset_field_display fieldset="FieldSet" field="AST_FLASH_HEIGHT"}"></embed>
+    </object>
+	</P>
+	{tmpl_end}
+	
+</fieldset>
+<fieldset title="File">
+	<legend>Flash Attributes</legend>		
+	<TABLE cellpadding="5">
+	<TR><td>	
+		Width  :</td><td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_FLASH_WIDTH"}
+		</td><td>&nbsp;</td>	<td>	
+		Height :</td><td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_FLASH_HEIGHT"}
+		</td></tr>		</TABLE>
+	<P style="padding:5px;">
+		{tmpl_fieldset_field fieldset="FieldSet" field="AST_FLASH_ATTRIBUTES"}
+	</P>	
+</fieldset>
+</td></tr></table>

@@ -1,0 +1,26 @@
+<tmpl_if condition="$data['Q_Current']->numRows() > 0 or $data['Q_Archive']->numRows() > 0">
+	<p>Click on the links below to view our newsletters.</p>
+	<tmpl_if condition="$data['Q_Current']->numRows() > 0">
+		<p><span class="NewsletterArchiveHeadings">Current Newsletter</span></p>
+		<ul>
+		<tmpl_loop query="Q_Current">
+			<li>
+			<a href="{tmpl_var AssetPath}/Service/ViewNewsletter/na_id/{tmpl_row_var na_id}" target="_blank=">{tmpl_row_var na_subject}</a><br />
+			<span class="NewsletterArchiveDates">{tmpl_row_var_date format="d-m-Y" name="na_sent"}</span></li>
+		</tmpl_loop>
+		</ul>
+	</tmpl_if>
+	
+	<tmpl_if condition="$data['Q_Archive']->numRows() > 0">
+		<p><span class="NewsletterArchiveHeadings">Archived Newsletters</span></p>
+		<ul>
+		<tmpl_loop query="Q_Archive">
+			<li>
+			<a href="{tmpl_var AssetPath}/Service/ViewNewsletter/na_id/{tmpl_row_var na_id}" target="_blank=">{tmpl_row_var na_subject}</a><br />
+			<span class="NewsletterArchiveDates">{tmpl_row_var_date format="d-m-Y" name="na_sent"}</span></li>
+		</tmpl_loop>
+		</ul>
+	</tmpl_if>
+<tmpl_else>
+	<p>There are currently no newsletters available in the archive.</p>
+</tmpl_if>

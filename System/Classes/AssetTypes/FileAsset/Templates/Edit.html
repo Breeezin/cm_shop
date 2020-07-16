@@ -1,0 +1,27 @@
+<table width="100%" cellpadding="0"><tr><td valign="top">
+<fieldset title="File">
+	<legend>File</legend>
+	<P style="padding:5px;">
+		To change this item's file, click the browse button and select a file
+		to upload from your computer.
+	</P>
+	<P style="padding:5px;">
+		{tmpl_fieldset_field fieldset="FieldSet" field="AST_FILE_FILENAME"}
+	</P>
+</fieldset>
+</td><td valign="top">
+<fieldset title="Button Images">
+	<legend>Button Images</legend>
+	<p style="padding:5px;">The images below will be used to link to the file if you embed this file in a page.</p>	
+	<table cellspacing="0" cellpadding="5" width="100%">
+		<tr>
+			<th align="LEFT">Normal&nbsp;:</th>			
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_FILE_DOWNLOADBUTTON"}</td>
+		</tr>
+		<tr>
+			<th align="LEFT">Mouse Over&nbsp;:</th>			
+			<td>{tmpl_fieldset_field fieldset="FieldSet" field="AST_FILE_DOWNLOADBUTTONOVER"}</td>
+		</tr>
+	</table>
+</fieldset>
+</td></tr></table>

@@ -1,0 +1,6 @@
+<ul>{tmpl_loop ListQuery}
+
+  <li><span class="textNewsDate">{tmpl_row_var_date Name="nei_timestamp" Format="d M Y"}</span><br>
+                <a href="{tmpl_var AssetPath}" class="textNews">{tmpl_row_var nei_headline}</a></li>
+
+	{tmpl_end}</ul>

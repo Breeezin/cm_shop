@@ -1,0 +1,896 @@
+<link rel="stylesheet" href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_main.css">
+<link rel="stylesheet" href="Custom/ContentStore/Layouts/<?=$GLOBALS['cfg']['currentSiteFolder'];?>sty_shop.css">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="5">
+        <tr>
+			<form method="post" name="adminForm" action="index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}">
+          <td align="left" valign="top">
+		  	<table>
+			<tr><td><strong>Order # :</strong> {tmpl_var DisplayOrID}</td><td><strong>Site:</strong> <? echo $data['Order']['or_site_folder']; ?></td></tr>
+			<tr><td><strong>Date :</strong> {tmpl_var_date format="l, d F Y" name="or_recorded"}</td><td><strong>IP Address:</strong><?echo $data['Transactions']['tr_ip_address']." (".ss_getCountry($data['Transactions']['tr_ip_address']),")";?></td></tr>
+			<tr>
+			<td><strong>User:</strong> <a target='_blank' href='/index.php?act=UsersAdministration.Edit&us_id=<? echo $data['or_us_id']; ?>'><? echo $data['or_us_id']; ?></a>
+				<?php if( ss_adminCapability( ADMIN_CREATE_ORDER ) ) { ?>
+				<input type="button" name="New Order" value="New Order" onclick="document.location='<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>Online%20Shop/Service/OrderForClient/ExistingClient/<?php echo $data['or_us_id'];?>?AccessCode={tmpl_var_url AccessCode}&<?=ss_getHashMeInURL();?>';"/>
+				<?php }
+				$userRow = getRow( "select * from users where us_id = ".(int)$data['or_us_id'] );
+				if( $userRow['us_discount'] > 0 ) echo "&nbsp;Discount&nbsp;".$userRow['us_discount']."% expires&nbsp;".$userRow['us_discount_expires'];
+				if( strlen($userRow['us_notes']) ) echo "&nbsp;Notes:&nbsp;".substr($userRow['us_notes'], 0, 10 );
+				?>
+			</td>
+			<td><strong>Browser:</strong><?echo $data['Transactions']['tr_browser_ident'];?></td>
+			</tr>
+			<tr>
+			<td><strong>Flags:</strong><?php if(strlen($data['Order']['or_standby']) ) echo "<i>Standby</i>:".$data['Order']['or_standby']."&nbsp;"; ?><?php if(strlen($data['Order']['or_paid']) ) echo "<i>Paid</i>:".$data['Order']['or_paid']."&nbsp;"; ?><?php if(strlen($data['Order']['or_paid_not_shipped']) ) echo "<i>PaidNotShipped</i>:".$data['Order']['or_paid_not_shipped']."&nbsp;"; ?></td>
+			<td><strong>Session:</strong><?echo $data['Transactions']['tr_session'];?></td>
+			</tr>
+			<? if( array_key_exists( 'ReshippedInTransaction', $data ) && $data['ReshippedInTransaction'] != NULL ) { ?>
+			<tr><td><strong>Reshipped In:</strong> <a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id=<? echo $data['ReshippedInOrder'];?>&tr_id=<? echo $data['ReshippedInTransaction'];?>&as_id=514&BreadCrumbs=Administration : Orders :'><? echo $data['ReshippedInTransaction']; ?></a></td></tr>
+			<? } ?>
+			<? if( $data['Transactions']['tr_reship_link'] > 0 ) { ?>
+			<tr><td><strong>Reship From:</strong> <a target='_blank' href='/index.php?act=OnlineShop.ViewOrder&or_id=<? echo $data['ReshipOrID'];?>&tr_id=<? echo $data['Transactions']['tr_reship_link'];?>&as_id=514&BreadCrumbs=Administration : Orders :'><? echo $data['Transactions']['tr_reship_link']; ?></a></td></tr>
+			<? } ?>
+			<? if( (array_key_exists( 'OrderListNumber', $data ) && strlen($data['OrderListNumber']) )
+				||  (array_key_exists( 'AwaitingList', $data ) && strlen($data['AwaitingList']) ) ) echo "<tr>" ?>
+			<? if( (array_key_exists( 'OrderListNumber', $data ) && strlen($data['OrderListNumber']) ) ) { ?>
+			<td><strong>Packing List Numbers:</strong> <? echo $data['OrderListNumber']; ?></td>
+			<? } ?>
+			<? if( (array_key_exists( 'AwaitingList', $data ) && strlen($data['AwaitingList']) ) ) { ?>
+			<td><strong>Awaiting Packing:</strong> <? echo $data['AwaitingList']; ?>
+			<? if( strlen( $data['or_shipped']->value ) ) echo "Will not ship" ?>
+			<? } ?>
+			<? if( (array_key_exists( 'OrderListNumber', $data ) && strlen($data['OrderListNumber']) )
+				||  (array_key_exists( 'AwaitingList', $data ) && strlen($data['AwaitingList']) ) ) echo "</tr>" ?>
+			<tr><td><strong>Date Shipped:</strong> <?=$data['or_shipped']->display(); ?></td>
+			<td><strong>Payment Authorisation Number :</strong> <INPUT CLASS="formborder" TYPE="TEXT" SIZE="8" NAME="or_authorisation_number" VALUE="<?=ss_HTMLEditFormat($data['Order']['or_authorisation_number']);?>" MAXLENGTH="10"/>&nbsp;<?php if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) { ?><input type="Submit" name="Save" value="Update"><?php } ?></td></tr>
+			<? if( array_key_exists( 'Transit', $data ) ) { ?>
+			<tr><td><strong>In Transit:</strong> <? echo $data['Transit']." days"; ?></td><td><strong>Extension Notes :</strong> <INPUT CLASS="formborder" TYPE="TEXT" SIZE="8" NAME="or_follow_up_status" VALUE="<?=ss_HTMLEditFormat($data['Order']['or_follow_up_status']);?>" MAXLENGTH="10"/>&nbsp;<?php if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) { ?><input type="Submit" name="Save" value="Update"><?php } ?></td></tr>
+			<tr><td><strong>UserNotes:</strong> <?php echo $data['UserNotes']; ?></td><td><strong>Address Checked by:</strong><?php echo $data['AddressCheckedBy']; ?></td></tr>
+			<? } ?>
+			</table>
+		  </td>		  
+			</form>
+		  <td align="right">
+		    <? if( ss_adminCapability( ADMIN_EDIT_BLACKLIST ) ) {
+					if( $data['isProxy'] ) {?>
+					<input type="button" name="isProxy" value="UnMark IP as Proxy" onclick="unMarkAsProxy();">
+					<?} else { ?>
+					<input type="button" name="isProxy" value="Mark IP as Proxy" onclick="markAsProxy();">
+					<? }
+				} ?>	
+			<? if( $data['killEmail'] ) {?>
+				<input type="button" name="killEmail" value="UnMark Email Unreachable" onclick="unkillClientEmail();">
+			<?} else { ?>
+				<input type="button" name="killEmail" value="Mark Email Unreachable" onclick="killClientEmail();">
+			<? } ?>
+			<br />
+			<?php if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) { ?>
+				<input type="button" name="sendTestCustomEmail" value="Test Send Custom Email" onclick="sendClientEmail(1);">
+				<input type="button" name="sendCustomEmail" value="Send Custom Email" onclick="sendClientEmail(0);">
+			<?php } ?>
+		  </td>
+        </tr>
+        <tr>
+        	<td>{tmpl_var_raw ChargeListHTML}</td>
+			<?php if( ss_adminCapability( ADMIN_EDIT_BLACKLIST ) ) { ?>
+				<td align="right">{tmpl_var_raw BlackListedClient}</td>
+			<?php } ?>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellpadding="5" cellspacing="0" class="border-tab-inner">
+        <tr>
+          <td class="onlineShop_BasketHeaderRow" width="50%" align="left" valign="top"><strong>Purchaser</strong></td>
+		  <td class="onlineShop_BasketHeaderRow" width="50%" align="left" valign="top">
+		  <?php if( !array_key_exists('PastedStuff', $data) || !strlen( $data['PastedStuff'] ) ) { ?>
+			  <strong>Ship To</strong>
+		  <?php } else { ?>
+		  	  <br />
+		  <?php } ?>
+		  </td>
+		  <td class="onlineShop_BasketHeaderRow" width="50%" align="left" valign="top">
+		  </td>
+        </tr>
+        <tr bgcolor="#FFFFFF" class="onlineShopBasketOddRow">
+          <td width="45%" align="left" valign="top">
+		  {tmpl_var_raw PurchaserDetailsHTML}
+		  </td>
+          <td width="45%" align="left" valign="top">
+		  <?php if( !array_key_exists('PastedStuff', $data) || !strlen( $data['PastedStuff'] ) ) { ?>
+			  {tmpl_var_raw ShippingDetailsHTML}
+		  <?php } ?>
+		  </td>
+          <td width="10%" align="left" valign="top">
+			  <?php if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) { ?><input type="button" name="Edit Addresses" value="Edit Addresses" onclick="document.location='<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>Online%20Shop/Service/EditOrder/Address/{tmpl_var or_id}?AccessCode={tmpl_var_url AccessCode}&<?=ss_getHashMeInURL();?>';"/><?php } ?>
+		  </td>
+        </tr>
+		<?php if( array_key_exists('PastedStuff', $data) && strlen( $data['PastedStuff'] ) ) { ?>
+			<tr bgcolor="#FFFFFF" class="onlineShopBasketEvenRow"><td align="left" valign="top">{tmpl_var_br PastedStuff}</td>
+			  <td class="onlineShopBasketEvenRow" width="50%" align="left" valign="top"><br /></td>
+			</tr>
+		<?php } ?>
+     </table>
+          <br>
+      {tmpl_if strlen($data['GiftMessage'])}
+	  <table width="100%" border="0" cellpadding="5" cellspacing="0" class="border-tab-inner">
+		<tr><td class="onlineShop_BasketHeaderRow" align="left" valign="top">Special Instructions</td></tr>
+		<tr bgcolor="#FFFFFF" class="onlineShopBasketOddRow"><td align="left" valign="top">{tmpl_var_br GiftMessage}</td></tr>
+     </table>
+     {/tmpl_if}
+   </td>
+   </tr>
+   
+   </table>
+	  <p>
+	  {tmpl_var_raw BasketHTML}
+	  </p>
+
+<script language="Javascript">
+	var productKeys = new Array();
+	var allProductKeys = new Array();
+
+	/*function newProductKey(theKey,theQty) {
+		this.key = theKey;
+		this.qty = theQty;
+		return this;
+	}*/
+	var browserType;
+
+	if (document.layers) {browserType = "nn4"}
+	if (document.all) {browserType = "ie"}
+	if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+
+	function setDivVisibility( name, visibility ) 
+	{
+		if (browserType == "gecko" )
+		    document.poppedLayer = eval("document.getElementById(\'"+name+"\')");
+		else
+		    if (browserType == "ie")
+			document.poppedLayer = eval('document.all[\''+name+'\']');
+		    else
+			document.poppedLayer = eval('document.layers[\''+name+'\']');
+
+		document.poppedLayer.style.visibility = visibility;
+	}
+
+	function showBlackList( ID )
+	{
+		window.open( 'index.php?act=ShopSystem_BlackListAdministration.Edit&bl_id='+ID, 'BlackList', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');
+	}
+
+	function alterDUA( to, line )
+	{
+		document.forms.theForm['DUAStatus['+line+']'].value = to;
+		form_to_show = "DUAStatus_"+line+"_";
+		form_to_hide1 = "DUAStatus_"+line+"_";
+		form_to_hide2 = "DUAStatus_"+line+"_";
+		if( to == 0 )
+		{
+			form_to_show += "orange";
+			form_to_hide1 += "red";
+			form_to_hide2 += "green";
+		}
+		else
+			if( to == 1 )
+			{
+				form_to_show += "red";
+				form_to_hide1 += "orange";
+				form_to_hide2 += "green";
+			}
+			else
+			{
+				form_to_show += "green";
+				form_to_hide1 += "red";
+				form_to_hide2 += "orange";
+			}
+
+		setDivVisibility( form_to_show, 'visible' );
+		setDivVisibility( form_to_hide1, 'hidden' );
+		setDivVisibility( form_to_hide2, 'hidden' );
+	}
+
+	function updateShipped(key,qty) {
+		statSel = document.forms.theForm['Status['+key+'_'+qty+']'];
+		shipChk = document.forms.theForm["Shipped["+key+'_'+qty+"]"];
+		shipChkEl = document.getElementById('Shipped'+key+'_'+qty+'Select');
+
+		if (statSel)
+		{
+			if (statSel.options[statSel.selectedIndex].value == 'instock') 
+			{
+				shipChk.disabled = false;
+				shipChkEl.style.display = '';
+			}
+			else
+			{
+				shipChk.disabled = true;
+				shipChkEl.style.display = 'none';
+			}
+		}
+		else
+		{
+			shipChk.disabled = false;
+			shipChkEl.style.display = '';
+		}
+	}
+	
+	function updateInvoiceNow(key,qty,override) {
+		statSel = document.forms.theForm['Status['+key+'_'+qty+']'];
+		invoSel = document.forms.theForm["Invoice["+key+'_'+qty+"]"];
+		invoSelEl = document.getElementById('Invoice'+key+'_'+qty+'Select');
+
+		if( override ) {
+			invoSel.disabled = false;
+			invoSelEl.style.display = '';
+			return;
+		}
+
+		if( statSel )
+		{
+			if (statSel.options[statSel.selectedIndex].value == 'instock')
+			{
+				invoSel.disabled = false;
+				invoSelEl.style.display = '';
+			}
+			else
+			{
+				invoSel.disabled = true;
+				invoSelEl.style.display = 'none';
+			}
+		}
+	}
+
+	function ReturnBoxes() {
+		ticked = 0;
+//		alert(allProductKeys.length);
+		for (var i=0; i<allProductKeys.length; i++) {
+			var key = allProductKeys[i].key;
+			var qty = allProductKeys[i].qty;
+//			alert('checking '+key+'_'+qty);
+			returnBoxes = document.forms.theForm["Reship["+key+'_'+qty+"]"];
+			if (returnBoxes.checked) {
+				ticked++;	
+			}
+		}
+		if (ticked > 0) {
+			confirmed = confirm('This is for returning boxes back to stock.\nAre you sure you wish to return the selected '+ticked+' order line(s)? ');
+			if (confirmed) {
+				return true;
+			} else {
+				return false;	
+			}
+		} else {
+			alert('No order lines have been selected to return');
+			return false;
+		}	
+	}
+
+
+	function Resend() {
+		ticked = 0;
+//		alert(allProductKeys.length);
+		for (var i=0; i<allProductKeys.length; i++) {
+			var key = allProductKeys[i].key;
+			var qty = allProductKeys[i].qty;
+//			alert('checking '+key+'_'+qty);
+			reship = document.forms.theForm["Reship["+key+'_'+qty+"]"];
+			if (reship.checked) {
+				ticked++;	
+			}
+		}
+		if (ticked > 0) {
+			confirmed = confirm('This is for resending returned boxes.\nAre you sure you wish to resend the selected '+ticked+' order line(s)? ');
+			if (confirmed) {
+				return true;
+			} else {
+				return false;	
+			}
+		} else {
+			alert('No order lines have been selected to resend');	
+			return false;
+		}	
+	}
+
+	function Reship() {
+		ticked = 0;
+//		alert(allProductKeys.length);
+		for (var i=0; i<allProductKeys.length; i++) {
+			var key = allProductKeys[i].key;
+			var qty = allProductKeys[i].qty;
+//			alert('checking '+key+'_'+qty);
+			reship = document.forms.theForm["Reship["+key+'_'+qty+"]"];
+			if (reship.checked) {
+				ticked++;	
+			}
+		}
+		if (ticked > 0) {
+			confirmed = confirm('Are you sure you wish to reship the selected '+ticked+' order line(s)? ');
+			if (confirmed) {
+				return true;
+			} else {
+				return false;	
+			}
+		} else {
+			alert('No order lines have been selected to reship');	
+			return false;
+		}	
+	}
+
+	var okToInvoiceNow = true;
+	function InvoiceNow() {
+		ticked = 0;
+		for (var i=0; i<productKeys.length; i++)
+		{
+			var key = productKeys[i].key;
+			var qty = productKeys[i].qty;
+			//alert('checking '+key+'_'+qty);
+			statSel = document.forms.theForm['Status['+key+'_'+qty+']'];
+			invoSel = document.forms.theForm["Invoice["+key+'_'+qty+"]"];
+			if ( statSel )
+			{
+				if ( statSel.options[statSel.selectedIndex].value == 'instock') 
+					if (invoSel.checked)
+						ticked++;	
+			}
+			else
+			{
+				if (invoSel.checked)
+					ticked++;	
+			}
+		}
+		if (ticked > 0) {
+			if (okToInvoiceNow) {
+				confirmed = confirm('Are you sure you wish to invoice the selected '+ticked+' order line(s)? ');
+				if (confirmed) {
+					okToInvoiceNow = false;	
+					return true;
+				} else {
+					return false;	
+				}
+			} else {
+				return false;	
+			}
+		} else {
+			alert('No order lines have been selected to invoice');	
+			return false;
+		}	
+	}
+
+	function SwapVendor( pr_id, BoxNo, infostring )
+	{
+		confirmed = confirm(infostring+'. Would you like to swap the vendor for this product? ');
+		if( confirmed )
+			document.location = 'index.php?act=OnlineShop.SwapVendor&or_id={tmpl_var or_id}&pr_id='+pr_id+'&BoxNo='+BoxNo+'&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');;
+	}
+	
+	function editInvoice(id) {
+		document.location = 'index.php?act=ShopSystem_InvoicesAdministration.Edit&or_id={tmpl_var or_id}&inv_id='+id+'&as_id={tmpl_var as_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function viewInvoice(id) {
+		res = window.open('index.php?act=OnlineShop.ViewAcmeInvoice&inv_id='+id,'invoice', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');		
+	}
+	var okCreateTransitDoc = 1;
+	function createTransitDoc(id) {
+		if (okCreateTransitDoc) {
+			okCreateTransitDoc = 0;
+			document.location = 'index.php?act=OnlineShop.CreateTransitDoc&or_id={tmpl_var or_id}&inv_id='+id+'&as_id={tmpl_var as_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+		}
+	}
+	var okSaveNow = 1;
+	function saveNow() {
+		if (okSaveNow) {
+			okSaveNow = 0;
+			return true;
+		} else {
+			return false;	
+		}
+	}
+	function editTransitDoc(id) {
+		document.location = 'index.php?act=ShopSystem_TransitDocsAdministration.Edit&TrDoOrderLink={tmpl_var or_id}&TrDoID='+id+'&as_id={tmpl_var as_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function unMarkAsProxy() {
+		document.location = 'index.php?act=OnlineShop.unMarkAsProxy&tr_id={tmpl_var tr_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function markAsProxy() {
+		document.location = 'index.php?act=OnlineShop.markAsProxy&tr_id={tmpl_var tr_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function unkillClientEmail() {
+		document.location = 'index.php?act=OnlineShop.unkillEmail&or_id={tmpl_var or_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function killClientEmail() {
+		document.location = 'index.php?act=OnlineShop.killEmail&or_id={tmpl_var or_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function sendClientEmail(test) {
+		if( test )
+			res = window.open('index.php?act=OnlineShop.SendCustomEmail&Tx={tmpl_var tr_id}&TEST=1','Custom Email', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');		
+		else
+			res = window.open('index.php?act=OnlineShop.SendCustomEmail&Tx={tmpl_var tr_id}','Custom Email', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');		
+//		document.location = 'index.php?act=OnlineShop.SendEmail&or_id={tmpl_var or_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function viewTransitDoc(id) {
+		res = window.open('index.php?act=OnlineShop.ViewAcmeTransitDoc&TrDoID='+id,'transitdoc', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');		
+	}
+	function editAbono(id) {
+		document.location = 'index.php?act=ShopSystem_AbonosAdministration.Edit&CoInID='+id+'&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+	function viewAbono(id) {
+		res = window.open('index.php?act=OnlineShop.ViewAcmeAbono&CoInID='+id,'abono', 'height=480,width=580,innerHeight=460,innerwidth=560,location=no,menuBar=yes,personalbar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');		
+	}
+	function createAbono(id) {
+		document.location = 'index.php?act=OnlineShop.AcmeCreateAbono&inv_id='+id+'&or_id={tmpl_var or_id}&BackURL='+escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');		
+	}
+</script>
+<?php
+
+	$PriceTotal = 0;
+	foreach ($data['Shop']['Basket']['Products'] as $entry)
+	{
+//		print_r( $entry ); die;
+		for( $i = 0; $i < $entry['Qty']; $i++ )
+			$PriceTotal += $entry['Product']['Price'];
+//			if( array_key_exists( 'Refund',  $entry ) && array_key_exists( $i, $entry['Refund'] ) )
+//				;
+//			else
+//				$PriceTotal += $entry['Product']['Price'];
+	}
+
+	$trRow = $data['Transactions'];
+	$PaidTotal = $trRow['tr_total'];
+	$paydetails = unserialize($trRow['tr_payment_details_szln']);
+
+	if( array_key_exists('us_admin_level', $_SESSION['User'] ) && ( $_SESSION['User']['us_admin_level'] !== NULL ) && ( $_SESSION['User']['us_admin_level'] == 0 ) )
+	{
+		echo "Charge Details: Total <strong>$PaidTotal</strong>, Card Holder <strong>{$paydetails['TrCreditCardHolder']}</strong>, Expiry <strong>{$paydetails['TrCreditCardExpiry']}</strong>";
+		echo "&nbsp;&nbsp;<a target='_blank', href='/index.php?act=OnlineShop.AcmeEdit&or_id={$data['or_id']}&tr_id={$data['tr_id']}&as_id={$data['as_id']}&BreadCrumbs=Administration : Orders :'><strong>Edit</strong></a><br /><br />";
+	}
+//	print( "PriceTotal = $PriceTotal, PaidTotal = $PaidTotal" ); die;
+
+if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) {
+?>
+<strong>Invoicing / Transit Documents</strong><br />
+<form method="post" name="theForm" action="index.php?act=OnlineShop.ViewOrder&Go=1&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}">
+<table cellspacing="0" cellpadding="4" width="100%" border="1px;" rules="all">
+	<tr>
+		<td><strong>Name</strong></td>
+		<td><strong>Vendor</strong></td>
+		<td><strong>Paid Price</strong></td>
+		<td><strong>Availability</strong></td>
+		<td><strong>Invoice Now?</td>
+		<td align="right"><strong>Invoice</td>
+<!--		<td align="right"><strong>Transit Doc</td> --!>
+		<td align="right"><strong>Abono</td>
+		<td><strong>Date Shipped</strong></td>
+		<td><strong>Services Requested</strong></td>
+		<td><strong>Tracking Number</strong></td>
+		<td><strong>Received</strong></td>
+		<td><strong>Select</strong></td>
+		<td><strong>Refund</strong></td>
+	</tr>
+<?php
+	$oddEven = 1;
+
+	foreach ($data['Shop']['Basket']['Products'] as $entry) {
+	/*		do we want to see these here?
+		if( $entry['Product']['pr_is_service'] == 'true' )
+			continue;
+		*/
+		$row = $entry['Product'];
+		$data['key'] = $entry['Key'];
+		ss_paramKey($entry,'Availabilities',array());
+		ss_paramKey($entry,'InvoiceNumbers',array());
+		ss_paramKey($entry,'TransitDocNumbers',array());
+		ss_paramKey($entry,'Shipped',array());
+		ss_paramKey($entry,'DUANumbers',array());
+		ss_paramKey($entry,'DUAStatus',array());
+		ss_paramKey($entry,'TrackingNumbers',array());
+		ss_paramKey($entry,'Refund',array());
+		ss_paramKey($entry,'RefundRequest',array());
+		ss_paramKey($entry,'RefundAuthNum',array());
+		ss_paramKey($entry,'Abono',array());
+		for ($data['currentQty'] = 0; $data['currentQty'] < $entry['Qty']; $data['currentQty']++) 
+		{
+			$OldSheetItems = getRow( "select * from shopsystem_order_sheets_items where orsi_or_id = {$data['or_id']} and orsi_stock_code = '{$row['pro_stock_code']}' and orsi_qty = 1" );
+			$SheetItems = getRow( "select * from shopsystem_order_sheets_items where orsi_or_id = {$data['or_id']} and orsi_stock_code = '{$row['pro_stock_code']}' and orsi_box_number = {$data['currentQty']} order by orsi_received desc" );
+			$oddEven = 1-$oddEven;
+			ss_paramKey($entry['InvoiceNumbers'],$data['currentQty'],'');
+			ss_paramKey($entry['TransitDocNumbers'],$data['currentQty'],'');
+			ss_paramKey($entry['Availabilities'],$data['currentQty'],'undecided');
+			ss_paramKey($entry['DUANumbers'],$data['currentQty'],'');
+			ss_paramKey($entry['DUAStatus'],$data['currentQty'],2);
+			ss_paramKey($entry['TrackingNumbers'],$data['currentQty'],$SheetItems['orsi_tracking_number']);
+
+			$Refund = getRow( "select * from shopsystem_refunds where rfd_or_id =  {$data['or_id']} and rfd_key_qty = '".$entry['Key'].'_'.$data['currentQty']."'" );
+			if( $Refund && array_key_exists( 'rfd_amount', $Refund ) && $Refund['rfd_amount'] > 0 )
+			{
+				$entry['Refund'][$data['currentQty']] = 'refund_'.$Refund['rfd_amount'];
+				$entry['RefundRequest'][$data['currentQty']] = $Refund['rfd_pending'];
+				$entry['RefundAuthNum'][$data['currentQty']] = $Refund['rfd_authorisation_number'];
+			}
+			else
+			{
+				$entry['Refund'][$data['currentQty']] = '';
+				$entry['RefundRequest'][$data['currentQty']] = '';
+				$entry['RefundAuthNum'][$data['currentQty']] = '';
+			}
+//				ss_paramKey($entry['Refund'],$data['currentQty'],'');
+
+			ss_paramKey($entry['Abono'],$data['currentQty'],'');
+
+			// Make a date object for date shipped
+			$Shipped = new DateField(array(
+				'name'			=>	'Shipped'.$entry['Key'].'_'.$data['currentQty'],
+				'displayName'	=>	'Shipping Date',
+				'note'			=>	null,			
+				'required'		=>	false,
+				'class'			=>	'formborder',
+				'verify'		=>	false,
+				'unique'		=>	false,
+				'defaultValue'	=>	'Now',
+				'showCalendar'	=> 	false,
+				'size'	=>	'8',	'maxLength'	=>	'10',
+				'rows'	=>	'6',	'cols'		=>	'40',			
+			));
+			if (array_key_exists($data['currentQty'],$entry['Shipped'])) {
+				// Load the date into the display
+				$Shipped->value = $entry['Shipped'][$data['currentQty']].' 00:00:00';
+				$Shipped->processDatabaseInputValues(null);
+			}	
+
+			$ve_name = GetField( "Select ve_name from vendor where ve_id = {$row['pr_ve_id']}" );
+			if( $SheetItems == NULL )
+			{
+				$infostring = '';
+
+				if( $row['pr_ve_id'] == 2 )
+				{
+					$inM = getField( "select pro_stock_available from shopsystem_product_extended_options join product_vendor_map on pro_pr_id = pvm_4_pr_id where pvm_2_pr_id = {$row['pr_id']}" );
+					if( $inM && $inM > 0 )
+						$infostring = "There are $inM of {$row['pr_name']} in Marbella";
+				}
+
+				if( $row['pr_ve_id'] == 4 )
+				{
+					$inS = getField( "select pro_stock_available from shopsystem_product_extended_options join product_vendor_map on pro_pr_id = pvm_2_pr_id where pvm_4_pr_id = {$row['pr_id']}" );
+					if( $inS && $inS > 0 )
+						$infostring = "There are $inS of {$row['pr_name']} in Geneva";
+				}
+
+			}
+			/*if (array_key_exists('or_shipped',$this->ATTRIBUTES)) {
+				$or_shipped->value = $this->ATTRIBUTES['or_shipped'];
+				$or_shipped->processFormInputValues(null);
+				$errors = $or_shipped->validate();
+				if ($errors === null) {
+					$Q_Update = query("
+						UPDATE shopsystem_orders
+						SET or_shipped = ".$or_shipped->valueSQL()."
+						WHERE or_id = {$this->ATTRIBUTES['or_id']}
+					");	
+				}
+			} else {
+				$or_shipped->value = $Order['or_shipped'];
+				$or_shipped->processDatabaseInputValues(null);
+			}*/		
+?>
+
+	<tr height="28" class="Admin<?if ($oddEven) print('Odd'); else print('Even');?>Row">
+		<td>
+		<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 2)">
+			<font color=#FF0080>
+		</tmpl_if>
+		<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 1)">
+			<font color=#0000FF>
+		</tmpl_if>
+		{tmpl_row_var pr_name} 
+		<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 2)">
+			</font>
+		</tmpl_if>
+		<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 1)">
+			</font>
+		</tmpl_if>
+		
+		<tmpl_if condition="strlen($row['Options'])">({tmpl_row_var Options})</tmpl_if></td>
+		<?php if( $SheetItems !== NULL || ($row['pr_is_service'] == 'true') ) {    // can we swap vendor?  ?>
+			<td align="right"><?=$ve_name?></td>
+		<?php } else if( $infostring ) { ?>
+			<td align="right"><a href='javascript:void(0);' onclick='SwapVendor({tmpl_row_var pr_id}, {tmpl_var currentQty}, "<?=$infostring?>" );void(0);'?><?=$ve_name?></a></td>
+		<?php } else { ?>
+			<td align="right"><?=$ve_name?></td>
+		<?php } ?>
+		<td align="right"><?php echo $trRow['tr_currency_code'].' '.number_format( $row['Price'], 2); ?></td>
+		<?php /* <td align="right"><?php echo number_format( $PaidTotal*$row['Price']/$PriceTotal, 2); ?></td> */?>
+		<tmpl_if condition="strlen($entry['InvoiceNumbers'][$data['currentQty']])">
+			<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 1)">
+				<td>
+				External Product
+				</td>
+			<tmpl_else>
+				<td>
+				<select name="Status[{tmpl_var key}_{tmpl_var currentQty}]" onchange="updateInvoiceNow('{tmpl_var key}','{tmpl_var currentQty}', false);updateShipped('{tmpl_var key}','{tmpl_var currentQty}');">
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'undecided') print('selected'); ?> value="unknown">undecided</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'instock') print('selected'); ?> value="instock">in stock</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'buy') print('selected'); ?> value="buy">buy</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'outofstock') print('selected'); ?> value="outofstock">out of stock</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'ordered') print('selected'); ?> value="ordered">ordered</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'deleted') print('selected'); ?> value="deleted">deleted</option>
+				</select>
+				</td>
+			</tmpl_if>
+			<td>Invoiced</td>
+			<td align="right"><?=$entry['InvoiceNumbers'][$data['currentQty']];?><br />
+			<input type="button" name="none" value="Edit" onclick="editInvoice(<?=$entry['InvoiceNumbers'][$data['currentQty']];?>);void(0);">
+			<input type="button" name="none" value="Print" onclick="viewInvoice(<?=$entry['InvoiceNumbers'][$data['currentQty']];?>);void(0);">
+			</td>
+			<?php /*
+			<td align="right">
+				<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] >= 1)">
+					&nbsp;
+				<tmpl_else>
+					<tmpl_if condition="strlen($entry['TransitDocNumbers'][$data['currentQty']])">
+						<?=$entry['TransitDocNumbers'][$data['currentQty']];?><br />
+						<input type="button" name="none" value="Edit" onclick="editTransitDoc(<?=$entry['TransitDocNumbers'][$data['currentQty']];?>);void(0);">
+						<input type="button" name="none" value="Print" onclick="viewTransitDoc(<?=$entry['TransitDocNumbers'][$data['currentQty']];?>);void(0);">
+					<tmpl_else>
+						<input type="button" name="none" value="Create" onclick="createTransitDoc(<?=$entry['InvoiceNumbers'][$data['currentQty']];?>);void(0);">
+					</tmpl_if>
+				</tmpl_if>
+			</td>
+			*/ ?>
+		<tmpl_else>
+			<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] == 1)">
+				<td>
+				External Product
+				</td>
+				<td align="center">
+					<input type="checkbox" id="Invoice{tmpl_var key}_{tmpl_var currentQty}Select" name="Invoice[{tmpl_var key}_{tmpl_var currentQty}]" value="1" style="display:none;border:0px;" checked>
+				</td>
+				<td align="right">None</td>
+				<script language="Javascript">
+					updateInvoiceNow('{tmpl_var key}','{tmpl_var currentQty}', true);
+					productKeys[productKeys.length] = {key:'{tmpl_var key}', qty:'{tmpl_var currentQty}'};
+				</script>
+			<tmpl_else>
+				<td>
+				<select name="Status[{tmpl_var key}_{tmpl_var currentQty}]" onchange="updateInvoiceNow('{tmpl_var key}','{tmpl_var currentQty}', false);updateShipped('{tmpl_var key}','{tmpl_var currentQty}');">
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'undecided') print('selected'); ?> value="unknown">undecided</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'instock') print('selected'); ?> value="instock">in stock</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'buy') print('selected'); ?> value="buy">buy</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'outofstock') print('selected'); ?> value="outofstock">out of stock</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'ordered') print('selected'); ?> value="ordered">ordered</option>
+					<option <?if ($entry['Availabilities'][$data['currentQty']] == 'deleted') print('selected'); ?> value="deleted">deleted</option>
+				</select>
+				</td>
+				<td align="center">
+					<input type="checkbox" id="Invoice{tmpl_var key}_{tmpl_var currentQty}Select" name="Invoice[{tmpl_var key}_{tmpl_var currentQty}]" value="1" style="display:none;border:0px;" checked>
+				</td>
+				<td align="right">None</td>
+				<!---<td align="right">None</td> -->
+				<script language="Javascript">
+					updateInvoiceNow('{tmpl_var key}','{tmpl_var currentQty}', false);
+					productKeys[productKeys.length] = {key:'{tmpl_var key}', qty:'{tmpl_var currentQty}'};
+				</script>
+			</tmpl_if>
+		</tmpl_if>
+		<td align="right">
+			<tmpl_if condition="strlen($entry['Abono'][$data['currentQty']])">
+				<?=$entry['Abono'][$data['currentQty']];?> 
+				<input type="button" name="none" value="Edit" onclick="editAbono(<?=$entry['Abono'][$data['currentQty']];?>);void(0);">
+				<input type="button" name="none" value="Print" onclick="viewAbono(<?=$entry['Abono'][$data['currentQty']];?>);void(0);">
+			<tmpl_else>
+				None<br />
+				<tmpl_if condition="0 and strlen($entry['InvoiceNumbers'][$data['currentQty']])">
+					<input type="button" name="none" value="Create" onclick="createAbono(<?=$entry['InvoiceNumbers'][$data['currentQty']];?>);void(0);">
+				</tmpl_if>
+			</tmpl_if>
+		</td>
+		<td align="center"> 
+			<?php if( strlen( $SheetItems['orsi_date_shipped'] ) ) { echo $SheetItems['orsi_date_shipped']; ?>
+				<br/><small>undo</small><input type="checkbox" name="UndoShipped[{tmpl_var key}_{tmpl_var currentQty}]">
+			<? }
+			else
+			{
+				if( strlen( $SheetItems['orsi_no_stock'] ) ) 
+				{
+					echo "No Stock at ".$SheetItems['orsi_no_stock']; ?>
+					<br/><small>undo</small><input type="checkbox" name="UndoNoStock[{tmpl_var key}_{tmpl_var currentQty}]">
+				<?php
+				}
+			}
+			/*
+			if( strlen( $OldSheetItems['orsi_date_shipped'] ) ) { echo $OldSheetItems['orsi_date_shipped']; }
+			else { ?>
+				<input type="checkbox" name="Shipped[{tmpl_var key}_{tmpl_var currentQty}]" value="1">
+			<?php } */  ?>
+
+<!--
+			<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] >= 1)">
+				<tmpl_if condition="$row['pr_ve_id'] == 2">
+					<span id="Shipped{tmpl_var key}_{tmpl_var currentQty}Select">
+						<input type="checkbox" name="Shipped[{tmpl_var key}_{tmpl_var currentQty}]" value="1" style="border:0px;" <?if (array_key_exists($data['currentQty'],$entry['Shipped']) and $entry['Shipped'][$data['currentQty']]) print('checked'); ?>>
+					</span>
+					<?=$Shipped->value; ?>
+				<tmpl_else>
+					<span id="Shipped{tmpl_var key}_{tmpl_var currentQty}Select">
+						<input type="hidden" name="Shipped[{tmpl_var key}_{tmpl_var currentQty}]" value="1" style="border:0px;" <?if (array_key_exists($data['currentQty'],$entry['Shipped']) and $entry['Shipped'][$data['currentQty']]) print('checked'); ?>>
+					</span>
+					<?=$Shipped->value; ?>
+				</tmpl_if>
+			<tmpl_else>
+				<span id="Shipped{tmpl_var key}_{tmpl_var currentQty}Select">
+					<input type="checkbox" name="Shipped[{tmpl_var key}_{tmpl_var currentQty}]" value="1" style="border:0px;" <?if (array_key_exists($data['currentQty'],$entry['Shipped']) and $entry['Shipped'][$data['currentQty']]) print('checked'); ?>>
+					<input type="text" size="10" name="DUANumbers[{tmpl_var key}_{tmpl_var currentQty}]" value="<?=ss_HTMLEditFormat($entry['DUANumbers'][$data['currentQty']]);?>">
+					<?=$Shipped->display(); ?>
+				</span>
+			</tmpl_if>
+-->
+			&nbsp;
+		</td>
+		<td align="center">
+
+<?php
+
+			if( array_key_exists( 'AddService', $entry )
+			  && is_array( $entry['AddService'] )
+			  && count( $entry['AddService'] ) )
+			  	foreach( $entry['AddService']  as $sv_idi )
+				{
+					$svi = getRow( "select * from product_service_options join shopsystem_products on sv_pr_id_service = pr_id where sv_id = $sv_idi" );
+					if( $svi )
+					{
+						echo $svi['pr_name'].'<br/>';
+					}
+				}
+
+
+/*
+			<tmpl_if condition="array_key_exists('pr_ve_id', $row) && ($row['pr_ve_id'] >= 1)">
+				&nbsp;
+			<tmpl_else>
+				<input type="hidden" name="DUAStatus[{tmpl_var key}_{tmpl_var currentQty}]" value=<? print $entry['DUAStatus'][$data['currentQty']]?>>
+				<span id="DUAStatus_{tmpl_var key}_{tmpl_var currentQty}_orange" style="position:absolute; visibility:<? if($entry['DUAStatus'][$data['currentQty']] == 0 ) print 'visible'; else print 'hidden';?>">
+					<img src="System/Classes/Tools/SecureWebPayment/Templates/Images/wait.gif" onclick="alterDUA(1,'{tmpl_var key}_{tmpl_var currentQty}');">
+				</span>
+				<span id="DUAStatus_{tmpl_var key}_{tmpl_var currentQty}_red" style="position:absolute; visibility:<? if($entry['DUAStatus'][$data['currentQty']] == 1 ) print 'visible'; else print 'hidden';?>">
+					<img src="System/Classes/Tools/SecureWebPayment/Templates/Images/stop.gif" onclick="alterDUA(2,'{tmpl_var key}_{tmpl_var currentQty}');">
+				</span>
+				<span id="DUAStatus_{tmpl_var key}_{tmpl_var currentQty}_green" style="position:absolute; visibility:<? if($entry['DUAStatus'][$data['currentQty']] == 2 ) print 'visible'; else print 'hidden';?>">
+					<img src="System/Classes/Tools/SecureWebPayment/Templates/Images/go.gif" onclick="alterDUA(0,'{tmpl_var key}_{tmpl_var currentQty}');">
+				</span>
+			</tmpl_if>
+*/ ?>
+		</td>
+		<td>
+			<input type="text" size="12" name="TrackingNumbers[{tmpl_var key}_{tmpl_var currentQty}]" value="<?=ss_HTMLEditFormat($entry['TrackingNumbers'][$data['currentQty']]);?>">
+		</td>
+		<td>
+			<?php if( strlen( $SheetItems['orsi_received'] ) ) { echo $SheetItems['orsi_received']; ?>
+				<br/><small>undo</small><input type="checkbox" name="UndoReceived[{tmpl_var key}_{tmpl_var currentQty}]">
+			<? } else { ?>
+				<input type="checkbox" name="Received[{tmpl_var key}_{tmpl_var currentQty}]">
+			<?php } ?>
+		</td>
+		<td><input type="checkbox" name="Reship[{tmpl_var key}_{tmpl_var currentQty}]" style="border:0px;"></td>
+		<td><input type="hidden" name="Refund[{tmpl_var key}_{tmpl_var currentQty}]" value="<?=ss_HTMLEditFormat($entry['Refund'][$data['currentQty']]);?>">
+			<tmpl_if condition="!strlen($entry['Refund'][$data['currentQty']])">
+				<input type="button" name="refundbutton" value="Credit/Refund" onclick="var amount=prompt('Please enter the refund amount', ''); amount = parseFloat(amount); if (isNaN(amount)) { alert('Please enter a valid number.'); } else { this.form['Refund[{tmpl_var key}_{tmpl_var currentQty}]'].value='refund_credit_'+amount; if (saveNow()) this.form.submit(); }">
+				<?php
+					$script = getField( "select pg_script from transactions left join payment_gateways on tr_bank = pg_id where tr_id = {$data['tr_id']}" );
+					$manual_available = !strcmp( $script, 'bank_manual.php' );
+					if( $manual_available )
+					{
+				?>
+				<input type="button" name="refund2button" value="Card/Refund" onclick="var amount=prompt('Please enter the refund amount', ''); amount = parseFloat(amount); if (isNaN(amount)) { alert('Please enter a valid number.'); } else { this.form['Refund[{tmpl_var key}_{tmpl_var currentQty}]'].value='refund_card_'+amount; if (saveNow()) this.form.submit(); }">
+				<?php
+					}
+				?>
+			<tmpl_else>
+				Refund <?= $trRow['tr_currency_code'] ?> <?=ListLast($entry['Refund'][$data['currentQty']],'_')?>(
+				<?php 	if( strlen( $entry['RefundAuthNum'][$data['currentQty']] ) )
+							echo "Done";
+						else
+							if( $entry['RefundRequest'][$data['currentQty']])
+								echo "Pending";
+							else
+								echo "Credit";
+				?>)
+				<input type="button" name="refundbutton" value="Remove" onclick="this.form['Refund[{tmpl_var key}_{tmpl_var currentQty}]'].value='unrefund'; if (saveNow()) this.form.submit();">
+			</tmpl_if>
+		</td>
+		<script language="Javascript">
+				allProductKeys[allProductKeys.length] = {key:'{tmpl_var key}', qty:'{tmpl_var currentQty}'};
+				updateShipped('{tmpl_var key}','{tmpl_var currentQty}');
+		</script>
+	
+</tr>
+<? } } ?>
+</table>
+<br />
+<table cellspacing="0" cellpadding="0" width="100%">
+<tr><td>
+<input type="submit" name="Submit" value="Save" onclick="return saveNow();">
+<input type="submit" name="Submit" value="Invoice Now" onclick="return InvoiceNow();"> <tmpl_if condition="strlen($data['Order']['or_shipping_values'])">
+<input type="button" name="Edit Basket" value="Edit Basket" onclick="document.location='<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>Online%20Shop/Service/EditOrder/Basket/{tmpl_var or_id}?AccessCode={tmpl_var_url AccessCode}&<?=ss_getHashMeInURL();?>';"/></tmpl_if></td><td align="right">
+<input type="submit" name="Submit" value="Return Selected Boxes" onclick="return ReturnBoxes();"></td><td align="right">
+<input type="submit" name="Submit" value="Resend Selected Boxes" onclick="return Resend();"></td><td align="right">
+<input type="submit" name="Submit" value="Reship Selected Boxes" onclick="return Reship();"></td></tr>
+<input type="button" name="Edit" value="Edit" onclick="document.location='<?=ss_JSStringFormat(ss_withTrailingSlash($GLOBALS['cfg']['secure_server']));?>Online%20Shop/Service/OrderForClient/LoadOrder/{tmpl_var or_id}?AccessCode={tmpl_var_url AccessCode}&<?=ss_getHashMeInURL();?>';">
+</table>
+</form>
+<?php } ?>
+<strong>Notes</strong><br />
+<table width="100%">
+<tmpl_loop query="Q_OrderNotes">
+	<tr>
+		<td width="150" valign="top"><strong>{tmpl_row_var_date name="orn_timestamp" format="d/m/Y H:i"}</strong></td>
+		<tmpl_if condition="$row['orn_show_packing'] > 0">
+			<td>P</td>
+		<tmpl_else>
+			<td></td>
+		</tmpl_if>
+		<td valign="top">{tmpl_row_var orn_text}</td>
+	</tr>
+</tmpl_loop>
+</table>
+<?php if( ss_adminCapability( ADMIN_EDIT_ORDER ) ) { ?>
+<form method="post" action="index.php?act=OnlineShop.AddOrderNote&or_id={tmpl_var or_id}">
+	<input type="hidden" name="BackURL" value="<? print "index.php?act=OnlineShop.ViewOrder&or_id={$data['or_id']}&tr_id={$data['tr_id']}&as_id={$data['as_id']}&BreadCrumbs=".ss_URLEncodedFormat($data['BreadCrumbs']);?>">
+	Show Note on Packing List: <input type="checkbox" id="ShowPacking" name="ShowPacking" value="1" style="border:0px;" />
+	<textarea name="Note" rows="4" cols="40" style="width:100%"></textarea><br /><br />
+<input type="submit" name="Submit" value="Save Note">
+</form>
+<?php } ?>
+<?php /* if( ss_adminCapability( ADMIN_CUSTOMER_ISSUE ) ) */ { ?>
+<h3>Issue Entries for this Order</h3>
+<ul>
+<?php
+	$en = query( "select ce_created as created, ce_text as text, 'black' as colour from client_issue_entry join client_issue on ci_id = ce_ci_id where ci_transaction_number = {$data['tr_id']}
+			union select cir_created as created, cir_text as text, 'blue' as colour from client_issue_response  join client_issue on ci_id = cir_ci_id where ci_transaction_number = {$data['tr_id']} order by 1" );
+	while( $er = $en->fetchRow( ) )
+	{
+		echo "<li><font color='{$er['colour']}'>".formatDateTime($er['created'], 'j-M-Y')."-".$er['text']."</font></li>";
+	}
+?>
+</ul>
+<h3>Issue Attachments for this Order</h3>
+<ul>
+<?php
+	$en = query( "select cia_created as created, cia_name, cia_filename from client_issue_attachment join client_issue on ci_id = cia_ci_id where ci_transaction_number = {$data['tr_id']}
+			order by 1" );
+	while( $er = $en->fetchRow( ) )
+	{
+		echo "<li>".formatDateTime($er['created'], 'j-M-Y')." ".$er['cia_name']."<a target='_blank' href='index.php?act=ImageManager.get&Image={$er['cia_filename']}'>Download</a></li>";
+	}
+?>
+</ul>
+<form method="post" action="index.php?act=OnlineShop.AddIssueEntry&tr_id={tmpl_var tr_id}">
+	<input type="hidden" name="BackURL" value="<? print "index.php?act=OnlineShop.ViewOrder&or_id={$data['or_id']}&tr_id={$data['tr_id']}&as_id={$data['as_id']}&BreadCrumbs=".ss_URLEncodedFormat($data['BreadCrumbs']);?>">
+	<textarea name="Note" rows="12" cols="40" style="width:100%"></textarea><br /><br />
+SendEmail ?<input type='checkbox' name='SendEmail' value=1 checked='checked' />
+<input type="submit" name="Submit" value="Save Issue Entry">
+</form>
+<br />
+<?php }
+	$script = getField( "select pg_script from transactions left join payment_gateways on tr_bank = pg_id where tr_id = {$data['tr_id']}" );
+?>
+<a target='_blank' href='index.php?act=OnlineShop.QueryGateway&tr_id={tmpl_var tr_id}'>Query the gateway about this TX</a>
+<script language="Javascript">
+	window.focus();
+	function removeBlackListEntry( bl_id ) {
+		document.location = "index.php?act=shopsystem_blacklist.RemoveID&bl_id="+bl_id+"&BackURL=" +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+	function removeBlackListByUser() {
+		document.location = "index.php?act=shopsystem_blacklist.RemoveClient&us_id=<? echo (int)$data['or_us_id']; ?>&BackURL=" +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+	function addWhiteList() {
+		document.location = "index.php?act=shopsystem_blacklist.AddWhiteList&or_id=<? echo (int)$data['or_id']; ?>&BackURL="  +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+	function addBlackList() {
+		document.location = "index.php?act=shopsystem_blacklist.AddClient&us_id=<? echo (int)$data['or_us_id']; ?>&bl_idstring=<?=$data['bl_idstring']?>&or_id={tmpl_var or_id}&BackURL="  +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+	function addToChargeList() {
+		document.location = "index.php?act=ShopSystem_ChargeList.AddOrder&or_id={tmpl_var or_id}&BackURL="  +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+	function removeFromChargeList() {
+		document.location = "index.php?act=ShopSystem_ChargeList.RemoveOrder&or_id={tmpl_var or_id}&BackURL="  +escape('index.php?act=OnlineShop.ViewOrder&or_id={tmpl_var or_id}&tr_id={tmpl_var tr_id}&as_id={tmpl_var as_id}&BreadCrumbs={tmpl_var_url BreadCrumbs}');
+	}
+</script>

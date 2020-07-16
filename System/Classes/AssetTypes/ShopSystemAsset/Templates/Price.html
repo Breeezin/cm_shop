@@ -1,0 +1,50 @@
+<table border="0" cellspacing="5" cellpadding="0">
+	<tmpl_if condition="$data['Donation']">
+		<tr>
+			<th align="left" class="onlineShop_priceTableHeader">Please enter donation amount:</th>
+			<td>$<input type="text" name="DonationAmount" value="" size="5"></td>
+		</tr>	
+	<tmpl_else>
+	<tmpl_if condition="$data['RRP'] !== null">
+		<tr>
+			<th align="left" class="onlineShop_RRPTableHeader">RRP&nbsp;:</th>
+			<td align="right" id="RRP{tmpl_var pr_id}" class="onlineShop_RRP">{tmpl_var RRP}</td>
+			<tmpl_if condition="$data['CurrencyConverter']">
+				<td align="right" id="RRP{tmpl_var pr_id}approx">{tmpl_var RRPApprox}</td>
+			</tmpl_if>
+		</tr>
+	</tmpl_if>
+	<tmpl_if condition="$data['NormalPrice'] !== null">
+	<tr>
+		<th align="left" class="onlineShop_priceTableHeader">Price&nbsp;:</th>
+		<td align="right" id="normalPrice{tmpl_var pr_id}" class="onlineShop_price">
+			<tmpl_if condition="$data['OnSpecial']">
+				<span class="onlineShop_oldPrice">{tmpl_var NormalPrice}</span>
+			<tmpl_else>
+				{tmpl_var NormalPrice}
+			</tmpl_if>
+		</td>
+		<tmpl_if condition="$data['CurrencyConverter']">
+			<td align="right" id="normalPrice{tmpl_var pr_id}approx">
+				<tmpl_if condition="$data['OnSpecial']">
+					<span class="onlineShop_oldPrice">{tmpl_var NormalPriceApprox}</span>
+				<tmpl_else>
+					{tmpl_var NormalPriceApprox}
+				</tmpl_if>
+			</td>
+		</tmpl_if>
+	</tr>
+	</tmpl_if>
+	<tmpl_if condition="$data['OnSpecial']">
+		<tr>
+			<th align="left" class="onlineShop_spediscountTableHeader">{tmpl_var SpecialDescription}&nbsp;Price&nbsp;:</th>
+			<td align="right" id="specialPrice{tmpl_var pr_id}" class="onlineShop_SpecialPrice">{tmpl_var SpecialPrice}</td>
+			<tmpl_if condition="$data['CurrencyConverter']">
+			<td align="right" id="specialPrice{tmpl_var pr_id}approx">
+				{tmpl_var SpecialPriceApprox}
+			</td>
+		</tmpl_if>
+		</tr>
+	</tmpl_if>
+	</tmpl_if>
+</table>

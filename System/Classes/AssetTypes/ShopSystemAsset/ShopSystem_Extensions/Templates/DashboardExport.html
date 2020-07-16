@@ -1,0 +1,15 @@
+,{tmpl_var_raw Today},<? foreach ($data['Values'] as $data['desc'] => $values) { 	foreach ($values as $data['title'] => $value) { if ($data['title'] != 'Today') { ?>{tmpl_var_raw title},<? } } break; } ?>
+
+<? $counter = 0; foreach ($data['Values'] as $data['desc'] => $values) { ?>{tmpl_var_raw desc}<? foreach ($values as $column => $value) { 
+						$value = $value['TheValue'];
+						if ($value === null) $value = 0;
+						if ($column == '% Difference') {
+							echo ",".$value;	
+						} else { 
+							$value = str_replace(",","",number_format($value,0));
+							if ($counter != 0 and $counter != 5) echo "";
+							echo ",".$value;
+						}
+ 						} echo "\n"; $counter++; } 
+?>
+Average Shipping Delay,<? if (strlen($data['AverageShippingDelay'])) { echo number_format($data['AverageShippingDelay'],1).' days'; } else { echo "Unknown"; } ?>
